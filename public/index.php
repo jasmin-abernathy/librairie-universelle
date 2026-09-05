@@ -46,10 +46,18 @@ function e(?string $value): string
         <form class="search-form" action="/" method="get" role="search">
             <label for="q">Titre, auteur ou autrice</label>
             <div class="search-row">
-                <input id="q" name="q" type="search" value="<?= e($query) ?>" placeholder="Ex. Les Misérables, Ursula Le Guin…" autocomplete="off">
+                <input id="q" name="q" type="search" value="<?= e($query) ?>" placeholder="Ex. Les Misérables, George Orwell…" autocomplete="off">
                 <button type="submit">Rechercher</button>
             </div>
         </form>
+
+        <div class="try-searches" aria-label="Exemples à essayer">
+            <span>Essayer :</span>
+            <a href="/?q=Les+Mis%C3%A9rables">Les Misérables</a>
+            <a href="/?q=George+Orwell">George Orwell</a>
+            <a href="/?q=1984">1984</a>
+            <a href="/?q=Animal+Farm">Animal Farm</a>
+        </div>
 
         <ul class="principles" aria-label="Principes du moteur">
             <li>Sans IA</li>
@@ -72,9 +80,9 @@ function e(?string $value): string
 
             <?php if ($results === []): ?>
                 <div class="empty-state">
-                    <h3>Aucun résultat dans le prototype.</h3>
-                    <p>Le catalogue réel n’est pas encore importé. Le MVP est en train d’être préparé avec un petit corpus vérifié avant tout élargissement.</p>
-                    <a class="text-link" href="/projet.php">Voir ce que le MVP cherche à valider</a>
+                    <h3>Pas encore dans le petit corpus du MVP.</h3>
+                    <p>Le prototype contient volontairement peu d’œuvres, toutes documentées. On élargira le corpus après validation du modèle et des sources.</p>
+                    <a class="text-link" href="/?q=George+Orwell">Essayer avec George Orwell</a>
                 </div>
             <?php else: ?>
                 <div class="result-list">
@@ -82,14 +90,18 @@ function e(?string $value): string
                         <article class="work-card">
                             <div>
                                 <p class="work-kind">Œuvre</p>
-                                <h3><?= e($result['title']) ?></h3>
+                                <h3><a href="/work.php?id=<?= (int) $result['id'] ?>"><?= e($result['title']) ?></a></h3>
+                                <?php if (!empty($result['original_title']) && $result['original_title'] !== $result['title']): ?>
+                                    <p class="original-title">Titre original : <?= e($result['original_title']) ?></p>
+                                <?php endif; ?>
                                 <?php if (!empty($result['contributors'])): ?>
                                     <p><?= e($result['contributors']) ?></p>
                                 <?php endif; ?>
+                                <a class="text-link" href="/work.php?id=<?= (int) $result['id'] ?>">Voir les façons de lire →</a>
                             </div>
                             <dl>
                                 <div><dt>Première publication</dt><dd><?= e($result['first_publication_year'] ? (string) $result['first_publication_year'] : '—') ?></dd></div>
-                                <div><dt>Domaine public</dt><dd><?= e($result['public_domain_status']) ?></dd></div>
+                                <div><dt>Domaine public</dt><dd><?= $result['public_domain_status'] === 'yes' ? 'Oui — œuvre originale' : e($result['public_domain_status']) ?></dd></div>
                             </dl>
                         </article>
                     <?php endforeach; ?>
@@ -120,11 +132,11 @@ function e(?string $value): string
 
         <section class="content-section callout" aria-labelledby="scope-title">
             <div>
-                <div class="section-kicker">Prototype, pas fausse promesse</div>
-                <h2 id="scope-title">On valide d’abord la recherche et la fiche œuvre.</h2>
-                <p>Pas encore de paiement, de panier multi-libraires ni de catalogue prétendument exhaustif. Les fonctions arrivent une par une seulement lorsqu’elles apportent quelque chose au parcours.</p>
+                <div class="section-kicker">Déjà testable</div>
+                <h2 id="scope-title">Le premier corpus réel est en place.</h2>
+                <p>Les Misérables et plusieurs œuvres de George Orwell permettent déjà de tester la recherche, la distinction œuvre/édition et les cas de domaine public. Pour Orwell, le site distingue explicitement le texte original des traductions.</p>
             </div>
-            <a class="button-link secondary" href="/projet.php">Voir le périmètre exact</a>
+            <a class="button-link secondary" href="/?q=George+Orwell">Tester Orwell</a>
         </section>
     <?php endif; ?>
 </main>
