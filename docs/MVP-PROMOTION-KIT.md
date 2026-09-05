@@ -1,206 +1,194 @@
 # Kit de mise en avant du MVP
 
-> Document de travail. `Librairie universelle` est un nom de projet, pas nécessairement le nom public final.
+> Nom public provisoire : **Librairie universelle**. Ne pas construire d’identité définitive avant validation du nom.
 
-## 1. Promesse centrale
+## TL;DR public
 
-**Chercher une œuvre une seule fois, puis choisir librement comment la lire.**
+Une recherche pour retrouver une œuvre et voir clairement comment la lire : ebook payant, version gratuite légale, différentes éditions et, progressivement, librairies et bibliothèques. Le MVP accueille aussi des auteurs indépendants, mais leurs livres ne sont jamais publiés automatiquement : les fichiers sont contrôlés et la validation éditoriale reste humaine.
 
-Le MVP doit montrer qu'une même recherche peut réunir, dans une interface claire, plusieurs voies d'accès au livre : éditions papier, numérique, librairies, occasion et téléchargement légal lorsqu'une version est réellement dans le domaine public.
+**Sans IA de recommandation, sans profilage comportemental, sans faux stock et sans gratuit caché parce qu’il ne rapporte rien.**
 
-La plateforme ne cherche pas à pousser le produit qui rapporte le plus. Elle cherche à rendre les possibilités lisibles et comparables.
+## Proposition de valeur
 
-## 2. Phrase courte
+### Formule courte
 
 > Une recherche. Toutes les façons légales de lire.
 
-Alternative :
+### Formule actuelle du MVP
 
-> Chercher une œuvre, pas un produit.
+> Ebooks payants et gratuits dans le même storefront, sources et contraintes visibles, autoédition validée humainement.
 
-## 3. Pitch 30 secondes
+### Différence avec une marketplace classique
 
-Aujourd'hui, chercher un livre oblige souvent à naviguer entre plusieurs catalogues : librairies, ebooks, occasion, bibliothèques et ressources du domaine public. Le projet veut réunir ces possibilités autour d'une seule fiche par œuvre. Le MVP commence volontairement petit : recherche simple, quelques œuvres bien documentées et sources clairement identifiées. Pas d'IA, pas de profilage, pas de classement opaque.
+Une marketplace cherche d’abord à vendre ce qu’elle distribue. Le projet cherche d’abord à répondre à : **« je veux lire ce livre, quelles sont mes options ? »**
 
-## 4. Pitch long
+Le résultat peut donc être une offre payante, une version gratuite vérifiée ou, plus tard, une disponibilité en bibliothèque ou chez un libraire local.
 
-Le projet part d'une idée simple : quand quelqu'un cherche *Les Misérables*, son besoin n'est pas d'abord de trouver un ISBN précis. Il veut lire l'œuvre. Selon sa situation, la meilleure réponse peut être une édition papier disponible chez un libraire, un ebook, un exemplaire d'occasion, un prêt ou un téléchargement légal gratuit.
+## Pitch 30 secondes
 
-Le MVP teste cette logique avec une interface centrée sur l'œuvre. Chaque résultat doit expliquer ce qu'il est, d'où vient l'information et pourquoi il apparaît. Les futures recommandations, si elles existent, devront être humaines ou fondées sur des règles visibles et déterministes. Aucun moteur de recommandation par IA et aucun profilage comportemental ne font partie du projet.
+Librairie universelle est un prototype de moteur d’accès au livre centré sur l’œuvre plutôt que sur une boutique. Une même fiche peut regrouper différentes éditions, formats, prix, DRM et sources gratuites légales. Le premier storefront réunit ebooks payants et gratuits sans favoriser automatiquement celui qui rapporte le plus. Nous testons aussi une autoédition accompagnée : EPUB, couverture et PDF imprimeur peuvent être soumis, mais une personne valide le livre avant sa publication. Aucun moteur de recommandation par IA ni profilage lecteur.
 
-## 5. Les cinq messages à répéter
+## Pitch plus long
 
-1. **Une seule recherche pour plusieurs modes d'accès au livre.**
-2. **L'œuvre est au centre, pas l'ISBN ni la plateforme vendeuse.**
-3. **Le domaine public est traité comme une vraie possibilité de lecture, pas caché derrière une boutique.**
-4. **Les sources, formats, prix et contraintes doivent être compréhensibles.**
-5. **Pas d'IA, pas de profilage, pas de résultat impossible à expliquer.**
+Chercher un livre aujourd’hui oblige souvent à passer d’un catalogue à l’autre : vendeurs papier, ebooks, domaine public, bibliothèques, occasion. Le projet propose une couche commune centrée sur l’œuvre. Les éditions et les offres restent distinctes afin d’afficher correctement traducteurs, ISBN, formats, prix et DRM.
 
-## 6. Ce que le MVP prouve
+Le premier MVP se concentre sur le numérique. Il réunit déjà des accès gratuits vérifiés et des offres commerciales réelles, avec date de vérification. Le domaine public n’est pas inféré aveuglément, notamment pour les traductions.
 
-Le MVP doit permettre de tester quatre hypothèses :
+Une deuxième différence est l’ouverture aux auteurs indépendants sans publication automatique de masse. Le formulaire permet de soumettre EPUB/PDF/couverture, fournit les ressources officielles pour l’ISBN et des pistes d’impression, puis le dossier passe par une validation humaine. Un ebook gratuit validé peut être distribué ; pour un ebook payant, le paiement ne sera annoncé qu’une fois réellement intégré.
 
-- une recherche centrée sur l'œuvre est plus naturelle qu'un catalogue centré sur les références commerciales ;
-- les lecteurs trouvent utile de voir au même endroit gratuit, payant, physique et numérique ;
-- la transparence sur la source et le format augmente la confiance ;
-- le projet peut être utile avant même l'existence d'un panier universel ou de comptes utilisateurs.
+## Publics prioritaires pour l’alpha
 
-## 7. Ce que le MVP ne promet pas encore
+1. lecteurs qui achètent déjà des ebooks mais utilisent plusieurs boutiques ;
+2. lecteurs de classiques et domaine public qui veulent des fichiers propres ;
+3. auteurs/autrices ayant déjà autoédité ou préparant leur premier livre ;
+4. libraires et bibliothécaires capables de repérer les ambiguïtés bibliographiques ;
+5. personnes utilisant une liseuse et attentives aux DRM/compatibilités ;
+6. personnes sensibles à l’accessibilité numérique.
 
-Ne pas présenter comme disponible ce qui ne l'est pas :
+## Appel à testeurs — lecteurs
 
-- panier multi-libraires ;
-- paiement intégré ;
-- disponibilité temps réel de toutes les librairies ;
-- couverture exhaustive du catalogue francophone ;
-- compte lecteur ;
-- synchronisation avec toutes les bibliothèques ;
-- application mobile ;
-- recommandations personnalisées.
+> Je construis un prototype de librairie qui part du livre plutôt que du vendeur. Le premier test réunit ebooks payants et versions gratuites légales dans le même rayon, avec formats, DRM et sources visibles. Je cherche surtout à savoir ce qui est incompréhensible ou manque pour choisir une édition. Pas besoin d’être gentil avec le prototype : les critiques sont précisément ce qui m’intéresse.
 
-Formulation publique conseillée : **« Le prototype teste d'abord la recherche et la fiche œuvre. Les fonctions commerciales viendront ensuite, une par une. »**
+## Appel à testeurs — auteurs indépendants
 
-## 8. Publics prioritaires
+> Je teste aussi un parcours d’autoédition qui ne publie pas automatiquement n’importe quel fichier. L’auteur dépose ses métadonnées, son EPUB et éventuellement son PDF imprimeur/couverture ; les contrôles techniques sont automatiques, mais la décision de publication reste humaine. Si vous avez déjà autoédité un livre, vos retours sur ce parcours m’intéressent particulièrement.
 
-### Lecteurs et lectrices
+## Message court forum / Discord
 
-Message : trouver plus facilement la bonne manière de lire, y compris gratuitement lorsque c'est légal.
+> 📚 Je teste une alternative de catalogue de livres centrée sur l’œuvre : ebooks payants + versions gratuites légales au même endroit, sources/DRM visibles, zéro recommandation par IA. Il y a aussi un parcours d’autoédition avec validation humaine. Je cherche des gens prêts à casser l’UX plutôt qu’à me dire que c’est joli.
 
-### Libraires indépendants
+## E-mail court de présentation
 
-Message : le projet ne remplace pas leur rôle éditorial ; il cherche à rendre leur offre plus visible dans un parcours où l'utilisateur peut aussi comparer les autres modes d'accès.
+Objet suggéré : **Un prototype de librairie numérique à tester**
 
-### Bibliothécaires et acteurs du domaine public
+Bonjour,
 
-Message : leurs ressources ne sont pas une fonction secondaire mais une voie d'accès au même niveau que les offres commerciales.
+Je développe un prototype qui regroupe, autour d’une même œuvre, différentes éditions et façons de la lire. La première alpha se concentre sur les ebooks : offres payantes, versions gratuites légales, formats et DRM clairement indiqués.
 
-### Éditeurs et distributeurs numériques
+J’ajoute aussi un parcours pour les auteurs indépendants, avec contrôle des fichiers et validation humaine plutôt que publication automatique.
 
-Message : formats, DRM, compatibilité et provenance doivent être expliqués clairement plutôt que cachés dans le tunnel d'achat.
+Le projet fonctionne sans moteur de recommandation par IA ni profilage comportemental. Je cherche surtout des retours critiques sur ce qui manque ou prête à confusion.
 
-### Contributeurs open source / données ouvertes
+## Autoédition — éléments à mettre en avant
 
-Message : architecture sobre, règles déterministes, provenance documentée et possibilité d'auditer le comportement du moteur.
+Le formulaire public doit rendre visibles les points suivants :
 
-## 9. Appel à testeurs — version courte
+- un livre indépendant n’est pas inférieur par nature à un livre d’éditeur ;
+- il n’est pas non plus publié automatiquement ;
+- le projet vérifie les éléments objectifs et demande une validation humaine ;
+- les ISBN restent ceux de l’autoéditeur/autrice ;
+- lien direct vers la demande officielle AFNIL pour particuliers ;
+- ressources externes Bookelis, CoolLibri et BoD pour préparer l’impression, sans partenariat ni classement sponsorisé ;
+- l’auteur confirme disposer des droits sur les contenus transmis ;
+- un ebook gratuit validé peut être téléchargé ;
+- un ebook payant n’est pas vendu avant l’existence d’un vrai flux de paiement.
 
-> Je travaille sur un prototype qui part d'une idée simple : quand on cherche un livre, on devrait pouvoir voir au même endroit les éditions papier, les versions numériques et les accès gratuits légaux lorsqu'ils existent. Le MVP est volontairement petit et sans IA : je cherche surtout à vérifier si la fiche « œuvre » et la manière de présenter les choix sont réellement utiles. Les retours critiques sont les bienvenus.
+## FAQ
 
-## 10. Appel à libraires — version courte
+### C’est une nouvelle Amazon ?
 
-> Je construis un prototype de recherche de livres centré sur l'œuvre plutôt que sur une seule boutique. L'objectif est de pouvoir montrer, dans une même fiche, les éditions disponibles, les formats numériques et les autres voies d'accès, tout en identifiant clairement la provenance des données. Le projet est sans IA et n'a pas vocation à masquer les libraires derrière un intermédiaire. Je cherche quelques professionnels prêts à regarder le MVP et à me dire ce qui serait réellement utile — ou au contraire nuisible — dans leur quotidien.
+Non. Le principe est précisément de ne pas enfermer la recherche et l’achat dans un seul vendeur. Une fiche doit pouvoir montrer plusieurs façons d’accéder à une œuvre.
 
-## 11. Message Discord / forum
+### Pourquoi afficher du gratuit dans une boutique ?
 
-> **Prototype : une recherche pour toutes les façons de lire un livre**
->
-> Je travaille sur un petit MVP : on cherche une œuvre une seule fois, puis on voit les différentes possibilités de lecture qui existent — papier, numérique et, quand c'est juridiquement possible, téléchargement gratuit depuis une source légitime.
->
-> Le prototype est volontairement sans IA, sans profilage et sans recommandations opaques. Pour l'instant je teste surtout l'idée d'une fiche unique par œuvre et la clarté des informations.
->
-> Ce qui m'intéresse le plus, ce sont les retours du type : « je ne comprends pas ça », « il manque ce choix », « je chercherais autrement » ou « ça ne me servirait pas parce que… ».
+Parce que si une bonne version d’un livre est légalement gratuite, cacher cette information pour privilégier une vente va contre le but du produit.
 
-## 12. Message individuel / email de présentation
+### D’où viennent les ebooks gratuits ?
 
-Objet suggéré : **Un prototype pour chercher un livre autrement**
+Le MVP privilégie des sources identifiables et qualitatives : actuellement Wikisource et un connecteur Gallica OPDS préparé pour les EPUB BnF du domaine public. Une source gratuite n’est pas ajoutée simplement parce qu’un fichier traîne sur Internet.
 
-> Bonjour,
->
-> Je travaille sur un prototype de moteur de recherche consacré au livre. L'idée est de partir de l'œuvre plutôt que d'une référence commerciale : une recherche doit pouvoir réunir les éditions papier, les formats numériques et les accès gratuits légaux lorsqu'ils existent.
->
-> Le MVP est volontairement limité et sans IA. Il ne cherche pas encore à gérer le paiement ni un catalogue exhaustif ; il sert à vérifier si cette manière de présenter les possibilités est réellement plus claire et utile.
->
-> Je cherche quelques regards extérieurs pour tester le parcours et signaler ce qui manque, ce qui gêne ou ce qui mérite d'être conservé.
->
-> Merci d'avance pour tout retour, même très court.
+### Est-ce que tous les livres autoédités seront acceptés ?
 
-## 13. Texte « À propos » court
+Non. Le dépôt est ouvert aux auteurs indépendants, mais l’entrée dans le storefront est validée humainement. Les contrôles automatiques concernent uniquement les aspects objectifs des fichiers et métadonnées.
 
-> Ce prototype explore une autre manière de chercher des livres : partir de l'œuvre et montrer clairement les façons légales d'y accéder. Le projet privilégie la sobriété, l'interopérabilité, les sources identifiées et les choix explicites. Aucun moteur de recommandation par IA ni profilage publicitaire n'est utilisé.
+### Utilisez-vous une IA pour sélectionner les livres ?
 
-## 14. FAQ publique
+Non. Ni pour la recherche, ni pour le classement, ni pour la validation éditoriale.
 
-### Est-ce une librairie en ligne ?
+### Les prix affichés sont-ils garantis ?
 
-Pas encore. Le MVP teste d'abord la recherche et la fiche œuvre. Le paiement et le panier ne sont pas nécessaires pour vérifier le concept.
+Non lorsqu’ils viennent d’une observation ponctuelle. La date de vérification est affichée et les données anciennes sont signalées comme à revérifier.
 
-### Pourquoi montrer des livres gratuits ?
+### Peut-on déjà acheter directement sur le site ?
 
-Parce que l'objectif est d'aider à accéder à une œuvre, pas de pousser systématiquement un achat. Lorsqu'une version peut être téléchargée légalement, cette possibilité doit être visible.
+Pas encore. Les offres commerciales actuelles redirigent vers leur source. Le paiement ne sera intégré qu’avec un flux réel et autorisé.
 
-### Est-ce que toutes les éditions d'une œuvre sont libres lorsqu'elle est dans le domaine public ?
+### Peut-on déjà vendre son propre ebook payant ?
 
-Non. Une œuvre ancienne peut être dans le domaine public alors qu'une traduction, des illustrations ou un appareil critique plus récent restent protégés. Le statut doit donc être attaché aux bons objets et aux bonnes sources.
+Le parcours de dépôt et validation est codé, mais le paiement/reversement n’est pas encore intégré. Une édition payante validée peut être préparée au catalogue sans faux bouton d’achat.
 
-### Utilisez-vous de l'IA ?
+## Éléments de confiance à montrer
 
-Non. La recherche et le classement du MVP sont déterministes. Les éventuelles recommandations futures devront être humaines ou reposer sur des règles visibles et auditable.
+- statut « MVP / alpha » visible ;
+- source de chaque offre ;
+- date de vérification des prix ;
+- statut du domaine public avec note explicative ;
+- traducteur/traductrice distinct de l’auteur ;
+- page « Sans IA » ;
+- autoédition « validation humaine » ;
+- aucun faux partenaire ;
+- aucun faux stock temps réel ;
+- formulaire de retour simple.
 
-### Suivez-vous le comportement des visiteurs ?
+## Captures à produire après déploiement
 
-Le principe du projet est de ne pas construire de profil publicitaire ou comportemental. Si des mesures d'usage sont ajoutées au MVP, elles devront être minimales, agrégées et documentées.
+1. storefront `/ebooks.php` montrant côte à côte gratuit et payant ;
+2. fiche *1984* avec deux vendeurs/DRM ;
+3. fiche *Les Misérables* avec accès gratuit ;
+4. formulaire autoédition, bloc ISBN AFNIL ;
+5. formulaire autoédition, bloc imprimeurs ;
+6. back-office de validation sur une soumission de test non sensible ;
+7. page Sans IA.
 
-### Pourquoi ne pas commencer directement par le panier universel ?
+Ne pas produire les captures finales avant le déploiement réel : elles doivent refléter l’interface effectivement testée sur la Lune.
 
-Parce qu'il faut d'abord vérifier que la manière de trouver et comparer les livres est utile. Le panier multi-vendeurs ajoute beaucoup de complexité commerciale et juridique sans être nécessaire à la validation du concept.
+## Indicateurs alpha possibles, sans profilage
 
-## 15. Éléments de confiance à afficher sur le site
-
-- statut **Prototype / MVP** visible ;
-- date de dernière mise à jour des données lorsque connue ;
-- source de chaque donnée externe ;
-- distinction claire entre œuvre, édition et offre ;
-- mention explicite lorsqu'un statut juridique est incertain ;
-- explication « Pourquoi ce résultat ? » quand un classement devient plus complexe ;
-- page publique « Sans IA » ;
-- absence de faux compteurs, faux avis et faux partenaires ;
-- roadmap courte des fonctions réellement prévues.
-
-## 16. Captures à préparer lorsque le premier corpus réel sera prêt
-
-1. page d'accueil avec la recherche ;
-2. recherche d'une œuvre connue ;
-3. fiche réunissant plusieurs éditions ;
-4. cas domaine public avec source et formats ;
-5. cas œuvre protégée avec plusieurs modes d'accès ;
-6. détail clair d'un ebook avec format et DRM ;
-7. mobile : recherche + première partie d'une fiche œuvre.
-
-Ne produire les visuels promotionnels qu'une fois le nom public et l'identité visuelle stabilisés.
-
-## 17. Indicateurs MVP utiles et non intrusifs
-
-À mesurer seulement si nécessaire, idéalement sans identifiant persistant :
+Ne rien mesurer par défaut tant que le besoin n’est pas démontré. Si des métriques deviennent utiles, commencer par des compteurs agrégés :
 
 - nombre de recherches ;
-- part de recherches donnant au moins un résultat ;
-- nombre moyen de modes d'accès visibles par œuvre ;
-- clics sortants par type : librairie / ebook / domaine public / bibliothèque ;
-- taux de recherches reformulées ;
-- retours qualitatifs des testeurs.
+- recherches sans résultat ;
+- nombre de fiches consultées ;
+- nombre de retours déposés ;
+- erreurs d’import ;
+- nombre de soumissions autoédition et leurs statuts.
 
-Éviter au MVP : fingerprinting, profil individuel de lecture, revente ou enrichissement de données comportementales.
+Éviter identifiants persistants, fingerprinting, historique individuel de lecture et reconstruction de parcours utilisateur.
 
-## 18. Critères avant annonce publique
+## Séquence de lancement
 
-- au moins 20 œuvres de démonstration réellement cohérentes ;
-- plusieurs cas avec éditions multiples ;
-- au moins quelques cas de domaine public vérifiés ;
-- source visible pour toute donnée externe ;
-- navigation mobile et clavier vérifiées ;
-- page « Sans IA » en ligne ;
-- page expliquant clairement les limites du MVP ;
-- aucun bouton factice présenté comme fonctionnel ;
-- moyen simple de transmettre un retour ;
-- nom public vérifié avant communication large.
+### Avant alpha
 
-## 19. Séquence de lancement recommandée
+- déployer sur une Lune dédiée ;
+- exécuter `php bin/preflight.php` ;
+- vérifier BnF et Gallica depuis le serveur ;
+- faire un dépôt autoédition complet avec un EPUB/PDF de test non sensible ;
+- vérifier stockage privé et accès admin ;
+- tester clavier/mobile/lecteur d’écran sur le site réellement déployé ;
+- activer feedback et autoédition seulement après ces contrôles.
 
-1. **Alpha privée** : 5 à 10 personnes très critiques.
-2. Corriger les incompréhensions du parcours.
-3. **Test lecteurs** : petit groupe, sans communication large.
-4. **Test professionnels** : quelques libraires / bibliothécaires.
-5. Stabiliser le modèle de données et les sources.
-6. Seulement ensuite : annonce publique plus large.
+### Alpha privée
 
-Le but de la première mise en avant n'est pas de faire du volume. Il est d'obtenir des retours suffisamment précis pour savoir quoi construire ensuite.
+- 5 à 10 testeurs critiques ;
+- au moins une personne ayant déjà autoédité ;
+- au moins une personne utilisant une liseuse ;
+- idéalement un retour libraire/bibliothécaire ;
+- corriger les incompréhensions avant d’ajouter le panier.
+
+### Après validation du parcours
+
+- qualifier le premier partenaire commercial ;
+- écrire son adaptateur `OfferSource` ;
+- tester le choix éventuel d’une librairie bénéficiaire ;
+- seulement ensuite envisager paiement et panier.
+
+## À ne pas annoncer comme disponible
+
+- achat intégré ;
+- reversement automatique aux auteurs ;
+- impression déclenchée automatiquement ;
+- partenariat ePagine/leslibraires.fr tant qu’il n’existe pas ;
+- stock libraire temps réel ;
+- catalogue exhaustif ;
+- lecteur web complet ;
+- comptes utilisateurs.
