@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Runtime information
+        run: |
+          php -v
+          php -m | grep -Ei 'PDO|sqlite|mbstring'
+
+      - name: PHP syntax
+        run: find . -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: SQLite schema smoke test
+        run: |
+          rm -f data/app.sqlite
+          php -r '$config = require "config/app.php"; require "src/Database.php"; $pdo = Database::connect($config); $count = $pdo->query("SELECT COUNT(*) FROM sqlite_master WHERE type = '\''table'\''")->fetchColumn(); if ((int) $count < 6) { fwrite(STDERR, "Schema incomplet\n"); exit(1); }'
+
+      - name: HTTP smoke test
+        run: |
+          php -S 127.0.0.1:8080 -t public >/tmp/librairie-universelle-php.log 2>&1 &
+          PHP_SERVER_PID=$!
+          trap 'kill "$PHP_SERVER_PID"' EXIT
+          sleep 1
+          curl --fail --silent http://127.0.0.1:8080/health.php | grep '"status":"ok"'
+          curl --fail --silent http://127.0.0.1:8080/ | grep 'Chercher une œuvre, pas un produit.'
