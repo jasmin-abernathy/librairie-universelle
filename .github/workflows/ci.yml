@@ -23,10 +23,10 @@ jobs:
       - name: PHP syntax
         run: find . -type f -name '*.php' -print0 | xargs -0 -n1 php -l
 
-      - name: SQLite schema smoke test
+      - name: SQLite schema and corpus smoke test
         run: |
           rm -f data/app.sqlite
-          php -r '$config = require "config/app.php"; require "src/Database.php"; $pdo = Database::connect($config); $count = $pdo->query("SELECT COUNT(*) FROM sqlite_master WHERE type = '\''table'\''")->fetchColumn(); if ((int) $count < 6) { fwrite(STDERR, "Schema incomplet\n"); exit(1); }'
+          php -r '$config = require "config/app.php"; require "src/Database.php"; require "src/Search.php"; $pdo = Database::connect($config); $tables = (int) $pdo->query("SELECT COUNT(*) FROM sqlite_master WHERE type = '\''table'\''")->fetchColumn(); if ($tables < 6) { fwrite(STDERR, "Schema incomplet\n"); exit(1); } $works = (int) $pdo->query("SELECT COUNT(*) FROM works")->fetchColumn(); if ($works < 7) { fwrite(STDERR, "Corpus initial absent\n"); exit(1); } $orwell = Search::works($pdo, "George Orwell"); if (count($orwell) < 6) { fwrite(STDERR, "Corpus Orwell incomplet\n"); exit(1); }'
 
       - name: HTTP smoke test
         run: |
@@ -36,5 +36,9 @@ jobs:
           sleep 1
           curl --fail --silent http://127.0.0.1:8080/health.php | grep '"status":"ok"'
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Chercher une œuvre, pas un produit.'
+          curl --fail --silent 'http://127.0.0.1:8080/?q=George%20Orwell' | grep 'La Ferme des animaux'
+          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=1' | grep 'Wikisource'
+          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'Nineteen Eighty-Four'
+          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'traduction française'
           curl --fail --silent http://127.0.0.1:8080/projet.php | grep 'Toutes les façons légales de lire.'
           curl --fail --silent http://127.0.0.1:8080/sans-ia.php | grep 'Pas d’IA pour décider ce que vous devriez lire.'
