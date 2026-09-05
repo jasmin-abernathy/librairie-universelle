@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:opds="http://opds-spec.org/2010/catalog">
+  <id>gallica.bnf.fr</id>
+  <title>Recherche test</title>
+  <updated>2026-09-05T00:00:00Z</updated>
+  <entry>
+    <title>Les Misérables / Victor Hugo</title>
+    <id>http://gallica.bnf.fr/ark:/12148/bpt6kTEST</id>
+    <updated>2026-09-05T00:00:00Z</updated>
+    <author>
+      <name>Hugo, Victor (1802-1885)</name>
+    </author>
+    <link type="text/html" href="http://gallica.bnf.fr/ark:/12148/bpt6kTEST" rel="alternate" title="Voir sur Gallica"/>
+    <link type="application/epub+zip" href="http://gallica.bnf.fr/ark:/12148/bpt6kTEST.epub" rel="http://opds-spec.org/acquisition" title="Ouvrir le livre"/>
+  </entry>
+</feed>
