@@ -11,7 +11,10 @@ INSERT OR IGNORE INTO contributors (id, name, birth_year, death_year, authority_
 (7, 'Frank Herbert', 1920, 1986, NULL),
 (8, 'Ursula K. Le Guin', 1929, 2018, NULL),
 (9, 'Antoine de Saint-Exupéry', 1900, 1944, NULL),
-(10, 'J. R. R. Tolkien', 1892, 1973, NULL);
+(10, 'J. R. R. Tolkien', 1892, 1973, NULL),
+(11, 'Josée Kamoun', NULL, NULL, NULL),
+(12, 'Amélie Audiberti', NULL, NULL, NULL),
+(13, 'Yves Gohin', NULL, NULL, NULL);
 
 INSERT OR IGNORE INTO works (id, title, original_title, first_publication_year, language, public_domain_status, public_domain_note) VALUES
 (1, 'Les Misérables', 'Les Misérables', 1862, 'fr', 'yes', 'Œuvre originale en français dans le domaine public.'),
@@ -61,20 +64,50 @@ INSERT OR IGNORE INTO work_contributors (work_id, contributor_id, role) VALUES
 
 INSERT OR IGNORE INTO sources (id, name, source_type, base_url, data_license) VALUES
 (1, 'Wikisource', 'public_domain', 'https://fr.wikisource.org', 'Voir les conditions de réutilisation de Wikisource'),
-(2, 'Bibliothèque nationale de France', 'library', 'https://catalogue.bnf.fr', 'Données bibliographiques BnF'),
-(3, 'BnF - prêt numérique', 'library', 'https://pret.bnf.fr', 'Accès soumis aux conditions du service');
+(2, 'Bibliothèque nationale de France', 'library', 'https://catalogue.bnf.fr', 'Licence ouverte de l’État — métadonnées BnF'),
+(3, 'BnF - prêt numérique', 'library', 'https://pret.bnf.fr', 'Accès soumis aux conditions du service'),
+(4, 'Lavoisier', 'bookseller', 'https://e.lavoisier.fr', 'Conditions commerciales du vendeur'),
+(5, 'E-librairie Leclerc', 'bookseller', 'https://e-librairie.leclerc', 'Conditions commerciales du vendeur');
 
-INSERT OR IGNORE INTO editions (id, work_id, title, publisher, publication_date, language, medium, file_format, drm_type) VALUES
-(1, 1, 'Les Misérables — édition Émile Testard', 'Émile Testard', '1890', 'fr', 'ebook', 'HTML / exports proposés par la source', 'none'),
-(2, 2, 'Nineteen Eighty-Four — texte original', 'Secker & Warburg', '1949', 'en', 'ebook', 'texte', 'none'),
-(3, 3, 'Animal Farm — texte original', 'Secker & Warburg', '1945', 'en', 'ebook', 'texte', 'none');
+INSERT OR IGNORE INTO editions (id, work_id, isbn13, title, publisher, publication_date, language, medium, file_format, drm_type) VALUES
+(1, 1, NULL, 'Les Misérables — édition Émile Testard', 'Émile Testard', '1890', 'fr', 'ebook', 'HTML / exports proposés par la source', 'none'),
+(2, 2, NULL, 'Nineteen Eighty-Four — texte original', 'Secker & Warburg', '1949', 'en', 'ebook', 'texte', 'none'),
+(3, 3, NULL, 'Animal Farm — texte original', 'Secker & Warburg', '1945', 'en', 'ebook', 'texte', 'none'),
+(4, 2, '9782072878497', '1984 — Folio, traduction Josée Kamoun', 'Gallimard', '2020', 'fr', 'paper', NULL, NULL),
+(5, 2, '9782072730030', '1984 — Du monde entier, traduction Josée Kamoun', 'Gallimard', '2018', 'fr', 'paper', NULL, NULL),
+(6, 2, '9782070248100', '1984 — Du monde entier, traduction Amélie Audiberti', 'Gallimard', '2015', 'fr', 'paper', NULL, NULL),
+(7, 2, '9782070463695', '1984 — Folioplus classiques, traduction Amélie Audiberti', 'Gallimard', '2015', 'fr', 'paper', NULL, NULL),
+(8, 2, '9782070348626', '1984 — Folio, traduction Amélie Audiberti', 'Gallimard', '2007', 'fr', 'paper', NULL, NULL),
+(9, 1, '9782070409228', 'Les Misérables — Folio Classique, tome I', 'Gallimard', '1999', 'fr', 'paper', NULL, NULL),
+(10, 1, '9782070409235', 'Les Misérables — Folio Classique, tome II', 'Gallimard', '1999', 'fr', 'paper', NULL, NULL),
+(11, 2, '9782072938245', '1984 — Folio SF, ebook, traduction Amélie Audiberti', 'Gallimard', '2021-05-13', 'fr', 'ebook', 'EPUB', NULL),
+(12, 2, '9782072938221', '1984 — Folio SF, traduction Amélie Audiberti', 'Gallimard', '2021', 'fr', 'paper', NULL, NULL);
+
+INSERT OR IGNORE INTO edition_contributors (edition_id, contributor_id, role) VALUES
+(4, 11, 'translator'),
+(5, 11, 'translator'),
+(6, 12, 'translator'),
+(7, 12, 'translator'),
+(8, 12, 'translator'),
+(9, 13, 'editor'),
+(10, 13, 'editor'),
+(11, 12, 'translator'),
+(12, 12, 'translator');
 
 INSERT OR IGNORE INTO offers (id, source_id, work_id, edition_id, offer_type, price_cents, currency, availability, url, file_format, drm_type, checked_at) VALUES
 (1, 1, 1, 1, 'read_online', 0, 'EUR', 'available', 'https://fr.wikisource.org/wiki/Les_Mis%C3%A9rables', 'HTML', 'none', '2026-09-05'),
 (2, 1, 1, 1, 'free_download', 0, 'EUR', 'available_via_source_exports', 'https://fr.wikisource.org/wiki/Les_Mis%C3%A9rables', 'PDF / autres exports selon la source', 'none', '2026-09-05'),
 (3, 3, 2, NULL, 'borrow', 0, 'EUR', 'check_on_source', 'https://pret.bnf.fr/resources?author_keyword=George+Orwell', 'EPUB', NULL, '2026-09-05'),
-(4, 3, 3, NULL, 'borrow', 0, 'EUR', 'check_on_source', 'https://pret.bnf.fr/resources?author_keyword=George+Orwell', 'EPUB', NULL, '2026-09-05');
+(4, 3, 3, NULL, 'borrow', 0, 'EUR', 'check_on_source', 'https://pret.bnf.fr/resources?author_keyword=George+Orwell', 'EPUB', NULL, '2026-09-05'),
+(5, 4, 2, 11, 'ebook', 949, 'EUR', 'available_when_checked', 'https://e.lavoisier.fr/produit/634185/9782072938269/1984', 'EPUB', 'Adobe DRM', '2026-09-05'),
+(6, 5, 2, 11, 'ebook', 949, 'EUR', 'available_when_checked', 'https://e-librairie.leclerc/product/9782072938245_9782072938245_10060/1984', 'EPUB', 'CARE', '2026-09-05');
 
 INSERT OR IGNORE INTO source_records (source_id, external_id, entity_type, local_id, source_url) VALUES
 (2, 'ark:/12148/cb11907966z', 'contributor', 1, 'https://data.bnf.fr/ark:/12148/cb11907966z'),
-(2, 'ark:/12148/cb11918228x', 'contributor', 2, 'https://data.bnf.fr/ark:/12148/cb11918228x');
+(2, 'ark:/12148/cb11918228x', 'contributor', 2, 'https://data.bnf.fr/ark:/12148/cb11918228x'),
+(2, 'ark:/12148/cb465691674', 'edition', 4, 'https://catalogue.bnf.fr/ark:/12148/cb465691674'),
+(2, 'ark:/12148/cb45505564v', 'edition', 5, 'https://catalogue.bnf.fr/ark:/12148/cb45505564v'),
+(2, 'ark:/12148/cb44346567g', 'edition', 6, 'https://catalogue.bnf.fr/ark:/12148/cb44346567g'),
+(2, 'ark:/12148/cb444267862', 'edition', 7, 'https://catalogue.bnf.fr/ark:/12148/cb444267862'),
+(2, 'ark:/12148/cb41167710z', 'edition', 8, 'https://catalogue.bnf.fr/ark:/12148/cb41167710z'),
+(2, 'ark:/12148/cb370398428', 'edition', 9, 'https://catalogue.bnf.fr/ark:/12148/cb370398428');
