@@ -49,6 +49,19 @@ function rightsLabel(string $status): string
         default => 'Inconnu',
     };
 }
+
+function priceLabel(?int $cents, ?string $currency): string
+{
+    if ($cents === null) {
+        return 'Prix à vérifier';
+    }
+    if ($cents === 0) {
+        return 'Gratuit';
+    }
+
+    $amount = number_format($cents / 100, 2, ',', ' ');
+    return $currency === 'EUR' || $currency === null ? $amount . ' €' : $amount . ' ' . $currency;
+}
 ?>
 <!doctype html>
 <html lang="fr">
@@ -119,26 +132,33 @@ function rightsLabel(string $status): string
                     <article class="offer-card">
                         <div>
                             <p class="work-kind"><?= e($offer['source_name']) ?></p>
-                            <h3><?= e(offerLabel($offer['offer_type'])) ?></h3>
+                            <h3><?= e(offerLabel($offer['offer_type'])) ?> · <?= e(priceLabel($offer['price_cents'] !== null ? (int) $offer['price_cents'] : null, $offer['currency'])) ?></h3>
                             <p>
                                 <?php if (!empty($offer['edition_title'])): ?><?= e($offer['edition_title']) ?> · <?php endif; ?>
+                                <?php if (!empty($offer['edition_isbn13'])): ?>ISBN <?= e($offer['edition_isbn13']) ?> · <?php endif; ?>
                                 <?php if (!empty($offer['edition_language'])): ?><?= e(languageLabel($offer['edition_language'])) ?> · <?php endif; ?>
                                 <?= e($offer['file_format'] ?: 'format non précisé') ?>
                                 <?php if (!empty($offer['drm_type'])): ?> · DRM : <?= e($offer['drm_type']) ?><?php endif; ?>
                             </p>
                             <?php if ($offer['availability'] === 'check_on_source'): ?>
                                 <p class="availability-warning">Disponibilité à vérifier sur la source.</p>
+                            <?php elseif ($offer['availability'] === 'available_when_checked'): ?>
+                                <p class="availability-warning">Prix et disponibilité observés le <?= e($offer['checked_at']) ?> ; à revérifier chez le vendeur.</p>
                             <?php endif; ?>
                         </div>
                         <a class="primary-link" href="<?= e($offer['url']) ?>" rel="noopener noreferrer">Voir sur la source <span aria-hidden="true">↗</span></a>
                     </article>
                 <?php endforeach; ?>
                 </div>
+                <p class="source-policy"><strong>Pourquoi le DRM est affiché par vendeur :</strong> une même édition numérique peut être livrée avec des protections différentes selon la plateforme. Le site ne déduit donc jamais un DRM global à partir du seul ISBN.</p>
             <?php endif; ?>
         </section>
 
         <section class="edition-section" aria-labelledby="edition-title">
-            <h2 id="edition-title">Éditions déjà distinguées dans le MVP</h2>
+            <div class="section-heading">
+                <h2 id="edition-title">Éditions identifiées</h2>
+                <span><?= count($record['editions']) ?> édition<?= count($record['editions']) === 1 ? '' : 's' ?></span>
+            </div>
             <?php if ($record['editions'] === []): ?>
                 <p>Aucune édition précise n’a encore été ajoutée.</p>
             <?php else: ?>
@@ -148,14 +168,20 @@ function rightsLabel(string $status): string
                         <h3><?= e($edition['title'] ?: $work['title']) ?></h3>
                         <p><?= e(languageLabel($edition['language'])) ?> · <?= e($edition['publication_date']) ?> · <?= e($edition['medium']) ?></p>
                         <?php if (!empty($edition['publisher'])): ?><p>Éditeur : <?= e($edition['publisher']) ?></p><?php endif; ?>
-                        <?php if (!empty($edition['file_format'])): ?><p>Format : <?= e($edition['file_format']) ?><?php if (!empty($edition['drm_type'])): ?> · DRM : <?= e($edition['drm_type']) ?><?php endif; ?></p><?php endif; ?>
+                        <?php if (!empty($edition['isbn13'])): ?><p>ISBN/EAN : <code><?= e($edition['isbn13']) ?></code></p><?php endif; ?>
+                        <?php if (!empty($edition['edition_contributors'])): ?><p><?= e(str_replace(',', ' · ', $edition['edition_contributors'])) ?></p><?php endif; ?>
+                        <?php if (!empty($edition['file_format'])): ?><p>Format : <?= e($edition['file_format']) ?><?php if (!empty($edition['drm_type'])): ?> · DRM de l’édition : <?= e($edition['drm_type']) ?><?php endif; ?></p><?php endif; ?>
+                        <?php if (!empty($edition['source_urls'])): ?>
+                            <?php $sourceUrl = explode(',', $edition['source_urls'])[0]; ?>
+                            <p><a class="text-link" href="<?= e($sourceUrl) ?>" rel="noopener noreferrer">Notice source ↗</a></p>
+                        <?php endif; ?>
                     </article>
                 <?php endforeach; ?>
                 </div>
             <?php endif; ?>
         </section>
 
-        <p class="source-policy">Les informations du MVP sont conservées avec leur provenance. Une œuvre, une édition et une offre sont trois objets différents : leurs droits et disponibilités peuvent donc être différents.</p>
+        <p class="source-policy">Les informations du MVP sont conservées avec leur provenance. Une œuvre, une édition et une offre sont trois objets différents : leurs droits, prix, DRM et disponibilités peuvent donc être différents.</p>
         <a class="text-link" href="/">← Revenir à la recherche</a>
     </article>
 <?php endif; ?>
