@@ -22,13 +22,23 @@ final class Database
         $pdo->exec('PRAGMA busy_timeout = 5000');
 
         if ($isNewDatabase) {
-            $schema = file_get_contents($config['schema_path']);
-            if ($schema === false) {
-                throw new RuntimeException('Impossible de lire le schéma SQL.');
-            }
-            $pdo->exec($schema);
+            self::execFile($pdo, $config['schema_path'], 'schéma SQL');
+        }
+
+        if (!empty($config['seed_path']) && is_file($config['seed_path'])) {
+            self::execFile($pdo, $config['seed_path'], 'corpus initial');
         }
 
         return $pdo;
+    }
+
+    private static function execFile(PDO $pdo, string $path, string $label): void
+    {
+        $sql = file_get_contents($path);
+        if ($sql === false) {
+            throw new RuntimeException('Impossible de lire le ' . $label . '.');
+        }
+
+        $pdo->exec($sql);
     }
 }
