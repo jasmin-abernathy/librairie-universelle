@@ -8,7 +8,6 @@ final class Database
     {
         $databasePath = $config['database_path'];
         $databaseDirectory = dirname($databasePath);
-        $isNewDatabase = !is_file($databasePath);
 
         if (!is_dir($databaseDirectory) && !mkdir($databaseDirectory, 0775, true) && !is_dir($databaseDirectory)) {
             throw new RuntimeException('Impossible de créer le dossier de données.');
@@ -21,9 +20,10 @@ final class Database
         $pdo->exec('PRAGMA foreign_keys = ON');
         $pdo->exec('PRAGMA busy_timeout = 5000');
 
-        if ($isNewDatabase) {
-            self::execFile($pdo, $config['schema_path'], 'schéma SQL');
-        }
+        // Le schéma est idempotent (CREATE ... IF NOT EXISTS). On le rejoue à
+        // chaque connexion afin qu'une base existante reçoive aussi les nouvelles
+        // tables du MVP sans devoir être supprimée manuellement.
+        self::execFile($pdo, $config['schema_path'], 'schéma SQL');
 
         if (!empty($config['seed_path']) && is_file($config['seed_path'])) {
             self::execFile($pdo, $config['seed_path'], 'corpus initial');
