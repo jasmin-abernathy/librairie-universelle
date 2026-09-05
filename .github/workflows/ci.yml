@@ -36,3 +36,5 @@ jobs:
           sleep 1
           curl --fail --silent http://127.0.0.1:8080/health.php | grep '"status":"ok"'
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Chercher une œuvre, pas un produit.'
+          curl --fail --silent http://127.0.0.1:8080/projet.php | grep 'Toutes les façons légales de lire.'
+          curl --fail --silent http://127.0.0.1:8080/sans-ia.php | grep 'Pas d’IA pour décider ce que vous devriez lire.'
