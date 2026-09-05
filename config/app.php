@@ -9,4 +9,5 @@ return [
     'env' => getenv('APP_ENV') ?: 'production',
     'database_path' => getenv('DATABASE_PATH') ?: $root . '/data/app.sqlite',
     'schema_path' => $root . '/database/schema.sql',
+    'seed_path' => $root . '/database/seed.sql',
 ];
