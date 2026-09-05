@@ -1,68 +1,113 @@
 # Feuille de route
 
-## Étape 0 — socle actuel
+## Phase 0 — socle ✅
 
-- [x] dépôt privé créé via repo-factory
-- [x] architecture PHP légère
-- [x] modèle centré sur l’œuvre
-- [x] œuvres / contributeurs / éditions / sources / offres
-- [x] recherche déterministe de base
-- [x] page responsive et accessible
-- [x] endpoint de santé
-- [x] règles « sans IA / sans profilage » documentées
+- [x] dépôt privé et conventions de base
+- [x] PHP sans framework
+- [x] SQLite prototype
+- [x] recherche déterministe
+- [x] modèle œuvre / édition / source / offre
+- [x] principes sans IA et sans profilage
+- [x] CI minimale
 
-## Étape 1 — catalogue bibliographique minimal
+## Phase 1 — MVP démontrable ✅ en grande partie
 
-- [ ] choisir une première source dont l’API et la licence sont compatibles
-- [ ] importer œuvres, auteurs/autrices et éditions
-- [ ] dédoublonner par règles explicites et journalisées
-- [ ] afficher une vraie fiche œuvre
-- [ ] afficher les éditions liées
+- [x] landing qui explique la promesse sans survendre
+- [x] corpus réel de 21 œuvres
+- [x] cas domaine public / protégé / à vérifier
+- [x] fiche œuvre
+- [x] plusieurs éditions réelles pour une même œuvre
+- [x] traducteurs et contributeurs d’édition distincts des auteurs
+- [x] ISBN/EAN et provenance visibles
+- [x] première source bibliographique automatisée : BnF SRU
+- [x] import idempotent ciblé
+- [x] premières offres commerciales réelles et datées
+- [x] prix et DRM modélisés au niveau de l’offre vendeur
+- [ ] audit clavier / responsive / contrastes
+- [ ] canal simple de retour alpha
+- [ ] alpha privée
 
-## Étape 2 — domaine public
+## Phase 2 — sources et libraires
 
-- [ ] définir la règle de preuve du statut juridique
-- [ ] brancher une première source de textes/fichiers légitimes
-- [ ] séparer clairement œuvre, traduction, édition, illustration et appareil critique
-- [ ] proposer EPUB/PDF/lecture en ligne selon les droits réels
-- [ ] conserver la provenance de chaque fichier/lien
+- [ ] stabiliser les imports BnF sur davantage d’œuvres
+- [ ] déterminer les conditions actuelles d’intégration de Place des Libraires / leslibraires.fr
+- [ ] déterminer les conditions d’intégration ePagine pour l’ebook
+- [ ] obtenir, si nécessaire, identifiant affilié / contrat / accès partenaire
+- [ ] créer une interface de connecteur d’offres séparée des sources bibliographiques
+- [ ] afficher une librairie bénéficiaire ou choisie quand le partenaire le permet
+- [ ] ajouter plusieurs vendeurs sans favoriser artificiellement celui qui rémunère le plus
+- [ ] politique explicite de fraîcheur des prix et disponibilités
 
-## Étape 3 — librairies et stocks
+## Phase 3 — disponibilité locale
 
-- [ ] définir un format d’échange simple pour les libraires
-- [ ] importer disponibilités et prix
-- [ ] retrait local et distance
-- [ ] distinguer neuf et occasion
-- [ ] page propre à chaque librairie
+- [ ] données fiables de librairies et stocks
+- [ ] recherche autour d’un lieu uniquement sur demande de l’utilisateur
+- [ ] retrait en librairie
+- [ ] distance calculée explicitement, sans profilage
+- [ ] occasion lorsque les sources le permettent
+- [ ] bibliothèques et prêt local lorsque la donnée existe
 
-## Étape 4 — ebooks commerciaux
+## Phase 4 — numérique
 
-- [ ] sélectionner un partenaire/distributeur compatible
-- [ ] afficher formats, DRM et compatibilité liseuse avant achat
-- [ ] permettre le choix de la librairie bénéficiaire lorsque le modèle du partenaire le permet
-- [ ] ne pas enfermer les fichiers dans une application propriétaire
+- [ ] plusieurs distributeurs / libraires numériques
+- [ ] compatibilité liseuse déclarative
+- [ ] DRM et restrictions compréhensibles
+- [ ] accessibilité des ebooks
+- [ ] audio
+- [ ] domaine public : meilleurs fichiers légitimement réutilisables
+- [ ] éventuel lecteur web non captif
 
-## Étape 5 — bibliothèques
+## Phase 5 — transaction
 
-- [ ] tester les données ouvertes / catalogues interrogeables
-- [ ] disponibilité locale
-- [ ] liens d’emprunt quand ils sont officiellement exposés
+À ne commencer qu’après validation du parcours œuvre → édition → offre.
 
-## Étape 6 — comptes facultatifs
+- [ ] panier mono-source propre
+- [ ] puis panier multi-source si les contrats et flux le permettent
+- [ ] paiement et répartition
+- [ ] gestion des commandes et retours
+- [ ] carte cadeau réseau
 
-- [ ] listes de lecture
+## Phase 6 — comptes facultatifs
+
+- [ ] compte lecteur optionnel
 - [ ] librairie préférée
-- [ ] liseuse(s) déclarée(s) volontairement
-- [ ] export/suppression des données
-- [ ] aucune personnalisation comportementale cachée
+- [ ] bibliothèque personnelle exportable
+- [ ] listes de lecture
+- [ ] préférences explicites de formats / liseuse
+- [ ] aucune personnalisation comportementale implicite
 
-## Plus tard seulement
+## Phase 7 — éditorial et communauté
 
-- panier multi-libraires ;
-- paiement et répartition entre vendeurs ;
-- cartes cadeaux réseau ;
-- application mobile ;
-- lecteur web facultatif ;
-- fédération/cooperative et outils professionnels.
+- [ ] sélections de libraires
+- [ ] listes thématiques humaines
+- [ ] recommandations explicables : même auteur, thème choisi, sélection humaine, etc.
+- [ ] pages libraires
+- [ ] événements
 
-Ces sujets sont volontairement différés : le premier enjeu est de prouver que la recherche par œuvre et l’agrégation de modes d’accès apportent déjà quelque chose d’utile.
+Toujours sans moteur de recommandation par IA ni profilage caché.
+
+## Infrastructure
+
+### Prototype
+
+SQLite + PHP suffit.
+
+### Première production o2switch
+
+- une Lune Cloud dédiée ;
+- PHP ;
+- MariaDB lorsque les imports/écritures le justifient ;
+- cron à faible fréquence pour les sources bibliographiques ;
+- secrets hors dépôt ;
+- cache si nécessaire ;
+- aucun worker permanent requis au stade du MVP.
+
+## Règle de progression
+
+Une nouvelle source n’est pas considérée comme « intégrée » tant que sont documentés :
+
+1. ses conditions de réutilisation ;
+2. sa provenance ;
+3. sa fraîcheur ;
+4. le comportement quand elle ne répond pas ;
+5. ce qu’elle permet réellement d’affirmer à l’utilisateur.
