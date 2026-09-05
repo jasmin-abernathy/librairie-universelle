@@ -27,4 +27,5 @@ return [
     'max_epub_bytes' => max(1_048_576, (int) (getenv('MAX_EPUB_BYTES') ?: 52_428_800)),
     'max_pdf_bytes' => max(1_048_576, (int) (getenv('MAX_PDF_BYTES') ?: 104_857_600)),
     'max_cover_bytes' => max(262_144, (int) (getenv('MAX_COVER_BYTES') ?: 15_728_640)),
+    'moselle_base_url' => rtrim((string) (getenv('MOSELLE_BASE_URL') ?: ''), '/'),
 ];
