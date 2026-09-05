@@ -13,7 +13,7 @@ GitHub
   -> PHP 8.2+
   -> SQLite pour l'alpha
   -> stockage privé hors /public
-  -> cron BnF à faible fréquence
+  -> cron BnF + Gallica à faible fréquence
 ```
 
 ## Variables à préparer
@@ -72,17 +72,29 @@ Tester ensuite :
 - `/feedback.php`
 - `/admin/` avec l'authentification Basic et `ADMIN_TOKEN` comme mot de passe
 
-## Cron BnF
+## Crons de catalogue
 
-Commencer à faible fréquence. Exemple quotidien :
+Commencer à faible fréquence et décaler les tâches pour ne pas les lancer ensemble.
+
+### BnF SRU — notices bibliographiques
+
+Exemple quotidien :
 
 ```cron
 17 4 * * * cd /CHEMIN/DU/DEPOT && /usr/local/bin/php bin/import-bnf.php --all --limit=20 >> logs/bnf-cron.log 2>&1
 ```
 
-Adapter le chemin PHP à celui fourni par la Lune. Le script journalise également son résultat dans la table `sync_runs`, visible depuis `/admin/`.
+### Gallica OPDS — EPUB gratuits du domaine public
 
-Ne pas augmenter la fréquence tant que la volumétrie, les limites de la source et la durée réelle des imports ne sont pas mesurées.
+Exemple hebdomadaire :
+
+```cron
+43 4 * * 2 cd /CHEMIN/DU/DEPOT && /usr/local/bin/php bin/import-gallica.php --all --limit=10 >> logs/gallica-cron.log 2>&1
+```
+
+Adapter le chemin PHP à celui fourni par la Lune. Les deux scripts journalisent leur résultat dans `sync_runs`, visible depuis `/admin/`.
+
+Ne pas augmenter la fréquence tant que la volumétrie, les limites des sources et la durée réelle des imports ne sont pas mesurées. Gallica reste volontairement limité aux œuvres françaises déjà validées comme domaine public dans notre base.
 
 ## Ouverture de l'alpha
 
@@ -94,6 +106,8 @@ FEEDBACK_ENABLED=true
 ```
 
 Puis relancer `php bin/preflight.php` et vérifier que l'administration est protégée.
+
+Faire ensuite un vrai dépôt de test avec un EPUB non sensible avant d'accepter le moindre manuscrit extérieur.
 
 ## Sauvegardes
 
