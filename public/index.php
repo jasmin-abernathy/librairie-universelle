@@ -11,6 +11,16 @@ function e(?string $value): string
 {
     return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
+
+function rightsLabel(string $status): string
+{
+    return match ($status) {
+        'yes' => 'Oui — œuvre originale',
+        'no' => 'Non',
+        'review' => 'À vérifier',
+        default => 'Inconnu',
+    };
+}
 ?>
 <!doctype html>
 <html lang="fr">
@@ -101,7 +111,7 @@ function e(?string $value): string
                             </div>
                             <dl>
                                 <div><dt>Première publication</dt><dd><?= e($result['first_publication_year'] ? (string) $result['first_publication_year'] : '—') ?></dd></div>
-                                <div><dt>Domaine public</dt><dd><?= $result['public_domain_status'] === 'yes' ? 'Oui — œuvre originale' : e($result['public_domain_status']) ?></dd></div>
+                                <div><dt>Domaine public</dt><dd><?= e(rightsLabel($result['public_domain_status'])) ?></dd></div>
                             </dl>
                         </article>
                     <?php endforeach; ?>
