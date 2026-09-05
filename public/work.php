@@ -39,6 +39,16 @@ function languageLabel(?string $language): string
         default => $language,
     };
 }
+
+function rightsLabel(string $status): string
+{
+    return match ($status) {
+        'yes' => 'Oui — œuvre originale',
+        'no' => 'Non',
+        'review' => 'À vérifier',
+        default => 'Inconnu',
+    };
+}
 ?>
 <!doctype html>
 <html lang="fr">
@@ -79,12 +89,12 @@ function languageLabel(?string $language): string
 
         <div class="work-facts" aria-label="Informations principales">
             <div><span>Langue originale</span><strong><?= e(languageLabel($work['language'])) ?></strong></div>
-            <div><span>Domaine public</span><strong><?= $work['public_domain_status'] === 'yes' ? 'Oui — œuvre originale' : e($work['public_domain_status']) ?></strong></div>
+            <div><span>Domaine public</span><strong><?= e(rightsLabel($work['public_domain_status'])) ?></strong></div>
         </div>
 
         <?php if (!empty($work['public_domain_note'])): ?>
             <aside class="rights-note" aria-labelledby="rights-title">
-                <h2 id="rights-title">Ce que « domaine public » veut dire ici</h2>
+                <h2 id="rights-title">Ce que ce statut veut dire ici</h2>
                 <p><?= e($work['public_domain_note']) ?></p>
                 <?php if ($work['language'] === 'en'): ?>
                     <p><strong>Important :</strong> une traduction française est une œuvre dérivée avec ses propres droits. Le MVP ne la considère jamais comme libre automatiquement.</p>
