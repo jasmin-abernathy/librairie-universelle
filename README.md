@@ -2,38 +2,44 @@
 
 > **Nom de travail** — le nom public définitif reste à choisir et à vérifier.
 
-MVP web pour chercher une **œuvre** une seule fois et voir, à terme, les différentes façons légales d’y accéder : livre neuf, occasion, librairie locale, ebook, audio, bibliothèque et téléchargement gratuit lorsqu’une version est réellement dans le domaine public.
+MVP web centré sur l’**œuvre** : chercher un livre une fois, comparer ses éditions et voir les différentes façons légales d’y accéder. La première alpha met désormais l’accent sur les **ebooks payants et gratuits de sources identifiées** ainsi que sur une **autoédition validée humainement**.
 
-Le dépôt est volontairement privé pendant la phase de conception. Le projet a vocation à rester sobre, accessible, interopérable et open source.
+Le dépôt reste privé pendant la phase de conception. Le projet a vocation à rester sobre, accessible, interopérable et open source.
 
 ## Principes non négociables
 
-- **Aucune IA** dans la recherche, le classement ou les recommandations.
+- **Aucune IA** dans la recherche, le classement, les recommandations ou la validation éditoriale.
 - Aucun profilage comportemental ni publicité ciblée.
-- Les résultats doivent être explicables : titre, auteur, édition, format, disponibilité, prix, distance ou source.
+- Les résultats doivent être explicables : œuvre, édition, source, format, DRM, disponibilité, prix ou date de vérification.
 - Les recommandations futures seront éditoriales/humaines ou basées sur des règles déterministes visibles et désactivables.
 - L’unité principale du catalogue est l’**œuvre**, pas l’ISBN.
 - Une œuvre peut regrouper plusieurs éditions et plusieurs modes d’accès.
 - Le statut « domaine public » ne doit jamais être déduit à l’aveugle : les cas incertains restent à vérifier.
+- Le gratuit n’est pas rétrogradé parce qu’il ne génère pas de vente.
+- L’autoédition n’est jamais publiée automatiquement : contrôles techniques déterministes, décision éditoriale humaine.
 - Les fichiers numériques doivent rester exportables/téléchargeables lorsque les droits le permettent ; pas d’enfermement dans un lecteur propriétaire.
 
 ## Socle actuel
 
-- PHP 8.2+ sans framework
-- HTML rendu côté serveur
-- CSS/JS natifs, sans dépendance front
-- SQLite pour le prototype local
-- schéma séparant œuvres, éditions, contributeurs d’œuvre, contributeurs d’édition, sources et offres
-- connecteurs de catalogue derrière une interface commune ; première implémentation : BnF SRU
+- PHP 8.2+ sans framework ;
+- HTML rendu côté serveur ;
+- CSS/JS natifs, sans dépendance front ;
+- SQLite pour l’alpha ;
+- schéma séparant œuvres, éditions, contributeurs, sources et offres ;
+- source bibliographique BnF SRU ;
+- source gratuite Gallica OPDS pour les EPUB du domaine public, avec filtrage conservateur ;
+- interface `OfferSource` séparée pour les futurs partenaires commerciaux ;
+- stockage privé des manuscrits hors webroot ;
+- journal des synchronisations et back-office alpha protégé.
 
-SQLite permet de démarrer très petit. Le modèle est conçu pour qu’un passage ultérieur à PostgreSQL ou MariaDB reste possible lorsque la volumétrie ou la concurrence d’écriture le justifieront.
+SQLite permet de démarrer petit. Le passage à MariaDB reste prévu lorsque la concurrence d’écriture ou la volumétrie réelle le justifieront.
 
 ## Lancer en local
 
-Prérequis : PHP 8.2+ avec PDO SQLite, `mbstring` et SimpleXML. `curl` est recommandé ; un fallback HTTP natif est prévu.
+Prérequis : PHP 8.2+ avec PDO SQLite, `mbstring`, SimpleXML et `fileinfo`. `curl` et `zip` sont recommandés.
 
 ```bash
-php -m | grep -Ei 'sqlite|mbstring|SimpleXML|curl'
+php bin/preflight.php
 php -S 127.0.0.1:8080 -t public
 ```
 
@@ -41,56 +47,99 @@ Puis ouvrir `http://127.0.0.1:8080`.
 
 La base `data/app.sqlite` reçoit automatiquement le schéma idempotent de `database/schema.sql`, puis le corpus MVP de `database/seed.sql` est chargé sans dupliquer les données.
 
-## Importer des éditions depuis la BnF
+## Pages principales
 
-Le premier connecteur automatisé utilise le service **SRU du Catalogue général de la BnF**. Il cherche des notices par auteur + titre, normalise les ISBN, conserve l’ARK BnF comme identifiant de provenance et rattache chaque notice à l’œuvre locale sans créer d’offre commerciale fictive.
+- `/` — recherche par œuvre ;
+- `/ebooks.php` — storefront ebook payant + gratuit ;
+- `/work.php?id=…` — fiche œuvre / éditions / offres ;
+- `/autoedition.php` — dépôt auteur, ressources ISBN et impression ;
+- `/feedback.php` — canal de retour alpha ;
+- `/projet.php` — périmètre et limites ;
+- `/sans-ia.php` — règles sans IA ;
+- `/admin/` — suivi des imports, retours et validation humaine des soumissions.
 
-Importer une seule œuvre :
+Les écritures publiques restent **fermées par défaut** :
+
+```text
+SELF_PUBLISHING_ENABLED=false
+FEEDBACK_ENABLED=false
+```
+
+Définir aussi un `ADMIN_TOKEN` long avant toute ouverture de l’alpha. Voir `.env.example` et `docs/O2SWITCH-DEPLOY.md`.
+
+## Sources bibliographiques et domaine public
+
+### BnF SRU
 
 ```bash
 php bin/import-bnf.php --work=2
-```
-
-Importer tout le petit corpus :
-
-```bash
 php bin/import-bnf.php --all --limit=20
 ```
 
-L’import est idempotent grâce à `source_records`. Une même notice BnF n’est pas réimportée à chaque cron. Les tests du parseur utilisent une fixture locale : la CI ne dépend pas du réseau BnF.
+L’import conserve les ARK BnF et les ISBN comme provenance et ne crée jamais de prix ou de stock à partir d’une simple notice bibliographique.
 
-Sur o2switch, cette commande pourra être placée dans un cron à faible fréquence une fois le déploiement installé. Voir `docs/CATALOG-SOURCES.md`.
+### Gallica OPDS
+
+```bash
+php bin/import-gallica.php --work=1
+php bin/import-gallica.php --all --limit=10
+```
+
+Au stade actuel, l’importeur Gallica est volontairement conservateur : il ne cherche que les œuvres locales déjà marquées `public_domain_status=yes` et de langue originale française, puis vérifie titre + auteur avant d’ajouter un lien EPUB. Le fichier reste servi par Gallica ; le MVP ne le réhéberge pas.
+
+Les parseurs BnF et Gallica sont testés sur fixtures locales afin que la CI ne dépende pas de leur disponibilité réseau.
+
+## Storefront ebook
+
+`/ebooks.php` réunit les offres gratuites et payantes dans le même rayon. Les offres commerciales affichent leur source, prix, format, DRM et fraîcheur. Une donnée dépassant `OFFER_MAX_AGE_DAYS` est signalée comme à revérifier.
+
+Le code sait désormais importer des offres commerciales par ISBN via l’interface `OfferSource` et `OfferImporter`. Aucun partenaire n’est prétendu intégré tant qu’un vrai accès contractuel/API n’existe pas.
+
+## Autoédition
+
+Le parcours `/autoedition.php` permet de préparer :
+
+- EPUB ;
+- couverture ;
+- PDF prêt à imprimer ;
+- ISBN ebook et papier ;
+- prix envisagés ;
+- mode gratuit ou payant ;
+- déclarations de droits et de qualité.
+
+Le formulaire contient le lien vers la demande d’ISBN AFNIL pour particuliers autoédités et des ressources d’impression/POD (Bookelis, CoolLibri, BoD) présentées sans partenariat ni classement sponsorisé.
+
+Les fichiers sont stockés hors `public/`. Le back-office permet : validation, demande de corrections, refus, puis publication. Un EPUB indépendant gratuit peut devenir téléchargeable après publication ; un EPUB indépendant payant reste seulement catalogué tant que le paiement n’est pas réellement intégré.
 
 ## État du MVP
 
-Le socle contient déjà :
+Déjà codé et testé :
 
-- une page d’accueil/recherche accessible et orientée MVP ;
-- une page publique `/projet.php` qui explique la promesse et les limites du prototype ;
-- une page publique `/sans-ia.php` qui documente l’absence d’IA, de profilage et de classement opaque ;
-- une recherche SQL simple et déterministe ;
-- des fiches `/work.php?id=…` qui distinguent œuvre, éditions, offres, droits et provenance ;
-- un corpus de démonstration de **21 œuvres** couvrant des cas de domaine public, des œuvres encore protégées et un cas volontairement à vérifier ;
-- six œuvres de George Orwell pour tester la différence entre domaine public du texte original et droits propres aux traductions ;
-- plusieurs éditions françaises réelles de *1984* avec ISBN, traductrice et notice BnF ;
-- deux volumes Folio réels de *Les Misérables* ;
-- une source Wikisource vérifiée pour *Les Misérables* et des liens de prêt BnF à vérifier côté source pour *1984* et *Animal Farm* ;
-- deux offres commerciales observées sur le même ebook de *1984*, qui démontrent que prix et DRM doivent être portés par l’offre vendeur ;
-- un connecteur BnF SRU et un importeur idempotent ;
-- une route de santé `/health.php` ;
-- les principes d’architecture et de non-IA ;
-- une feuille de route progressive ;
-- un kit de mise en avant avec pitchs, FAQ, appels à testeurs et séquence de lancement ;
-- une CI qui vérifie syntaxe PHP, extensions, parseur BnF hors réseau, schéma SQLite, corpus, recherche et pages principales.
+- recherche déterministe et fiches œuvre ;
+- corpus de 21 œuvres, cas domaine public/protégé/incertain ;
+- six Orwell et plusieurs éditions françaises réelles de *1984* ;
+- deux offres commerciales réelles du même EPUB avec DRM vendeur différents ;
+- storefront ebook gratuit + payant ;
+- BnF SRU + Gallica OPDS ;
+- autoédition avec contrôle des uploads, CSRF, validation humaine et back-office ;
+- feedback alpha ;
+- fraîcheur des offres ;
+- retries limités et journalisation des imports ;
+- interface de futurs connecteurs commerciaux ;
+- préflight et configuration Apache/o2switch ;
+- responsive, focus clavier et réduction des animations ;
+- CI couvrant le corpus, les parseurs, le storefront, l’autoédition et les routes principales.
 
-Il **n’y a encore aucun paiement, aucune gestion de compte, aucun panier multi-libraires et aucun agrégateur exhaustif de stocks**. Les prix commerciaux affichés sont datés et doivent être revérifiés chez leur source.
+Il **n’y a encore aucun paiement intégré, aucun panier multi-libraires, aucun compte lecteur et aucun flux exhaustif de stock libraire**. Les vraies intégrations commerciales dépendront des conditions et accès fournis par les partenaires.
 
 ## Documentation
 
 - `docs/ARCHITECTURE.md` — architecture et modèle de données
-- `docs/CATALOG-SOURCES.md` — stratégie de sources, import BnF et règles commerciales
+- `docs/CATALOG-SOURCES.md` — stratégie des sources bibliographiques et commerciales
+- `docs/O2SWITCH-DEPLOY.md` — déploiement alpha sur une Lune
+- `docs/SELF-PUBLISHING.md` — règles et workflow d’autoédition
 - `docs/PRINCIPLES.md` — principes produit
-- `docs/ROADMAP.md` — feuille de route fonctionnelle
-- `docs/CORPUS-NOTES.md` — règles de vérification bibliographique et juridique du corpus
-- `docs/MVP-PROMOTION-KIT.md` — positionnement, pitchs, FAQ, messages de test, critères et séquence de lancement
+- `docs/ROADMAP.md` — feuille de route
+- `docs/CORPUS-NOTES.md` — vérification bibliographique et juridique du corpus
+- `docs/MVP-PROMOTION-KIT.md` — positionnement et lancement
 - Issue `#1` — checklist opérationnelle avant première mise en avant publique
