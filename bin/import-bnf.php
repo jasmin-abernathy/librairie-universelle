@@ -34,7 +34,12 @@ if (isset($options['all'])) {
 
 $source = new BnfSruSource();
 $importer = new CatalogImporter($pdo, $source, (int) $sourceId);
+$runId = SyncLog::start($pdo, 'Bibliothèque nationale de France');
 $failed = 0;
+$totalInserted = 0;
+$totalSkipped = 0;
+$totalConflicts = 0;
+$errors = [];
 
 foreach ($workIds as $workId) {
     $titleStatement = $pdo->prepare('SELECT title FROM works WHERE id = :id');
@@ -42,13 +47,18 @@ foreach ($workIds as $workId) {
     $title = $titleStatement->fetchColumn();
 
     if ($title === false) {
-        fwrite(STDERR, "[{$workId}] œuvre inconnue\n");
+        $message = "[{$workId}] œuvre inconnue";
+        fwrite(STDERR, $message . "\n");
+        $errors[] = $message;
         $failed++;
         continue;
     }
 
     try {
         $stats = $importer->importWork($workId, $limit);
+        $totalInserted += (int) $stats['inserted'] + (int) $stats['linked'];
+        $totalSkipped += (int) $stats['skipped'];
+        $totalConflicts += (int) $stats['conflicts'];
         fwrite(STDOUT, sprintf(
             "[%d] %s — trouvées: %d, ajoutées: %d, reliées: %d, déjà vues: %d, conflits: %d\n",
             $workId,
@@ -60,9 +70,22 @@ foreach ($workIds as $workId) {
             $stats['conflicts']
         ));
     } catch (Throwable $error) {
-        fwrite(STDERR, sprintf("[%d] %s — ERREUR: %s\n", $workId, $title, $error->getMessage()));
+        $message = sprintf("[%d] %s — ERREUR: %s", $workId, $title, $error->getMessage());
+        fwrite(STDERR, $message . "\n");
+        $errors[] = $message;
         $failed++;
     }
 }
+
+$status = $failed === 0 ? 'success' : ($failed < count($workIds) ? 'partial' : 'failed');
+SyncLog::finish(
+    $pdo,
+    $runId,
+    $status,
+    $totalInserted,
+    $totalSkipped,
+    $totalConflicts,
+    $errors !== [] ? mb_substr(implode("\n", $errors), 0, 5000) : null
+);
 
 exit($failed === 0 ? 0 : 2);
