@@ -46,7 +46,7 @@ jobs:
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'Josée Kamoun'
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep '9782072938245'
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'Adobe DRM'
-          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep '>CARE<'
+          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'DRM : CARE'
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'traduction française'
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=20' | grep 'À vérifier'
           curl --fail --silent http://127.0.0.1:8080/projet.php | grep 'Toutes les façons légales de lire.'
