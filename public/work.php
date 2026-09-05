@@ -62,6 +62,18 @@ function priceLabel(?int $cents, ?string $currency): string
     $amount = number_format($cents / 100, 2, ',', ' ');
     return $currency === 'EUR' || $currency === null ? $amount . ' €' : $amount . ' ' . $currency;
 }
+
+function offerIsStale(?string $checkedAt, int $maxAgeDays): bool
+{
+    if ($checkedAt === null || trim($checkedAt) === '') {
+        return true;
+    }
+    try {
+        return new DateTimeImmutable($checkedAt) < (new DateTimeImmutable('now'))->modify('-' . $maxAgeDays . ' days');
+    } catch (Throwable) {
+        return true;
+    }
+}
 ?>
 <!doctype html>
 <html lang="fr">
@@ -77,6 +89,8 @@ function priceLabel(?int $cents, ?string $currency): string
 <header class="site-header">
     <a class="brand" href="/" aria-label="Accueil — Librairie universelle">📚 <span>Librairie universelle <small>nom de travail</small></span></a>
     <nav class="site-nav" aria-label="Navigation principale">
+        <a href="/ebooks.php">Ebooks</a>
+        <a href="/autoedition.php">Autoédition</a>
         <a href="/projet.php">Le projet</a>
         <a href="/sans-ia.php">Sans IA</a>
     </nav>
@@ -129,6 +143,7 @@ function priceLabel(?int $cents, ?string $currency): string
             <?php else: ?>
                 <div class="offer-list">
                 <?php foreach ($record['offers'] as $offer): ?>
+                    <?php $stale = offerIsStale($offer['checked_at'], (int) $config['offer_max_age_days']); ?>
                     <article class="offer-card">
                         <div>
                             <p class="work-kind"><?= e($offer['source_name']) ?></p>
@@ -142,8 +157,8 @@ function priceLabel(?int $cents, ?string $currency): string
                             </p>
                             <?php if ($offer['availability'] === 'check_on_source'): ?>
                                 <p class="availability-warning">Disponibilité à vérifier sur la source.</p>
-                            <?php elseif ($offer['availability'] === 'available_when_checked'): ?>
-                                <p class="availability-warning">Prix et disponibilité observés le <?= e($offer['checked_at']) ?> ; à revérifier chez le vendeur.</p>
+                            <?php elseif (!empty($offer['checked_at'])): ?>
+                                <p class="availability-warning">Donnée vérifiée le <?= e(substr((string) $offer['checked_at'], 0, 10)) ?><?= $stale ? ' — à revérifier avant achat.' : '.' ?></p>
                             <?php endif; ?>
                         </div>
                         <a class="primary-link" href="<?= e($offer['url']) ?>" rel="noopener noreferrer">Voir sur la source <span aria-hidden="true">↗</span></a>
@@ -182,12 +197,17 @@ function priceLabel(?int $cents, ?string $currency): string
         </section>
 
         <p class="source-policy">Les informations du MVP sont conservées avec leur provenance. Une œuvre, une édition et une offre sont trois objets différents : leurs droits, prix, DRM et disponibilités peuvent donc être différents.</p>
-        <a class="text-link" href="/">← Revenir à la recherche</a>
+        <div class="cta-row">
+            <a class="text-link" href="/">← Revenir à la recherche</a>
+            <a class="text-link" href="/ebooks.php">Parcourir le storefront ebook</a>
+            <a class="text-link" href="/feedback.php?kind=catalog">Signaler une erreur sur cette fiche</a>
+        </div>
     </article>
 <?php endif; ?>
 </main>
 
 <footer>
+    <div class="footer-links"><a href="/ebooks.php">Ebooks</a><a href="/autoedition.php">Autoédition</a><a href="/feedback.php">Donner un retour</a></div>
     <p>Prototype sans publicité, sans traqueur et sans moteur de recommandation opaque.</p>
 </footer>
 </body>
