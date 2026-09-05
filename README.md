@@ -113,7 +113,7 @@ Les fichiers sont stockés hors `public/`. Le back-office permet : validation, d
 
 ## État du MVP
 
-Déjà codé et testé :
+Déjà codé et couvert par la CI :
 
 - recherche déterministe et fiches œuvre ;
 - corpus de 21 œuvres, cas domaine public/protégé/incertain ;
@@ -128,7 +128,9 @@ Déjà codé et testé :
 - interface de futurs connecteurs commerciaux ;
 - préflight et configuration Apache/o2switch ;
 - responsive, focus clavier et réduction des animations ;
-- CI couvrant le corpus, les parseurs, le storefront, l’autoédition et les routes principales.
+- tests du corpus, des parseurs, du storefront, de l’autoédition et des routes principales.
+
+**Pas encore réalisé en conditions réelles :** déploiement sur la Lune o2switch, import réseau BnF/Gallica depuis cette Lune, test avec vrais fichiers envoyés via le formulaire, audit sur vrais appareils/lecteur d’écran et alpha auprès d’utilisateurs.
 
 Il **n’y a encore aucun paiement intégré, aucun panier multi-libraires, aucun compte lecteur et aucun flux exhaustif de stock libraire**. Les vraies intégrations commerciales dépendront des conditions et accès fournis par les partenaires.
 
