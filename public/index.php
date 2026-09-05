@@ -27,11 +27,11 @@ function rightsLabel(string $status): string
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Chercher une œuvre et choisir comment la lire : papier, numérique, bibliothèque ou domaine public. Prototype sans IA ni profilage.">
+    <meta name="description" content="Chercher une œuvre et choisir comment la lire : ebook payant ou gratuit, papier, bibliothèque ou domaine public. Prototype sans IA ni profilage.">
     <meta name="theme-color" content="#f7f3ea">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Une recherche. Toutes les façons légales de lire.">
-    <meta property="og:description" content="Un MVP centré sur l’œuvre : papier, numérique, domaine public et sources identifiées, sans IA ni recommandation opaque.">
+    <meta property="og:description" content="Un MVP centré sur l’œuvre : numérique payant ou gratuit, domaine public, autoédition validée et sources identifiées, sans IA.">
     <title><?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css">
     <script src="/assets/js/app.js" defer></script>
@@ -41,6 +41,8 @@ function rightsLabel(string $status): string
 <header class="site-header">
     <a class="brand" href="/" aria-label="Accueil — Librairie universelle">📚 <span>Librairie universelle <small>nom de travail</small></span></a>
     <nav class="site-nav" aria-label="Navigation principale">
+        <a href="/ebooks.php">Ebooks</a>
+        <a href="/autoedition.php">Autoédition</a>
         <a href="/projet.php">Le projet</a>
         <a href="/sans-ia.php">Sans IA</a>
     </nav>
@@ -51,7 +53,7 @@ function rightsLabel(string $status): string
         <div class="hero-meta"><span class="status-badge">MVP en construction</span><span>Recherche déterministe · sources explicites</span></div>
         <p class="eyebrow">Une recherche. Toutes les façons légales de lire.</p>
         <h1 id="hero-title">Chercher une œuvre, pas un produit.</h1>
-        <p class="lede">Papier, ebook, audio, librairie locale, bibliothèque ou téléchargement légal gratuit lorsque l’œuvre et la version le permettent.</p>
+        <p class="lede">Ebook payant ou gratuit, papier, audio, librairie locale, bibliothèque ou domaine public : le choix reste visible au lieu d’être décidé à votre place.</p>
 
         <form class="search-form" action="/" method="get" role="search">
             <label for="q">Titre, auteur ou autrice</label>
@@ -76,8 +78,9 @@ function rightsLabel(string $status): string
             <li>Sources identifiées</li>
         </ul>
         <div class="cta-row hero-links">
+            <a class="button-link" href="/ebooks.php">Parcourir les ebooks</a>
+            <a class="text-link" href="/autoedition.php">Publier en indépendant</a>
             <a class="text-link" href="/projet.php">Comprendre le MVP</a>
-            <a class="text-link" href="/sans-ia.php">Pourquoi sans IA ?</a>
         </div>
     </section>
 
@@ -131,11 +134,11 @@ function rightsLabel(string $status): string
         </section>
 
         <section class="modes" aria-labelledby="modes-title">
-            <h2 id="modes-title">Ce que cette fiche d’œuvre réunira</h2>
+            <h2 id="modes-title">Ce que cette fiche d’œuvre réunit progressivement</h2>
             <div class="mode-grid">
+                <article><span aria-hidden="true">⚡</span><h3>Ebooks</h3><p>Gratuits et payants dans le même storefront, avec format, DRM, prix, fraîcheur et source.</p></article>
+                <article><span aria-hidden="true">✍️</span><h3>Autoédition</h3><p>Des auteurs indépendants, mais après contrôle des fichiers et validation humaine — jamais par publication automatique de masse.</p></article>
                 <article><span aria-hidden="true">🏪</span><h3>Librairies</h3><p>Neuf, occasion, retrait local et disponibilité lorsque la donnée est réellement accessible.</p></article>
-                <article><span aria-hidden="true">⚡</span><h3>Numérique</h3><p>EPUB, PDF et audio avec formats et DRM clairement annoncés.</p></article>
-                <article><span aria-hidden="true">🏛️</span><h3>Bibliothèques</h3><p>Emprunt lorsque des données ouvertes ou partenaires le permettent.</p></article>
                 <article><span aria-hidden="true">🟢</span><h3>Domaine public</h3><p>Lire ou télécharger gratuitement depuis une source légitime et identifiable.</p></article>
             </div>
         </section>
@@ -143,16 +146,22 @@ function rightsLabel(string $status): string
         <section class="content-section callout" aria-labelledby="scope-title">
             <div>
                 <div class="section-kicker">Déjà testable</div>
-                <h2 id="scope-title">Le premier corpus réel est en place.</h2>
-                <p>Les Misérables et plusieurs œuvres de George Orwell permettent déjà de tester la recherche, la distinction œuvre/édition et les cas de domaine public. Pour Orwell, le site distingue explicitement le texte original des traductions.</p>
+                <h2 id="scope-title">Le storefront numérique et le parcours auteur sont codés.</h2>
+                <p>Les Misérables, Orwell et les premières offres commerciales servent de cas réels. Les dépôts d’autoédition restent fermés par défaut jusqu’à l’activation de l’alpha.</p>
             </div>
-            <a class="button-link secondary" href="/?q=George+Orwell">Tester Orwell</a>
+            <div class="cta-row">
+                <a class="button-link secondary" href="/ebooks.php">Voir les ebooks</a>
+                <a class="text-link" href="/autoedition.php">Voir l’autoédition</a>
+            </div>
         </section>
     <?php endif; ?>
 </main>
 
 <footer>
     <div class="footer-links">
+        <a href="/ebooks.php">Ebooks</a>
+        <a href="/autoedition.php">Autoédition</a>
+        <a href="/feedback.php">Donner un retour</a>
         <a href="/projet.php">Le projet</a>
         <a href="/sans-ia.php">Sans IA</a>
     </div>
