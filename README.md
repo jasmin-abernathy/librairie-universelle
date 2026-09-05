@@ -23,9 +23,9 @@ Le dépôt est volontairement privé pendant la phase de conception. Le projet a
 - HTML rendu côté serveur
 - CSS/JS natifs, sans dépendance front
 - SQLite pour le prototype local
-- schéma prévu pour séparer œuvres, éditions, contributeurs, sources et offres
+- schéma séparant œuvres, éditions, contributeurs, sources et offres
 
-SQLite permet de démarrer très petit. Le modèle est conçu pour qu’un passage ultérieur à PostgreSQL soit simple lorsque la volumétrie ou la concurrence d’écriture le justifieront.
+SQLite permet de démarrer très petit. Le modèle est conçu pour qu’un passage ultérieur à PostgreSQL ou MariaDB reste possible lorsque la volumétrie ou la concurrence d’écriture le justifieront.
 
 ## Lancer en local
 
@@ -38,7 +38,7 @@ php -S 127.0.0.1:8080 -t public
 
 Puis ouvrir `http://127.0.0.1:8080`.
 
-La base `data/app.sqlite` est créée automatiquement au premier lancement à partir de `database/schema.sql`.
+La base `data/app.sqlite` est créée automatiquement au premier lancement à partir de `database/schema.sql`, puis le corpus MVP de `database/seed.sql` est chargé de façon idempotente.
 
 ## État du MVP
 
@@ -48,19 +48,23 @@ Le socle contient déjà :
 - une page publique `/projet.php` qui explique la promesse et les limites du prototype ;
 - une page publique `/sans-ia.php` qui documente l’absence d’IA, de profilage et de classement opaque ;
 - une recherche SQL simple et déterministe ;
-- le modèle de données initial ;
+- des fiches `/work.php?id=…` qui distinguent œuvre, éditions, offres, droits et provenance ;
+- un corpus de démonstration de **21 œuvres** couvrant des cas de domaine public, des œuvres encore protégées et un cas volontairement à vérifier ;
+- six œuvres de George Orwell pour tester la différence entre domaine public du texte original et droits propres aux traductions ;
+- une source Wikisource vérifiée pour *Les Misérables* et des liens de prêt BnF à vérifier côté source pour *1984* et *Animal Farm* ;
 - une route de santé `/health.php` ;
 - les principes d’architecture et de non-IA ;
 - une feuille de route progressive ;
 - un kit de mise en avant avec pitchs, FAQ, appels à testeurs et séquence de lancement ;
-- un contrôle CI minimal de la syntaxe PHP, des extensions requises, du schéma SQLite et des pages publiques principales.
+- une CI qui vérifie syntaxe PHP, extensions, schéma SQLite, corpus, recherche et pages principales.
 
-Il **n’y a encore aucun import de catalogue externe, aucun paiement, aucune gestion de compte et aucun agrégateur de stock**. Ces briques seront ajoutées une par une après vérification des API, licences et contraintes juridiques.
+Il **n’y a encore aucun paiement, aucune gestion de compte, aucun panier multi-libraires et aucun agrégateur exhaustif de stocks**. Ces briques seront ajoutées une par une après vérification des API, licences et contraintes juridiques.
 
 ## Documentation
 
 - `docs/ARCHITECTURE.md` — architecture et modèle de données
 - `docs/PRINCIPLES.md` — principes produit
 - `docs/ROADMAP.md` — feuille de route fonctionnelle
+- `docs/CORPUS-NOTES.md` — règles de vérification bibliographique et juridique du corpus
 - `docs/MVP-PROMOTION-KIT.md` — positionnement, pitchs, FAQ, messages de test, critères et séquence de lancement
 - Issue `#1` — checklist opérationnelle avant première mise en avant publique
