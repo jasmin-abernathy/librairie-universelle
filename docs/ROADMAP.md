@@ -10,7 +10,7 @@
 - [x] principes sans IA et sans profilage
 - [x] CI minimale
 
-## Phase 1 — MVP démontrable ✅ en grande partie
+## Phase 1 — MVP alpha ✅ côté code
 
 - [x] landing qui explique la promesse sans survendre
 - [x] corpus réel de 21 œuvres
@@ -19,26 +19,56 @@
 - [x] plusieurs éditions réelles pour une même œuvre
 - [x] traducteurs et contributeurs d’édition distincts des auteurs
 - [x] ISBN/EAN et provenance visibles
-- [x] première source bibliographique automatisée : BnF SRU
+- [x] BnF SRU : première source bibliographique automatisée
 - [x] import idempotent ciblé
 - [x] premières offres commerciales réelles et datées
 - [x] prix et DRM modélisés au niveau de l’offre vendeur
-- [ ] audit clavier / responsive / contrastes
-- [ ] canal simple de retour alpha
-- [ ] alpha privée
+- [x] storefront ebook gratuit + payant
+- [x] politique de fraîcheur des offres
+- [x] Gallica OPDS préparé pour des EPUB gratuits du domaine public
+- [x] canal simple de retour alpha, fermé par défaut jusqu’au déploiement
+- [x] autoédition : dépôt EPUB / PDF / couverture
+- [x] validation ISBN-10 / ISBN-13
+- [x] lien AFNIL et ressources d’impression/POD
+- [x] stockage privé des manuscrits hors webroot
+- [x] validation éditoriale humaine : corrections / validation / refus / publication
+- [x] back-office alpha protégé
+- [x] journalisation des synchronisations et retries limités
+- [x] corrections clavier / focus / responsive / réduction des animations au niveau du code
+- [x] préflight et configuration o2switch prudente
+- [ ] test réel mobile / clavier / lecteur d’écran sur le déploiement
+- [ ] alpha privée avec 5 à 10 personnes
 
 ## Phase 2 — sources et libraires
 
-- [ ] stabiliser les imports BnF sur davantage d’œuvres
+- [ ] stabiliser les imports BnF et Gallica sur davantage d’œuvres après test serveur réel
 - [ ] déterminer les conditions actuelles d’intégration de Place des Libraires / leslibraires.fr
 - [ ] déterminer les conditions d’intégration ePagine pour l’ebook
 - [ ] obtenir, si nécessaire, identifiant affilié / contrat / accès partenaire
-- [ ] créer une interface de connecteur d’offres séparée des sources bibliographiques
+- [x] interface de connecteur d’offres séparée des sources bibliographiques (`OfferSource`)
+- [x] importeur d’offres par ISBN, idempotent (`OfferImporter`)
+- [ ] écrire le premier adaptateur commercial réel après obtention d’un accès autorisé
 - [ ] afficher une librairie bénéficiaire ou choisie quand le partenaire le permet
 - [ ] ajouter plusieurs vendeurs sans favoriser artificiellement celui qui rémunère le plus
-- [ ] politique explicite de fraîcheur des prix et disponibilités
 
-## Phase 3 — disponibilité locale
+## Phase 3 — autoédition commerciale
+
+Le dépôt et la validation humaine sont déjà codés. Il reste les briques qui impliquent réellement une transaction ou une relation contractuelle.
+
+- [ ] conditions de distribution à accepter par l’auteur/autrice
+- [ ] notifications et demandes de corrections par e-mail
+- [ ] historique des versions de fichiers
+- [ ] paiement d’un ebook autoédité
+- [ ] livraison sécurisée après paiement
+- [ ] calcul et reversement des revenus auteur
+- [ ] facture / suivi de commande
+- [ ] éventuelle connexion imprimeur / POD
+- [ ] aide au dépôt légal
+- [ ] tableau de bord auteur / ventes
+
+Le MVP ne doit jamais simuler ces fonctions tant qu’elles ne sont pas réellement disponibles.
+
+## Phase 4 — disponibilité locale
 
 - [ ] données fiables de librairies et stocks
 - [ ] recherche autour d’un lieu uniquement sur demande de l’utilisateur
@@ -47,17 +77,18 @@
 - [ ] occasion lorsque les sources le permettent
 - [ ] bibliothèques et prêt local lorsque la donnée existe
 
-## Phase 4 — numérique
+## Phase 5 — numérique étendu
 
 - [ ] plusieurs distributeurs / libraires numériques
 - [ ] compatibilité liseuse déclarative
-- [ ] DRM et restrictions compréhensibles
-- [ ] accessibilité des ebooks
+- [x] DRM et restrictions affichables au niveau de l’offre
+- [ ] accessibilité des ebooks : métadonnées et filtres plus complets
 - [ ] audio
-- [ ] domaine public : meilleurs fichiers légitimement réutilisables
+- [x] domaine public : source Gallica OPDS préparée et Wikisource déjà utilisé
+- [ ] Standard Ebooks ou autre source qualitative après vérification juridique France œuvre par œuvre
 - [ ] éventuel lecteur web non captif
 
-## Phase 5 — transaction
+## Phase 6 — transaction générale
 
 À ne commencer qu’après validation du parcours œuvre → édition → offre.
 
@@ -67,7 +98,7 @@
 - [ ] gestion des commandes et retours
 - [ ] carte cadeau réseau
 
-## Phase 6 — comptes facultatifs
+## Phase 7 — comptes facultatifs
 
 - [ ] compte lecteur optionnel
 - [ ] librairie préférée
@@ -76,7 +107,7 @@
 - [ ] préférences explicites de formats / liseuse
 - [ ] aucune personnalisation comportementale implicite
 
-## Phase 7 — éditorial et communauté
+## Phase 8 — éditorial et communauté
 
 - [ ] sélections de libraires
 - [ ] listes thématiques humaines
@@ -88,19 +119,26 @@ Toujours sans moteur de recommandation par IA ni profilage caché.
 
 ## Infrastructure
 
-### Prototype
+### Prototype / alpha
 
 SQLite + PHP suffit.
 
 ### Première production o2switch
 
-- une Lune Cloud dédiée ;
-- PHP ;
-- MariaDB lorsque les imports/écritures le justifient ;
-- cron à faible fréquence pour les sources bibliographiques ;
-- secrets hors dépôt ;
-- cache si nécessaire ;
-- aucun worker permanent requis au stade du MVP.
+- [x] architecture cible documentée pour une Lune Cloud dédiée
+- [x] document root `public/`
+- [x] stockage privé hors webroot
+- [x] headers de sécurité Apache prudents
+- [x] préflight PHP
+- [x] cron BnF préparé
+- [x] cron Gallica préparé
+- [ ] créer réellement la Lune / domaine / dépôt serveur
+- [ ] exécuter le préflight sur o2switch
+- [ ] installer les crons réels
+- [ ] vérifier sauvegardes SQLite + manuscrits
+- [ ] ouvrir `SELF_PUBLISHING_ENABLED` et `FEEDBACK_ENABLED` seulement après ces tests
+
+MariaDB devient utile lorsque les imports/écritures concurrentes le justifient. Aucun worker permanent n’est requis au stade de l’alpha.
 
 ## Règle de progression
 
