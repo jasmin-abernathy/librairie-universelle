@@ -26,7 +26,7 @@ jobs:
       - name: SQLite schema and corpus smoke test
         run: |
           rm -f data/app.sqlite
-          php -r '$config = require "config/app.php"; require "src/Database.php"; require "src/Search.php"; $pdo = Database::connect($config); $tables = (int) $pdo->query("SELECT COUNT(*) FROM sqlite_master WHERE type = '\''table'\''")->fetchColumn(); if ($tables < 6) { fwrite(STDERR, "Schema incomplet\n"); exit(1); } $works = (int) $pdo->query("SELECT COUNT(*) FROM works")->fetchColumn(); if ($works < 7) { fwrite(STDERR, "Corpus initial absent\n"); exit(1); } $orwell = Search::works($pdo, "George Orwell"); if (count($orwell) < 6) { fwrite(STDERR, "Corpus Orwell incomplet\n"); exit(1); }'
+          php -r '$config = require "config/app.php"; require "src/Database.php"; require "src/Search.php"; $pdo = Database::connect($config); $tables = (int) $pdo->query("SELECT COUNT(*) FROM sqlite_master WHERE type = '\''table'\''")->fetchColumn(); if ($tables < 6) { fwrite(STDERR, "Schema incomplet\n"); exit(1); } $works = (int) $pdo->query("SELECT COUNT(*) FROM works")->fetchColumn(); if ($works < 20) { fwrite(STDERR, "Corpus MVP trop petit\n"); exit(1); } $orwell = Search::works($pdo, "George Orwell"); if (count($orwell) < 6) { fwrite(STDERR, "Corpus Orwell incomplet\n"); exit(1); } $camus = Search::works($pdo, "Albert Camus"); if (count($camus) < 2) { fwrite(STDERR, "Cas protégé Camus absent\n"); exit(1); } $review = (int) $pdo->query("SELECT COUNT(*) FROM works WHERE public_domain_status = '\''review'\''")->fetchColumn(); if ($review < 1) { fwrite(STDERR, "Cas juridique à vérifier absent\n"); exit(1); }'
 
       - name: HTTP smoke test
         run: |
@@ -37,8 +37,11 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/health.php | grep '"status":"ok"'
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Chercher une œuvre, pas un produit.'
           curl --fail --silent 'http://127.0.0.1:8080/?q=George%20Orwell' | grep 'La Ferme des animaux'
+          curl --fail --silent 'http://127.0.0.1:8080/?q=Albert%20Camus' | grep '>Non<'
+          curl --fail --silent 'http://127.0.0.1:8080/?q=Le%20Petit%20Prince' | grep 'À vérifier'
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=1' | grep 'Wikisource'
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'Nineteen Eighty-Four'
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'traduction française'
+          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=20' | grep 'À vérifier'
           curl --fail --silent http://127.0.0.1:8080/projet.php | grep 'Toutes les façons légales de lire.'
           curl --fail --silent http://127.0.0.1:8080/sans-ia.php | grep 'Pas d’IA pour décider ce que vous devriez lire.'
