@@ -10,6 +10,8 @@ require_once __DIR__ . '/CatalogSource.php';
 require_once __DIR__ . '/HttpClient.php';
 require_once __DIR__ . '/BnfSruSource.php';
 require_once __DIR__ . '/CatalogImporter.php';
+require_once __DIR__ . '/GallicaOpdsSource.php';
+require_once __DIR__ . '/GallicaImporter.php';
 require_once __DIR__ . '/Isbn.php';
 require_once __DIR__ . '/Csrf.php';
 require_once __DIR__ . '/UploadValidator.php';
