@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<srw:searchRetrieveResponse xmlns:srw="http://www.loc.gov/zing/srw/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <srw:version>1.2</srw:version>
+  <srw:numberOfRecords>2</srw:numberOfRecords>
+  <srw:records>
+    <srw:record>
+      <srw:recordSchema>info:srw/schema/1/dc-v1.1</srw:recordSchema>
+      <srw:recordData>
+        <oai_dc:dc>
+          <dc:title>1984 [Texte imprimé]</dc:title>
+          <dc:creator>Orwell, George (1903-1950)</dc:creator>
+          <dc:contributor>Kamoun, Josée</dc:contributor>
+          <dc:publisher>Gallimard</dc:publisher>
+          <dc:date>2020</dc:date>
+          <dc:language>fre</dc:language>
+          <dc:type>Text</dc:type>
+          <dc:identifier>ISBN 978-2-07-287849-7</dc:identifier>
+          <dc:identifier>ark:/12148/cb465691674</dc:identifier>
+        </oai_dc:dc>
+      </srw:recordData>
+    </srw:record>
+    <srw:record>
+      <srw:recordSchema>info:srw/schema/1/dc-v1.1</srw:recordSchema>
+      <srw:recordData>
+        <oai_dc:dc>
+          <dc:title>1984</dc:title>
+          <dc:creator>Orwell, George (1903-1950)</dc:creator>
+          <dc:contributor>Audiberti, Amélie</dc:contributor>
+          <dc:publisher>Gallimard</dc:publisher>
+          <dc:date>2015</dc:date>
+          <dc:language>fre</dc:language>
+          <dc:type>Text</dc:type>
+          <dc:identifier>ISBN 2-07-024810-0</dc:identifier>
+          <dc:identifier>https://catalogue.bnf.fr/ark:/12148/cb44346567g</dc:identifier>
+        </oai_dc:dc>
+      </srw:recordData>
+    </srw:record>
+  </srw:records>
+</srw:searchRetrieveResponse>
