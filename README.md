@@ -1,5 +1,7 @@
 # Librairie universelle
 
+> **Nom de travail** — le nom public définitif reste à choisir et à vérifier.
+
 MVP web pour chercher une **œuvre** une seule fois et voir, à terme, les différentes façons légales d’y accéder : livre neuf, occasion, librairie locale, ebook, audio, bibliothèque et téléchargement gratuit lorsqu’une version est réellement dans le domaine public.
 
 Le dépôt est volontairement privé pendant la phase de conception. Le projet a vocation à rester sobre, accessible, interopérable et open source.
@@ -42,14 +44,23 @@ La base `data/app.sqlite` est créée automatiquement au premier lancement à pa
 
 Le socle contient déjà :
 
-- une page d’accueil/recherche accessible ;
+- une page d’accueil/recherche accessible et orientée MVP ;
+- une page publique `/projet.php` qui explique la promesse et les limites du prototype ;
+- une page publique `/sans-ia.php` qui documente l’absence d’IA, de profilage et de classement opaque ;
 - une recherche SQL simple et déterministe ;
 - le modèle de données initial ;
 - une route de santé `/health.php` ;
 - les principes d’architecture et de non-IA ;
 - une feuille de route progressive ;
-- un contrôle CI minimal de la syntaxe PHP, des extensions requises, du schéma SQLite et de la route de santé.
+- un kit de mise en avant avec pitchs, FAQ, appels à testeurs et séquence de lancement ;
+- un contrôle CI minimal de la syntaxe PHP, des extensions requises, du schéma SQLite et des pages publiques principales.
 
 Il **n’y a encore aucun import de catalogue externe, aucun paiement, aucune gestion de compte et aucun agrégateur de stock**. Ces briques seront ajoutées une par une après vérification des API, licences et contraintes juridiques.
 
-Voir `docs/ARCHITECTURE.md`, `docs/PRINCIPLES.md` et `docs/ROADMAP.md`.
+## Documentation
+
+- `docs/ARCHITECTURE.md` — architecture et modèle de données
+- `docs/PRINCIPLES.md` — principes produit
+- `docs/ROADMAP.md` — feuille de route fonctionnelle
+- `docs/MVP-PROMOTION-KIT.md` — positionnement, pitchs, FAQ, messages de test, critères et séquence de lancement
+- Issue `#1` — checklist opérationnelle avant première mise en avant publique
