@@ -29,6 +29,9 @@ jobs:
       - name: BnF SRU parser fixture
         run: php tests/BnfSruSourceTest.php
 
+      - name: Gallica OPDS parser fixture
+        run: php tests/GallicaOpdsSourceTest.php
+
       - name: Storefront and indie publishing workflow
         run: php tests/MvpWorkflowTest.php
 
