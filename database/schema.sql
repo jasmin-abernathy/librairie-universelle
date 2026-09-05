@@ -55,6 +55,15 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_editions_isbn13
     WHERE isbn13 IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_editions_work ON editions(work_id);
 
+CREATE TABLE IF NOT EXISTS edition_contributors (
+    edition_id INTEGER NOT NULL REFERENCES editions(id) ON DELETE CASCADE,
+    contributor_id INTEGER NOT NULL REFERENCES contributors(id) ON DELETE CASCADE,
+    role TEXT NOT NULL DEFAULT 'contributor',
+    PRIMARY KEY (edition_id, contributor_id, role)
+);
+
+CREATE INDEX IF NOT EXISTS idx_edition_contributors_edition ON edition_contributors(edition_id);
+
 CREATE TABLE IF NOT EXISTS sources (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
