@@ -27,10 +27,10 @@ SQLite permet de démarrer très petit. Le modèle est conçu pour qu’un passa
 
 ## Lancer en local
 
-Prérequis : PHP 8.2+ avec PDO SQLite.
+Prérequis : PHP 8.2+ avec PDO SQLite et `mbstring`.
 
 ```bash
-php -m | grep -i sqlite
+php -m | grep -Ei 'sqlite|mbstring'
 php -S 127.0.0.1:8080 -t public
 ```
 
@@ -47,7 +47,8 @@ Le socle contient déjà :
 - le modèle de données initial ;
 - une route de santé `/health.php` ;
 - les principes d’architecture et de non-IA ;
-- une feuille de route progressive.
+- une feuille de route progressive ;
+- un contrôle CI minimal de la syntaxe PHP, des extensions requises, du schéma SQLite et de la route de santé.
 
 Il **n’y a encore aucun import de catalogue externe, aucun paiement, aucune gestion de compte et aucun agrégateur de stock**. Ces briques seront ajoutées une par une après vérification des API, licences et contraintes juridiques.
 
