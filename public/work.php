@@ -6,9 +6,18 @@ declare(strict_types=1);
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 $record = $id ? WorkCatalog::find($pdo, (int) $id) : null;
+$localAvailability = [];
 
 if ($record === null) {
     http_response_code(404);
+} elseif ($config['moselle_base_url'] !== '') {
+    $isbns = [];
+    foreach ($record['editions'] as $edition) {
+        if (!empty($edition['isbn13'])) {
+            $isbns[] = (string) $edition['isbn13'];
+        }
+    }
+    $localAvailability = (new MoselleAvailabilityClient((string) $config['moselle_base_url']))->availabilityForIsbns($isbns);
 }
 
 function e(?string $value): string
@@ -74,6 +83,25 @@ function offerIsStale(?string $checkedAt, int $maxAgeDays): bool
         return true;
     }
 }
+
+function localAvailabilityRows(array $availability): array
+{
+    $rows = [];
+    foreach ($availability as $isbn => $locations) {
+        if (!is_array($locations)) {
+            continue;
+        }
+        foreach ($locations as $location) {
+            if (is_array($location)) {
+                $location['isbn13'] = (string) $isbn;
+                $rows[] = $location;
+            }
+        }
+    }
+    return $rows;
+}
+
+$localRows = localAvailabilityRows($localAvailability);
 ?>
 <!doctype html>
 <html lang="fr">
@@ -168,6 +196,37 @@ function offerIsStale(?string $checkedAt, int $maxAgeDays): bool
                 <p class="source-policy"><strong>Pourquoi le DRM est affiché par vendeur :</strong> une même édition numérique peut être livrée avec des protections différentes selon la plateforme. Le site ne déduit donc jamais un DRM global à partir du seul ISBN.</p>
             <?php endif; ?>
         </section>
+
+        <?php if ($config['moselle_base_url'] !== ''): ?>
+        <section class="access-section" aria-labelledby="moselle-title">
+            <div class="section-heading">
+                <h2 id="moselle-title">Acheter le livre en Moselle</h2>
+                <span><?= count($localRows) ?> disponibilité<?= count($localRows) === 1 ? '' : 's' ?> confirmée<?= count($localRows) === 1 ? '' : 's' ?></span>
+            </div>
+            <?php if ($localRows === []): ?>
+                <div class="empty-state">
+                    <h3>Aucun stock local confirmé pour ces éditions.</h3>
+                    <p>Le pilote Moselle n’affiche jamais une librairie simplement parce qu’elle existe : il faut qu’elle ait accepté le dispositif et qu’un stock ait été confirmé.</p>
+                </div>
+            <?php else: ?>
+                <div class="offer-list">
+                <?php foreach ($localRows as $location): ?>
+                    <article class="offer-card">
+                        <div>
+                            <p class="work-kind">Librairie partenaire · Moselle</p>
+                            <h3><?= e((string) ($location['bookstore_name'] ?? 'Librairie')) ?></h3>
+                            <p>ISBN <?= e((string) ($location['isbn13'] ?? '')) ?> · <strong><?= (int) ($location['available_quantity'] ?? 0) ?> exemplaire<?= (int) ($location['available_quantity'] ?? 0) === 1 ? '' : 's' ?> disponible<?= (int) ($location['available_quantity'] ?? 0) === 1 ? '' : 's' ?></strong></p>
+                            <p><?= e(trim((string) ($location['address'] ?? '') . ' ' . (string) ($location['postcode'] ?? '') . ' ' . (string) ($location['city'] ?? ''))) ?></p>
+                            <?php if (!empty($location['checked_at'])): ?><p class="availability-warning">Stock confirmé le <?= e(substr((string) $location['checked_at'], 0, 10)) ?>.</p><?php endif; ?>
+                        </div>
+                        <a class="primary-link" href="<?= e(rtrim((string) $config['moselle_base_url'], '/') . '/bookstores.php?isbn=' . rawurlencode((string) ($location['isbn13'] ?? ''))) ?>">Voir le retrait local</a>
+                    </article>
+                <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+            <p class="source-policy">Le pilote Moselle est une couche locale séparée : une librairie prospectée ou un stock non confirmé n’apparaît jamais ici.</p>
+        </section>
+        <?php endif; ?>
 
         <section class="edition-section" aria-labelledby="edition-title">
             <div class="section-heading">
