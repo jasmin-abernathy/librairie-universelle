@@ -4,7 +4,7 @@
 
 MVP web centré sur l’**œuvre** : chercher un livre une fois, comparer ses éditions et voir les différentes façons légales d’y accéder. La première alpha met désormais l’accent sur les **ebooks payants et gratuits de sources identifiées** ainsi que sur une **autoédition validée humainement**.
 
-Le dépôt reste privé pendant la phase de conception. Le projet a vocation à rester sobre, accessible, interopérable et open source.
+Le projet est développé ouvertement sous licence AGPL-3.0-only. Il a vocation à rester sobre, accessible et interopérable ; son statut alpha et ses limites sont documentés explicitement.
 
 ## Principes non négociables
 
@@ -145,3 +145,9 @@ Il **n’y a encore aucun paiement intégré, aucun panier multi-libraires, aucu
 - `docs/CORPUS-NOTES.md` — vérification bibliographique et juridique du corpus
 - `docs/MVP-PROMOTION-KIT.md` — positionnement et lancement
 - Issue `#1` — checklist opérationnelle avant première mise en avant publique
+
+## Licence et sécurité
+
+Le code est distribué sous **AGPL-3.0-only**. Voir `LICENSE`.
+
+Les signalements de sécurité doivent suivre `SECURITY.md` et ne pas être publiés d’abord dans une issue publique.
