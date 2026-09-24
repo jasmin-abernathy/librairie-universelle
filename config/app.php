@@ -13,7 +13,7 @@ $boolEnv = static function (string $name, bool $default = false): bool {
     return filter_var($value, FILTER_VALIDATE_BOOLEAN);
 };
 
-return [
+$config = [
     'name' => getenv('APP_NAME') ?: 'Librairie universelle',
     'env' => getenv('APP_ENV') ?: 'production',
     'database_path' => getenv('DATABASE_PATH') ?: $root . '/data/app.sqlite',
@@ -30,3 +30,14 @@ return [
     'moselle_base_url' => rtrim((string) (getenv('MOSELLE_BASE_URL') ?: ''), '/'),
     'atelier_epub_url' => trim((string) (getenv('ATELIER_EPUB_URL') ?: '')),
 ];
+
+$localConfigPath = getenv('APP_LOCAL_CONFIG') ?: $root . '/config/local.php';
+if (is_file($localConfigPath)) {
+    $localConfig = require $localConfigPath;
+    if (!is_array($localConfig)) {
+        throw new RuntimeException('Le fichier de configuration locale doit retourner un tableau PHP.');
+    }
+    $config = array_replace($config, $localConfig);
+}
+
+return $config;
