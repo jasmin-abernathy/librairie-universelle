@@ -6,6 +6,8 @@ declare(strict_types=1);
 $service = new SelfPublishingService($pdo, $config);
 $errors = [];
 $successId = null;
+$sourceTool = isset($_GET['source']) ? trim((string) $_GET['source']) : '';
+$fromAtelier = $sourceTool === 'atelier-epub';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!Csrf::validate($_POST['csrf_token'] ?? null)) {
@@ -55,6 +57,18 @@ function old(string $key): string
         <p class="eyebrow">Auteurs et autrices indépendants</p>
         <h1>Publier sans être noyé dans une décharge d’autoédition.</h1>
         <p class="lede">Le dépôt ne déclenche jamais une publication automatique. Les fichiers et métadonnées sont contrôlés, puis une personne valide ou demande des corrections avant l’entrée dans le catalogue.</p>
+        <?php if ((string) $config['atelier_epub_url'] !== ''): ?>
+            <p><a class="button-link secondary" href="<?= e((string) $config['atelier_epub_url']) ?>" rel="noopener noreferrer">Créer ou corriger mon EPUB dans Atelier EPUB ↗</a></p>
+        <?php endif; ?>
+        <?php if ($fromAtelier): ?>
+            <div class="resource-card important-resource">
+                <div>
+                    <strong>Vous arrivez d’Atelier EPUB.</strong>
+                    <p>Un EPUB techniquement valide n’est pas une promesse de publication. Chaque dossier est relu par une personne. La librairie assume une sélection éditoriale et peut refuser notamment les dépôts industriels ou automatisés, les variantes répétitives sans valeur, les contenus trompeurs ou illégaux, les ouvrages manifestement bâclés et, plus largement, ce qui ne présente pas de véritable travail éditorial.</p>
+                    <p><strong>Cette décision n’est pas déléguée à une IA.</strong></p>
+                </div>
+            </div>
+        <?php endif; ?>
         <?php if (!$config['self_publishing_enabled']): ?>
             <p class="note"><strong>Pré-ouverture :</strong> le parcours est prêt mais les envois sont encore fermés sur cet environnement. Le formulaire reste visible pour préparer l’alpha.</p>
         <?php endif; ?>
@@ -181,8 +195,8 @@ function old(string $key): string
             <fieldset>
                 <legend>6. Déclarations avant envoi</legend>
                 <label class="check-row"><input type="checkbox" name="rights_confirmed" value="1" required<?= !empty($_POST['rights_confirmed']) ? ' checked' : '' ?>> <span>Je confirme disposer des droits nécessaires sur le texte, la couverture et les fichiers transmis, ou des autorisations correspondantes.</span></label>
-                <label class="check-row"><input type="checkbox" name="quality_confirmed" value="1" required<?= !empty($_POST['quality_confirmed']) ? ' checked' : '' ?>> <span>Je confirme qu’il s’agit d’un véritable projet éditorial et non d’un dépôt industriel, automatisé ou destiné à saturer le catalogue de variantes sans valeur.</span></label>
-                <p class="field-help">Cette déclaration ne remplace pas la validation humaine. Le projet ne classe ni n’accepte les livres par IA.</p>
+                <label class="check-row"><input type="checkbox" name="quality_confirmed" value="1" required<?= !empty($_POST['quality_confirmed']) ? ' checked' : '' ?>> <span>Je confirme qu’il s’agit d’un véritable projet éditorial et non d’un dépôt industriel ou automatisé, d’une série de variantes répétitives sans valeur, d’un contenu trompeur ou manifestement bâclé destiné à remplir artificiellement le catalogue.</span></label>
+                <p class="field-help"><strong>La publication reste une décision humaine.</strong> Un fichier techniquement valide peut être refusé pour des raisons éditoriales. Aucun score d’IA ne décide de l’acceptation.</p>
             </fieldset>
 
             <div class="submit-row">
