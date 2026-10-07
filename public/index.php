@@ -45,6 +45,7 @@ function rightsLabel(string $status): string
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="description" content="Chercher une œuvre et choisir comment la lire : ebook payant ou gratuit, papier, bibliothèque ou domaine public. Prototype sans IA ni profilage.">
     <meta name="theme-color" content="#f7f3ea">
     <meta property="og:type" content="website">

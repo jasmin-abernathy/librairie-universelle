@@ -29,6 +29,7 @@ function priceLabel(?int $cents, ?string $currency, bool $isFree): string
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="description" content="Storefront ebook réunissant livres payants et textes gratuits de sources vérifiées, sans recommandation par IA.">
     <title>Ebooks — <?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css">
