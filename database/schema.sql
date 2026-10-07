@@ -154,6 +154,33 @@ CREATE TABLE IF NOT EXISTS submission_files (
 
 CREATE INDEX IF NOT EXISTS idx_submission_files_submission ON submission_files(submission_id);
 
+CREATE TABLE IF NOT EXISTS submission_print_settings (
+    submission_id INTEGER PRIMARY KEY REFERENCES author_submissions(id) ON DELETE CASCADE,
+    trim_size TEXT NOT NULL DEFAULT '140x210'
+        CHECK (trim_size IN ('a5', '140x210', '135x215', '152x229')),
+    binding TEXT NOT NULL DEFAULT 'paperback'
+        CHECK (binding IN ('paperback', 'hardcover')),
+    toc_enabled INTEGER NOT NULL DEFAULT 1 CHECK (toc_enabled IN (0, 1)),
+    chapter_start TEXT NOT NULL DEFAULT 'right'
+        CHECK (chapter_start IN ('right', 'next')),
+    page_number_position TEXT NOT NULL DEFAULT 'outside'
+        CHECK (page_number_position IN ('outside', 'center', 'none')),
+    hide_chapter_openers INTEGER NOT NULL DEFAULT 1 CHECK (hide_chapter_openers IN (0, 1)),
+    front_matter_numbering TEXT NOT NULL DEFAULT 'roman'
+        CHECK (front_matter_numbering IN ('roman', 'hidden', 'arabic')),
+    bleed_mm INTEGER NOT NULL DEFAULT 0 CHECK (bleed_mm IN (0, 3)),
+    gutter_mode TEXT NOT NULL DEFAULT 'auto'
+        CHECK (gutter_mode IN ('auto', 'custom')),
+    gutter_mm REAL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CHECK (
+        (gutter_mode = 'auto' AND gutter_mm IS NULL)
+        OR
+        (gutter_mode = 'custom' AND gutter_mm BETWEEN 5 AND 40)
+    )
+);
+
+
 CREATE TABLE IF NOT EXISTS feedback (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     page_url TEXT,

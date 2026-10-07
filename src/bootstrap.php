@@ -16,6 +16,8 @@ require_once __DIR__ . '/OfferImporter.php';
 require_once __DIR__ . '/MoselleAvailabilityClient.php';
 require_once __DIR__ . '/Csrf.php';
 require_once __DIR__ . '/UploadValidator.php';
+require_once __DIR__ . '/PrintSettings.php';
+require_once __DIR__ . '/EpubPrintSource.php';
 require_once __DIR__ . '/SelfPublishingService.php';
 require_once __DIR__ . '/EbookStorefront.php';
 require_once __DIR__ . '/FeedbackService.php';

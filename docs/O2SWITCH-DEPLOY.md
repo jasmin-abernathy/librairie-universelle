@@ -55,7 +55,8 @@ Extensions obligatoires :
 Recommandées :
 
 - `curl`
-- `zip` / `ZipArchive` pour valider plus profondément les EPUB
+- `zip` / `ZipArchive` pour valider plus profondément les EPUB et utiliser la composition papier
+- `dom` pour extraire et nettoyer les chapitres lors de la prévisualisation papier
 
 Le script vérifie aussi les droits d'écriture et refuse de considérer l'environnement prêt si les fonctions alpha sont ouvertes sans `ADMIN_TOKEN`.
 
@@ -108,6 +109,14 @@ FEEDBACK_ENABLED=true
 Puis relancer `php bin/preflight.php` et vérifier que l'administration est protégée.
 
 Faire ensuite un vrai dépôt de test avec un EPUB non sensible avant d'accepter le moindre manuscrit extérieur.
+
+## Composition papier depuis l’autoédition
+
+La page `/autoedition.php` conserve Atelier EPUB comme outil dédié à l’EPUB. La version papier est préparée directement dans la Librairie : l’auteur sélectionne son EPUB, choisit format/reliure/sommaire/pagination, puis ouvre `/print-preview.php` via le bouton « Prévisualiser la version imprimée ».
+
+Le serveur lit l’EPUB sans l’extraire dans le webroot, nettoie le XHTML et embarque uniquement les images locales acceptées. L’aperçu paginé utilise Paged.js 0.4.3 chargé depuis unpkg ; le manuscrit n’est pas envoyé à ce CDN. Le navigateur ne récupère que le script statique de pagination, avec une politique de référent sans URL source. Les scripts applicatifs et la feuille de mise en page dynamique restent servis par `librairie.lepotager.org`. Le bouton final utilise la boîte d’impression du navigateur pour imprimer ou enregistrer le résultat en PDF.
+
+Avant ouverture publique, tester ce parcours avec un EPUB non sensible et vérifier recto/verso, pages blanches de début de chapitre, sommaire et export PDF dans le navigateur réellement utilisé.
 
 ## Sauvegardes
 

@@ -1,0 +1,1 @@
+window.PagedConfig = { auto: false };

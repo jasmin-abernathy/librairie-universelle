@@ -30,6 +30,16 @@ function old(string $key): string
 {
     return e(isset($_POST[$key]) ? (string) $_POST[$key] : '');
 }
+
+function checked(string $key, bool $default = false): string
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        return !empty($_POST[$key]) ? ' checked' : '';
+    }
+    return $default ? ' checked' : '';
+}
+
+$printPreparationRequested = !empty($_POST['print_preparation_requested']);
 ?>
 <!doctype html>
 <html lang="fr">
@@ -173,9 +183,86 @@ function old(string $key): string
 
             <fieldset>
                 <legend>5. Version papier et impression</legend>
+
+                <div class="resource-card important-resource">
+                    <div>
+                        <strong>Composer la version papier ici.</strong>
+                        <p>Choisissez l’EPUB à l’étape 4, puis utilisez l’aperçu ci-dessous. La Librairie extrait les chapitres, génère le sommaire et calcule la pagination recto/verso sans modifier votre EPUB.</p>
+                    </div>
+                </div>
+
+                <label class="check-row">
+                    <input id="print-preparation-requested" type="checkbox" name="print_preparation_requested" value="1" aria-controls="print-layout-settings" aria-expanded="<?= $printPreparationRequested ? 'true' : 'false' ?>"<?= checked('print_preparation_requested') ?>>
+                    <span><strong>Je veux définir la mise en page de ma future version imprimée.</strong><br><span class="field-help">Ces choix deviennent le cahier de composition conservé avec votre soumission. Le formulaire ne fabrique pas encore le PDF : le rendu paginé sera assuré par Atelier EPUB.</span></span>
+                </label>
+
+                <div id="print-layout-settings"<?= $printPreparationRequested ? '' : ' hidden' ?>>
+                    <div class="form-grid two-columns">
+                        <label>Format du livre
+                            <select name="print_trim_size">
+                                <option value="140x210"<?= ($_POST['print_trim_size'] ?? '140x210') === '140x210' ? ' selected' : '' ?>>14 × 21 cm</option>
+                                <option value="a5"<?= ($_POST['print_trim_size'] ?? '') === 'a5' ? ' selected' : '' ?>>A5 — 14,8 × 21 cm</option>
+                                <option value="135x215"<?= ($_POST['print_trim_size'] ?? '') === '135x215' ? ' selected' : '' ?>>13,5 × 21,5 cm</option>
+                                <option value="152x229"<?= ($_POST['print_trim_size'] ?? '') === '152x229' ? ' selected' : '' ?>>15,2 × 22,9 cm / 6 × 9 pouces</option>
+                            </select>
+                        </label>
+                        <label>Reliure
+                            <select name="print_binding">
+                                <option value="paperback"<?= ($_POST['print_binding'] ?? 'paperback') === 'paperback' ? ' selected' : '' ?>>Broché</option>
+                                <option value="hardcover"<?= ($_POST['print_binding'] ?? '') === 'hardcover' ? ' selected' : '' ?>>Relié</option>
+                            </select>
+                        </label>
+                        <label>Début des chapitres
+                            <select name="print_chapter_start">
+                                <option value="right"<?= ($_POST['print_chapter_start'] ?? 'right') === 'right' ? ' selected' : '' ?>>Toujours sur une page de droite</option>
+                                <option value="next"<?= ($_POST['print_chapter_start'] ?? '') === 'next' ? ' selected' : '' ?>>À la page suivante, gauche ou droite</option>
+                            </select>
+                        </label>
+                        <label>Numéros de page
+                            <select name="print_page_number_position">
+                                <option value="outside"<?= ($_POST['print_page_number_position'] ?? 'outside') === 'outside' ? ' selected' : '' ?>>Côté extérieur — gauche sur page gauche, droite sur page droite</option>
+                                <option value="center"<?= ($_POST['print_page_number_position'] ?? '') === 'center' ? ' selected' : '' ?>>Centrés en bas</option>
+                                <option value="none"<?= ($_POST['print_page_number_position'] ?? '') === 'none' ? ' selected' : '' ?>>Aucun numéro visible</option>
+                            </select>
+                        </label>
+                        <label>Pages liminaires
+                            <select name="print_front_matter_numbering">
+                                <option value="roman"<?= ($_POST['print_front_matter_numbering'] ?? 'roman') === 'roman' ? ' selected' : '' ?>>Chiffres romains, puis 1 au début du texte</option>
+                                <option value="hidden"<?= ($_POST['print_front_matter_numbering'] ?? '') === 'hidden' ? ' selected' : '' ?>>Comptées mais numéros masqués</option>
+                                <option value="arabic"<?= ($_POST['print_front_matter_numbering'] ?? '') === 'arabic' ? ' selected' : '' ?>>Numérotation continue en chiffres arabes</option>
+                            </select>
+                        </label>
+                        <label>Fond perdu
+                            <select name="print_bleed_mm">
+                                <option value="0"<?= (string) ($_POST['print_bleed_mm'] ?? '0') === '0' ? ' selected' : '' ?>>0 mm — livre sans éléments jusqu’au bord</option>
+                                <option value="3"<?= (string) ($_POST['print_bleed_mm'] ?? '') === '3' ? ' selected' : '' ?>>3 mm</option>
+                            </select>
+                        </label>
+                        <label>Marge intérieure / reliure
+                            <select id="print-gutter-mode" name="print_gutter_mode">
+                                <option value="auto"<?= ($_POST['print_gutter_mode'] ?? 'auto') === 'auto' ? ' selected' : '' ?>>Automatique selon le nombre de pages</option>
+                                <option value="custom"<?= ($_POST['print_gutter_mode'] ?? '') === 'custom' ? ' selected' : '' ?>>Personnalisée</option>
+                            </select>
+                        </label>
+                        <label id="print-gutter-custom"<?= ($_POST['print_gutter_mode'] ?? 'auto') === 'custom' ? '' : ' hidden' ?>>Marge intérieure personnalisée (mm)
+                            <input id="print-gutter-mm" name="print_gutter_mm" inputmode="decimal" value="<?= old('print_gutter_mm') ?>" placeholder="ex. 18">
+                            <span class="field-help">Entre 5 et 40 mm.</span>
+                        </label>
+                    </div>
+
+                    <label class="check-row"><input type="checkbox" name="print_toc_enabled" value="1"<?= checked('print_toc_enabled', true) ?>> <span><strong>Sommaire automatique</strong> — construit depuis les chapitres et recalculé après pagination.</span></label>
+                    <label class="check-row"><input type="checkbox" name="print_hide_chapter_openers" value="1"<?= checked('print_hide_chapter_openers', true) ?>> <span>Masquer le numéro visible sur la première page de chaque chapitre.</span></label>
+                    <p class="note"><strong>Principe :</strong> les numéros du sommaire ne sont jamais devinés à partir de l’EPUB. Ils sont calculés après composition du PDF, quand le format, les marges, les images et les sauts de page sont définitifs.</p>
+                    <div class="submit-row print-preview-row">
+                        <button type="submit" class="secondary-action" formaction="/print-preview.php" formtarget="_blank" formnovalidate>Prévisualiser la version imprimée</button>
+                        <span>Utilise l’EPUB sélectionné à l’étape 4. L’aperçu s’ouvre dans un nouvel onglet et ne publie rien.</span>
+                    </div>
+                </div>
+
                 <div class="form-grid two-columns">
-                    <label>PDF prêt à imprimer <span class="optional">facultatif</span>
+                    <label>PDF déjà prêt à imprimer <span class="optional">facultatif</span>
                         <input type="file" name="print_pdf" accept="application/pdf,.pdf">
+                        <span class="field-help">Si vous avez déjà un PDF final conforme aux exigences de votre imprimeur, vous pouvez le joindre directement.</span>
                     </label>
                     <label>Prix papier envisagé (€) <span class="optional">facultatif</span>
                         <input name="paper_price" inputmode="decimal" value="<?= old('paper_price') ?>" placeholder="14,90">
@@ -212,5 +299,6 @@ function old(string $key): string
     <div class="footer-links"><a href="/ebooks.php">Ebooks</a><a href="/feedback.php?kind=self_publishing">Donner un retour</a><a href="/projet.php">Le projet</a></div>
     <p>Autoédition accompagnée et filtrée humainement — sans classement automatique opaque.</p>
 </footer>
+<script src="/assets/js/autoedition-print.js"></script>
 </body>
 </html>

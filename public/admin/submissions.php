@@ -42,6 +42,27 @@ function cents(?int $value): string
     return $value === null ? '—' : number_format($value / 100, 2, ',', ' ') . ' €';
 }
 
+function yesNo(mixed $value): string
+{
+    return (int) $value === 1 ? 'Oui' : 'Non';
+}
+
+function printSettingLabel(string $kind, ?string $value): string
+{
+    $labels = [
+        'trim_size' => ['a5' => 'A5 — 14,8 × 21 cm', '140x210' => '14 × 21 cm', '135x215' => '13,5 × 21,5 cm', '152x229' => '15,2 × 22,9 cm / 6 × 9 pouces'],
+        'binding' => ['paperback' => 'Broché', 'hardcover' => 'Relié'],
+        'chapter_start' => ['right' => 'Page de droite', 'next' => 'Page suivante'],
+        'page_number_position' => ['outside' => 'Extérieur gauche/droite', 'center' => 'Centrés en bas', 'none' => 'Masqués'],
+        'front_matter_numbering' => ['roman' => 'Chiffres romains puis arabes', 'hidden' => 'Comptées mais masquées', 'arabic' => 'Chiffres arabes continus'],
+        'gutter_mode' => ['auto' => 'Automatique', 'custom' => 'Personnalisée'],
+    ];
+    if ($value === null || $value === '') {
+        return '—';
+    }
+    return $labels[$kind][$value] ?? $value;
+}
+
 $current = $id > 0 ? $service->find($id) : null;
 $submissions = $service->listSubmissions($statusFilter);
 ?>
@@ -85,6 +106,21 @@ $submissions = $service->listSubmissions($statusFilter);
                         <div><dt>Prix papier</dt><dd><?= cents($current['paper_price_cents'] !== null ? (int) $current['paper_price_cents'] : null) ?></dd></div>
                         <div><dt>Diffusion ebook</dt><dd><?= e($current['ebook_distribution']) ?></dd></div>
                     </dl>
+                    <?php if ($current['print_settings'] !== null): ?>
+                        <?php $print = $current['print_settings']; ?>
+                        <h3>Composition papier demandée</h3>
+                        <dl class="detail-list">
+                            <div><dt>Format</dt><dd><?= e(printSettingLabel('trim_size', $print['trim_size'])) ?></dd></div>
+                            <div><dt>Reliure</dt><dd><?= e(printSettingLabel('binding', $print['binding'])) ?></dd></div>
+                            <div><dt>Sommaire auto</dt><dd><?= yesNo($print['toc_enabled']) ?></dd></div>
+                            <div><dt>Chapitres</dt><dd><?= e(printSettingLabel('chapter_start', $print['chapter_start'])) ?></dd></div>
+                            <div><dt>Pagination</dt><dd><?= e(printSettingLabel('page_number_position', $print['page_number_position'])) ?></dd></div>
+                            <div><dt>Ouverture chapitre</dt><dd><?= (int) $print['hide_chapter_openers'] === 1 ? 'Numéro masqué' : 'Numéro visible' ?></dd></div>
+                            <div><dt>Pages liminaires</dt><dd><?= e(printSettingLabel('front_matter_numbering', $print['front_matter_numbering'])) ?></dd></div>
+                            <div><dt>Fond perdu</dt><dd><?= (int) $print['bleed_mm'] ?> mm</dd></div>
+                            <div><dt>Marge intérieure</dt><dd><?= e(printSettingLabel('gutter_mode', $print['gutter_mode'])) ?><?= $print['gutter_mm'] !== null ? ' — ' . e(number_format((float) $print['gutter_mm'], 1, ',', ' ')) . ' mm' : '' ?></dd></div>
+                        </dl>
+                    <?php endif; ?>
                     <h3>Présentation</h3>
                     <p><?= nl2br(e($current['description'])) ?></p>
                 </div>

@@ -26,6 +26,7 @@ final class SelfPublishingService
         $ebookDistribution = ($input['ebook_distribution'] ?? 'paid') === 'free' ? 'free' : 'paid';
         $ebookPrice = self::eurosToCents($input['ebook_price'] ?? null);
         $paperPrice = self::eurosToCents($input['paper_price'] ?? null);
+        $printSettings = !empty($input['print_preparation_requested']) ? PrintSettings::normalize($input) : null;
 
         if ($authorName === '' || $title === '' || $description === '') {
             throw new InvalidArgumentException('Nom, titre et présentation sont obligatoires.');
@@ -82,6 +83,10 @@ SQL);
             ]);
             $submissionId = (int) $this->pdo->lastInsertId();
 
+            if ($printSettings !== null) {
+                $this->insertPrintSettings($submissionId, $printSettings);
+            }
+
             foreach (['ebook', 'cover', 'print_pdf'] as $kind) {
                 if (!isset($files[$kind]) || ($files[$kind]['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
                     continue;
@@ -136,6 +141,11 @@ SQL);
         $files = $this->pdo->prepare('SELECT * FROM submission_files WHERE submission_id = :id ORDER BY id');
         $files->execute([':id' => $id]);
         $submission['files'] = $files->fetchAll();
+
+        $print = $this->pdo->prepare('SELECT * FROM submission_print_settings WHERE submission_id = :id');
+        $print->execute([':id' => $id]);
+        $printSettings = $print->fetch();
+        $submission['print_settings'] = $printSettings === false ? null : $printSettings;
         return $submission;
     }
 
@@ -283,6 +293,34 @@ SQL);
         }
         $file['path'] = rtrim((string) $this->config['storage_path'], '/') . '/submissions/' . $file['stored_name'];
         return $file;
+    }
+
+    private function insertPrintSettings(int $submissionId, array $settings): void
+    {
+        $statement = $this->pdo->prepare(<<<'SQL'
+INSERT INTO submission_print_settings (
+    submission_id, trim_size, binding, toc_enabled, chapter_start,
+    page_number_position, hide_chapter_openers, front_matter_numbering,
+    bleed_mm, gutter_mode, gutter_mm
+) VALUES (
+    :submission, :trim_size, :binding, :toc_enabled, :chapter_start,
+    :page_number_position, :hide_chapter_openers, :front_matter_numbering,
+    :bleed_mm, :gutter_mode, :gutter_mm
+)
+SQL);
+        $statement->execute([
+            ':submission' => $submissionId,
+            ':trim_size' => $settings['trim_size'],
+            ':binding' => $settings['binding'],
+            ':toc_enabled' => $settings['toc_enabled'],
+            ':chapter_start' => $settings['chapter_start'],
+            ':page_number_position' => $settings['page_number_position'],
+            ':hide_chapter_openers' => $settings['hide_chapter_openers'],
+            ':front_matter_numbering' => $settings['front_matter_numbering'],
+            ':bleed_mm' => $settings['bleed_mm'],
+            ':gutter_mode' => $settings['gutter_mode'],
+            ':gutter_mm' => $settings['gutter_mm'],
+        ]);
     }
 
     private function insertFile(int $submissionId, string $kind, array $stored): void

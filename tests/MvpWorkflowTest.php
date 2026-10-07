@@ -30,7 +30,7 @@ $assert($listedBookstoreCount >= 21, 'Librairies publiques insuffisantes.');
 $assert($reviewBookstoreCount >= 2, 'Fiches à vérifier absentes de la curation.');
 
 $tables = array_flip($pdo->query("SELECT name FROM sqlite_master WHERE type = 'table'")->fetchAll(PDO::FETCH_COLUMN));
-foreach (['author_submissions', 'submission_files', 'feedback', 'sync_runs', 'bookstores'] as $table) {
+foreach (['author_submissions', 'submission_files', 'submission_print_settings', 'feedback', 'sync_runs', 'bookstores'] as $table) {
     $assert(isset($tables[$table]), 'Table manquante: ' . $table);
 }
 
@@ -65,7 +65,21 @@ $file->execute([
     ':sha' => str_repeat('a', 64),
 ]);
 
+$print = $pdo->prepare(<<<'SQL'
+INSERT INTO submission_print_settings (
+    submission_id, trim_size, binding, toc_enabled, chapter_start, page_number_position,
+    hide_chapter_openers, front_matter_numbering, bleed_mm, gutter_mode, gutter_mm
+) VALUES (
+    :submission, '140x210', 'paperback', 1, 'right', 'outside', 1, 'roman', 0, 'auto', NULL
+)
+SQL);
+$print->execute([':submission' => $submissionId]);
+
 $service = new SelfPublishingService($pdo, $config);
+$submissionDetail = $service->find($submissionId);
+$assert($submissionDetail !== null && $submissionDetail['print_settings'] !== null, 'Réglages de composition papier absents de la soumission.');
+$assert($submissionDetail['print_settings']['chapter_start'] === 'right', 'Règle de début de chapitre non conservée.');
+$assert((int) $submissionDetail['print_settings']['toc_enabled'] === 1, 'Sommaire automatique non conservé.');
 $workId = $service->publish($submissionId);
 $assert($workId > 0, 'Publication indépendante non créée.');
 
