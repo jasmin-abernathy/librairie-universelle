@@ -5,6 +5,7 @@
     if (!section) return;
 
     const query = section.dataset.query || '';
+    const languages = section.dataset.languages || 'fr,en';
     let sources = [];
     try { sources = JSON.parse(section.dataset.sources || '[]'); } catch (_) { return; }
     if (!query || !Array.isArray(sources) || sources.length === 0) return;
@@ -128,7 +129,9 @@
         const controller = new AbortController();
         const timer = window.setTimeout(() => controller.abort(), 9000);
         try {
-            const url = '/api/discovery.php?source=' + encodeURIComponent(source) + '&q=' + encodeURIComponent(query);
+            const url = '/api/discovery.php?source=' + encodeURIComponent(source)
+                + '&q=' + encodeURIComponent(query)
+                + '&lang=' + encodeURIComponent(languages);
             const response = await fetch(url, {
                 headers: { 'Accept': 'application/json' },
                 signal: controller.signal,
