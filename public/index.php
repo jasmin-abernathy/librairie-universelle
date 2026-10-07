@@ -88,14 +88,20 @@ function rightsLabel(string $status): string
         <section class="results" aria-labelledby="results-title">
             <div class="section-heading">
                 <h2 id="results-title">Résultats pour « <?= e($query) ?> »</h2>
-                <span><?= count($results) ?> résultat<?= count($results) === 1 ? '' : 's' ?></span>
+                <div>
+                    <span><?= count($results) ?> résultat<?= count($results) === 1 ? '' : 's' ?></span>
+                    <a class="text-link" href="/">Effacer la recherche</a>
+                </div>
             </div>
 
             <?php if ($results === []): ?>
                 <div class="empty-state">
                     <h3>Pas encore dans le petit corpus du MVP.</h3>
                     <p>Le prototype contient volontairement peu d’œuvres, toutes documentées. On élargira le corpus après validation du modèle et des sources.</p>
-                    <a class="text-link" href="/?q=George+Orwell">Essayer avec George Orwell</a>
+                    <div class="cta-row">
+                        <a class="text-link" href="/">Effacer la recherche</a>
+                        <a class="text-link" href="/?q=George+Orwell">Essayer avec George Orwell</a>
+                    </div>
                 </div>
             <?php else: ?>
                 <div class="result-list">
@@ -121,7 +127,8 @@ function rightsLabel(string $status): string
                 </div>
             <?php endif; ?>
         </section>
-    <?php else: ?>
+    <?php endif; ?>
+
         <section class="mvp-intro" aria-labelledby="mvp-intro-title">
             <div class="section-kicker">Pourquoi ce MVP ?</div>
             <h2 id="mvp-intro-title">Aujourd’hui, une même œuvre est dispersée entre plusieurs mondes.</h2>
@@ -154,7 +161,6 @@ function rightsLabel(string $status): string
                 <a class="text-link" href="/autoedition.php">Voir l’autoédition</a>
             </div>
         </section>
-    <?php endif; ?>
 </main>
 
 <footer>
