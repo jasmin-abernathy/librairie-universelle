@@ -11,7 +11,7 @@ final class HttpClient
     ) {
     }
 
-    public function get(string $url): string
+    public function get(string $url, string $accept = 'application/xml,text/xml;q=0.9,*/*;q=0.1'): string
     {
         $lastError = null;
         $attempts = max(1, min(3, $this->maxAttempts));
@@ -19,8 +19,8 @@ final class HttpClient
         for ($attempt = 1; $attempt <= $attempts; $attempt++) {
             try {
                 return function_exists('curl_init')
-                    ? $this->getWithCurl($url)
-                    : $this->getWithStreams($url);
+                    ? $this->getWithCurl($url, $accept)
+                    : $this->getWithStreams($url, $accept);
             } catch (RuntimeException $error) {
                 $lastError = $error;
                 if ($attempt >= $attempts || !$this->isTransient($error->getMessage())) {
@@ -33,7 +33,7 @@ final class HttpClient
         throw $lastError ?? new RuntimeException('Échec HTTP inconnu.');
     }
 
-    private function getWithCurl(string $url): string
+    private function getWithCurl(string $url, string $accept): string
     {
         $curl = curl_init($url);
         if ($curl === false) {
@@ -47,7 +47,7 @@ final class HttpClient
             CURLOPT_CONNECTTIMEOUT => $this->timeoutSeconds,
             CURLOPT_TIMEOUT => $this->timeoutSeconds,
             CURLOPT_USERAGENT => $this->userAgent,
-            CURLOPT_HTTPHEADER => ['Accept: application/xml,text/xml;q=0.9,*/*;q=0.1'],
+            CURLOPT_HTTPHEADER => ['Accept: ' . $accept],
         ]);
 
         $body = curl_exec($curl);
@@ -63,14 +63,14 @@ final class HttpClient
         return $body;
     }
 
-    private function getWithStreams(string $url): string
+    private function getWithStreams(string $url, string $accept): string
     {
         $context = stream_context_create([
             'http' => [
                 'method' => 'GET',
                 'timeout' => $this->timeoutSeconds,
                 'ignore_errors' => true,
-                'header' => "User-Agent: {$this->userAgent}\r\nAccept: application/xml,text/xml;q=0.9,*/*;q=0.1\r\n",
+                'header' => "User-Agent: {$this->userAgent}\r\nAccept: {$accept}\r\n",
             ],
         ]);
 

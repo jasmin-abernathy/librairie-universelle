@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 $query = isset($_GET['q']) ? trim((string) $_GET['q']) : '';
 $results = $query !== '' ? Search::works($pdo, $query) : [];
+$discoveryDefinitions = !empty($config['federated_search_enabled']) ? DiscoveryRegistry::definitions() : [];
 
 function e(?string $value): string
 {
@@ -34,7 +35,9 @@ function rightsLabel(string $status): string
     <meta property="og:description" content="Un MVP centré sur l’œuvre : numérique payant ou gratuit, domaine public, autoédition validée et sources identifiées, sans IA.">
     <title><?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/discovery.css">
     <script src="/assets/js/app.js" defer></script>
+    <script src="/assets/js/discovery.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -96,8 +99,8 @@ function rightsLabel(string $status): string
 
             <?php if ($results === []): ?>
                 <div class="empty-state">
-                    <h3>Pas encore dans le petit corpus du MVP.</h3>
-                    <p>Le prototype contient volontairement peu d’œuvres, toutes documentées. On élargira le corpus après validation du modèle et des sources.</p>
+                    <h3>Pas encore dans notre catalogue local.</h3>
+                    <p>La recherche continue automatiquement dans les catalogues externes affichés juste après cette section.</p>
                     <div class="cta-row">
                         <a class="text-link" href="/">Effacer la recherche</a>
                         <a class="text-link" href="/?q=George+Orwell">Essayer avec George Orwell</a>
@@ -126,6 +129,37 @@ function rightsLabel(string $status): string
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
+        </section>
+    <?php endif; ?>
+
+    <?php if ($query !== '' && $discoveryDefinitions !== []): ?>
+        <section
+            class="results external-results"
+            id="external-results"
+            aria-labelledby="external-results-title"
+            data-discovery-search
+            data-query="<?= e($query) ?>"
+            data-sources="<?= e(json_encode(array_keys($discoveryDefinitions), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) ?>"
+        >
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Recherche fédérée</p>
+                    <h2 id="external-results-title">Autres catalogues</h2>
+                </div>
+                <span id="discovery-progress" aria-live="polite">Préparation de la recherche…</span>
+            </div>
+            <p class="lede small">Ces résultats viennent de sources externes identifiées. Une présence dans un catalogue ne vaut jamais, à elle seule, autorisation de téléchargement en France.</p>
+            <div class="source-pills" aria-label="Sources interrogées">
+                <?php foreach ($discoveryDefinitions as $definition): ?>
+                    <span title="<?= e($definition['description']) ?>"><?= e($definition['name']) ?></span>
+                <?php endforeach; ?>
+            </div>
+            <div id="external-result-list" class="external-result-list" aria-live="polite">
+                <p class="discovery-loading">Les catalogues sont interrogés progressivement pour ne pas bloquer la page.</p>
+            </div>
+            <noscript>
+                <p class="note">La recherche dans les catalogues externes nécessite JavaScript. La recherche locale reste entièrement fonctionnelle sans JavaScript.</p>
+            </noscript>
         </section>
     <?php endif; ?>
 

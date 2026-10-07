@@ -48,6 +48,9 @@ jobs:
       - name: Storefront and indie publishing workflow
         run: php tests/MvpWorkflowTest.php
 
+      - name: Federated discovery parsers and cache
+        run: php tests/DiscoverySourcesTest.php
+
       - name: SQLite schema and corpus smoke test
         run: |
           rm -f data/app.sqlite
