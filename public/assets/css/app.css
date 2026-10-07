@@ -216,3 +216,134 @@ footer { max-width: 1120px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 2rem)
     html { scroll-behavior: auto; }
     *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
 }
+
+/* Recherche de librairies locales */
+.bookstore-hero { max-width: 1040px; }
+.bookstore-locator {
+    margin-top: 2rem;
+    padding: clamp(1rem, 3vw, 1.5rem);
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: var(--surface);
+}
+.locator-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 9rem auto;
+    gap: .8rem;
+    align-items: end;
+}
+.locator-grid label { display: grid; gap: .45rem; font-weight: 800; }
+.locator-grid input,
+.locator-grid select {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid #aaa79f;
+    border-radius: .8rem;
+    background: #fff;
+    color: var(--ink);
+    padding: .95rem 1rem;
+}
+.locator-grid button {
+    border: 0;
+    border-radius: .8rem;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 800;
+    padding: .95rem 1.2rem;
+    min-height: 3.25rem;
+    cursor: pointer;
+}
+.address-combobox { position: relative; display: block; }
+.address-suggestions {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + .35rem);
+    left: 0;
+    right: 0;
+    max-height: 18rem;
+    overflow-y: auto;
+    border: 1px solid var(--line);
+    border-radius: .8rem;
+    background: var(--surface);
+    box-shadow: 0 12px 28px rgba(35, 35, 31, .13);
+}
+.address-suggestions[hidden] { display: none; }
+.address-suggestion {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    padding: .8rem 1rem;
+    background: transparent;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+}
+.address-suggestion:last-child { border-bottom: 0; }
+.address-suggestion:hover,
+.address-suggestion[aria-selected="true"] { background: var(--accent-soft); }
+.locator-privacy,
+.locator-status {
+    margin: .8rem 0 0;
+    color: var(--muted);
+    font-size: .9rem;
+}
+.locator-status:empty { display: none; }
+.bookstore-results { margin-top: 1.4rem; }
+.bookstore-results-heading h2 { font-size: clamp(1.4rem, 3vw, 2rem); margin: 0 0 1rem; }
+.bookstore-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+.bookstore-card {
+    display: flex;
+    flex-direction: column;
+    gap: .65rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: var(--surface);
+    padding: 1.2rem;
+}
+.bookstore-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1rem;
+}
+.bookstore-card h3 { margin: 0; font-size: 1.25rem; }
+.distance-badge,
+.availability-badge {
+    width: fit-content;
+    border-radius: 999px;
+    padding: .25rem .55rem;
+    font-size: .78rem;
+    font-weight: 800;
+}
+.distance-badge { background: var(--ink); color: #fff; white-space: nowrap; }
+.availability-badge { margin: 0; background: var(--accent-soft); color: #173e2d; }
+.bookstore-address { margin: 0; font-weight: 700; }
+.bookstore-details { margin: 0; color: var(--muted); }
+.bookstore-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .7rem 1rem;
+    align-items: center;
+    margin-top: auto;
+    padding-top: .35rem;
+}
+.bookstore-actions .button-link { padding: .65rem .85rem; min-height: 2.5rem; }
+.catalog-search { margin-top: .5rem; }
+
+@media (max-width: 820px) {
+    .locator-grid { grid-template-columns: minmax(0, 1fr) 8rem; }
+    .locator-grid button { grid-column: 1 / -1; }
+}
+
+@media (max-width: 620px) {
+    .locator-grid,
+    .bookstore-grid { grid-template-columns: 1fr; }
+    .locator-grid button { grid-column: auto; width: 100%; }
+    .bookstore-card-top { align-items: flex-start; }
+}
+

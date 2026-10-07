@@ -63,7 +63,9 @@ jobs:
           trap 'kill "$PHP_SERVER_PID"' EXIT
           sleep 1
           curl --fail --silent http://127.0.0.1:8080/health.php | grep '"status":"ok"'
+          curl --fail --silent http://127.0.0.1:8080/ | grep 'Trouver une librairie près de chez vous.'
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Chercher une œuvre, pas un produit.'
+          curl --fail --silent http://127.0.0.1:8080/api/bookstores.php | grep '"bookstores"'
           curl --fail --silent 'http://127.0.0.1:8080/?q=George%20Orwell' | grep 'La Ferme des animaux'
           curl --fail --silent 'http://127.0.0.1:8080/?q=Albert%20Camus' | grep '>Non<'
           curl --fail --silent 'http://127.0.0.1:8080/?q=Le%20Petit%20Prince' | grep 'À vérifier'

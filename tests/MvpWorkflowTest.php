@@ -22,8 +22,15 @@ $assert(Isbn::isValid('9782072938245'), 'ISBN-13 valide refusé.');
 $assert(Isbn::isValid('2-07-036822-X'), 'ISBN-10 valide refusé.');
 $assert(!Isbn::isValid('9782072938246'), 'ISBN invalide accepté.');
 
+$bookstoreCount = (int) $pdo->query("SELECT COUNT(*) FROM bookstores")->fetchColumn();
+$listedBookstoreCount = (int) $pdo->query("SELECT COUNT(*) FROM bookstores WHERE directory_status = 'listed'")->fetchColumn();
+$reviewBookstoreCount = (int) $pdo->query("SELECT COUNT(*) FROM bookstores WHERE directory_status = 'review'")->fetchColumn();
+$assert($bookstoreCount >= 23, 'Annuaire librairies incomplet.');
+$assert($listedBookstoreCount >= 21, 'Librairies publiques insuffisantes.');
+$assert($reviewBookstoreCount >= 2, 'Fiches à vérifier absentes de la curation.');
+
 $tables = array_flip($pdo->query("SELECT name FROM sqlite_master WHERE type = 'table'")->fetchAll(PDO::FETCH_COLUMN));
-foreach (['author_submissions', 'submission_files', 'feedback', 'sync_runs'] as $table) {
+foreach (['author_submissions', 'submission_files', 'feedback', 'sync_runs', 'bookstores'] as $table) {
     $assert(isset($tables[$table]), 'Table manquante: ' . $table);
 }
 
