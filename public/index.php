@@ -46,15 +46,16 @@ function rightsLabel(string $status): string
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <meta name="description" content="Chercher une œuvre et choisir comment la lire : ebook payant ou gratuit, papier, bibliothèque ou domaine public. Prototype sans IA ni profilage.">
+    <meta name="description" content="Trouver une librairie indépendante près de chez vous à Metz et en Moselle, puis chercher une œuvre dans plusieurs catalogues identifiés. Sans IA ni profilage.">
     <meta name="theme-color" content="#f7f3ea">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Une recherche. Toutes les façons légales de lire.">
-    <meta property="og:description" content="Un MVP centré sur l’œuvre : numérique payant ou gratuit, domaine public, autoédition validée et sources identifiées, sans IA.">
+    <meta property="og:title" content="Trouver une librairie près de chez vous.">
+    <meta property="og:description" content="Un annuaire local de librairies à Metz et en Moselle, complété par une recherche de livres multi-sources, sans profilage.">
     <title><?= e($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261007-1">
     <link rel="stylesheet" href="/assets/css/discovery.css">
     <script src="/assets/js/app.js" defer></script>
+    <script src="/assets/js/bookstores.js?v=20261007-1" defer></script>
     <script src="/assets/js/discovery.js" defer></script>
 </head>
 <body>
@@ -62,6 +63,7 @@ function rightsLabel(string $status): string
 <header class="site-header">
     <a class="brand" href="/" aria-label="Accueil — Librairie universelle">📚 <span>Librairie universelle <small>nom de travail</small></span></a>
     <nav class="site-nav" aria-label="Navigation principale">
+        <a href="/#librairies">Librairies proches</a>
         <a href="/ebooks.php">Ebooks</a>
         <a href="/autoedition.php">Autoédition</a>
         <a href="/projet.php">Le projet</a>
@@ -70,11 +72,67 @@ function rightsLabel(string $status): string
 </header>
 
 <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-meta"><span class="status-badge">MVP en construction</span><span>Recherche déterministe · sources explicites</span></div>
-        <p class="eyebrow">Une recherche. Toutes les façons légales de lire.</p>
-        <h1 id="hero-title">Chercher une œuvre, pas un produit.</h1>
-        <p class="lede">Ebook payant ou gratuit, papier, audio, librairie locale, bibliothèque ou domaine public : le choix reste visible au lieu d’être décidé à votre place.</p>
+    <section class="hero bookstore-hero" id="librairies" aria-labelledby="hero-title">
+        <div class="hero-meta"><span class="status-badge">Metz &amp; Moselle</span><span>Annuaire local · sans profilage</span></div>
+        <p class="eyebrow">Lire près de chez vous</p>
+        <h1 id="hero-title">Trouver une librairie près de chez vous.</h1>
+        <p class="lede">Entrez une adresse et choisissez un rayon. Nous affichons les librairies indépendantes et réseaux indépendants que nous avons vérifiés à Metz et en Moselle, triés par distance.</p>
+
+        <form class="bookstore-locator" data-bookstore-locator>
+            <div class="locator-grid">
+                <label for="bookstore-address">
+                    Votre adresse
+                    <span class="address-combobox">
+                        <input
+                            id="bookstore-address"
+                            type="text"
+                            inputmode="text"
+                            autocomplete="street-address"
+                            placeholder="Ex. 12 rue Taison, Metz"
+                            role="combobox"
+                            aria-autocomplete="list"
+                            aria-controls="bookstore-address-suggestions"
+                            aria-expanded="false"
+                            data-bookstore-address
+                        >
+                        <span
+                            id="bookstore-address-suggestions"
+                            class="address-suggestions"
+                            role="listbox"
+                            data-bookstore-suggestions
+                            hidden
+                        ></span>
+                    </span>
+                </label>
+                <label for="bookstore-radius">
+                    Rayon
+                    <select id="bookstore-radius" data-bookstore-radius>
+                        <option value="2">2 km</option>
+                        <option value="5">5 km</option>
+                        <option value="10" selected>10 km</option>
+                        <option value="25">25 km</option>
+                        <option value="50">50 km</option>
+                    </select>
+                </label>
+                <button type="submit" data-bookstore-submit>Trouver les librairies</button>
+            </div>
+            <p class="locator-privacy">
+                Les suggestions d’adresse sont fournies directement par le service public Géoplateforme / Base Adresse Nationale.
+                Votre adresse n’est ni enregistrée ni envoyée au Potager du Web.
+            </p>
+            <p class="locator-status" data-bookstore-status aria-live="polite"></p>
+        </form>
+
+        <div class="bookstore-results" data-bookstore-results aria-live="polite"></div>
+        <noscript>
+            <p class="note">La recherche par distance nécessite JavaScript. L’annuaire et la recherche de livres restent accessibles avec JavaScript activé.</p>
+        </noscript>
+    </section>
+
+    <section class="content-section catalog-search" aria-labelledby="catalog-search-title">
+        <div class="section-kicker">Chercher un livre</div>
+        <h2 id="catalog-search-title">Chercher une œuvre, pas un produit.</h2>
+        <p class="lede small">Ebook payant ou gratuit, papier, audio, librairie locale, bibliothèque ou domaine public : le choix reste visible au lieu d’être décidé à votre place.</p>
 
         <form class="search-form" action="/" method="get" role="search">
             <label for="q">Titre, auteur ou autrice</label>

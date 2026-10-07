@@ -182,3 +182,39 @@ CREATE TABLE IF NOT EXISTS sync_runs (
 );
 
 CREATE INDEX IF NOT EXISTS idx_sync_runs_source ON sync_runs(source_name, started_at DESC);
+
+-- Annuaire local des librairies indépendantes / réseaux indépendants de Metz et de Moselle.
+CREATE TABLE IF NOT EXISTS bookstores (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    directory_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    group_name TEXT,
+    address TEXT NOT NULL,
+    postal_code TEXT NOT NULL,
+    city TEXT NOT NULL,
+    department_code TEXT NOT NULL DEFAULT '57',
+    department_name TEXT NOT NULL DEFAULT 'Moselle',
+    country TEXT NOT NULL DEFAULT 'France',
+    category TEXT NOT NULL,
+    independence_status TEXT NOT NULL,
+    specialization TEXT,
+    phone TEXT,
+    website_url TEXT,
+    website_status TEXT,
+    ordering_status TEXT NOT NULL DEFAULT 'à vérifier',
+    ordering_notes TEXT,
+    directory_status TEXT NOT NULL DEFAULT 'review'
+        CHECK (directory_status IN ('listed', 'review', 'hidden')),
+    curation_note TEXT,
+    source_label TEXT,
+    source_url TEXT,
+    last_checked TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_bookstores_directory_status
+    ON bookstores(directory_status, city, name);
+CREATE INDEX IF NOT EXISTS idx_bookstores_postal_code
+    ON bookstores(postal_code);
+
