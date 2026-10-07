@@ -17,7 +17,6 @@ final class OpenLibraryDiscoverySource implements DiscoverySource
         $limit = max(1, min(20, $limit));
         $url = self::ENDPOINT . '?' . http_build_query([
             'q'=>$query,
-            'lang'=>'fr',
             'limit'=>$limit,
             'fields'=>'key,title,author_name,first_publish_year,language,public_scan_b,ebook_access',
         ], '', '&', PHP_QUERY_RFC3986);

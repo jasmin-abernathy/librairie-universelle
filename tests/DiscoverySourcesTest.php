@@ -15,6 +15,17 @@ foreach (['bnf','gallica','wikisource','elg','bnr','gutenberg','standardebooks',
     $assert(in_array($key, DiscoveryRegistry::keys(), true), 'Source manquante : ' . $key);
 }
 
+$assert(DiscoveryRegistry::supportsLanguages('wikisource', ['fr']), 'Wikisource devrait être disponible en français.');
+$assert(!DiscoveryRegistry::supportsLanguages('wikisource', ['en']), 'Wikisource FR ne doit pas être interrogé pour une recherche anglais uniquement.');
+$assert(DiscoveryRegistry::supportsLanguages('standardebooks', ['en']), 'Standard Ebooks devrait être disponible en anglais.');
+$assert(!DiscoveryRegistry::supportsLanguages('standardebooks', ['fr']), 'Standard Ebooks ne doit pas être interrogé pour une recherche français uniquement.');
+
+$filtered = DiscoveryRegistry::filterResults('bnf', [
+    ['language'=>'fre', 'title'=>'Français'],
+    ['language'=>'eng', 'title'=>'English'],
+], ['fr']);
+$assert(count($filtered) === 1 && $filtered[0]['title'] === 'Français', 'Filtre de langue BnF incorrect.');
+
 $bnfXml = <<<'XML'
 <?xml version="1.0" encoding="UTF-8"?>
 <srw:searchRetrieveResponse xmlns:srw="http://www.loc.gov/zing/srw/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/">

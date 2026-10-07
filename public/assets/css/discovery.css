@@ -13,3 +13,36 @@
 .source-format { color: var(--muted); font-size: .86rem; }
 .source-download { display: inline-flex; border-radius: 999px; background: var(--accent-soft); color: #173e2d; padding: .18rem .55rem; text-decoration: none; font-size: .82rem; font-weight: 800; }
 .discovery-loading { color: var(--muted); }
+
+
+.language-filter {
+    border: 0;
+    padding: 0;
+    margin: .85rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .55rem .9rem;
+}
+.language-filter legend {
+    width: 100%;
+    padding: 0;
+    margin: 0 0 .15rem;
+    font-weight: 750;
+}
+.language-filter label {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    cursor: pointer;
+    font-weight: 700;
+}
+.language-filter input {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0;
+    accent-color: var(--accent);
+}
+.language-filter small {
+    color: var(--muted);
+}

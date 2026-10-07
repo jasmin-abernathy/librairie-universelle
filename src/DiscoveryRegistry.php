@@ -7,15 +7,15 @@ final class DiscoveryRegistry
     public static function definitions(): array
     {
         return [
-            'bnf'=>['name'=>'BnF', 'description'=>'Catalogue bibliographique français'],
-            'gallica'=>['name'=>'Gallica', 'description'=>'EPUB patrimoniaux BnF'],
-            'wikisource'=>['name'=>'Wikisource FR', 'description'=>'Textes relus et exportables'],
-            'elg'=>['name'=>'Ebooks Libres et Gratuits', 'description'=>'Catalogue OPDS francophone'],
-            'bnr'=>['name'=>'Bibliothèque numérique romande', 'description'=>'Classiques francophones en EPUB'],
-            'gutenberg'=>['name'=>'Project Gutenberg', 'description'=>'Grand catalogue international du domaine public'],
-            'standardebooks'=>['name'=>'Standard Ebooks', 'description'=>'Éditions EPUB soignées indexées via GitHub'],
-            'openlibrary'=>['name'=>'Open Library', 'description'=>'Catalogue international et accès numériques'],
-            'doab'=>['name'=>'DOAB', 'description'=>'Livres académiques en open access'],
+            'bnf'=>['name'=>'BnF', 'description'=>'Catalogue bibliographique français', 'languages'=>['fr','en'], 'default_language'=>null],
+            'gallica'=>['name'=>'Gallica', 'description'=>'EPUB patrimoniaux BnF', 'languages'=>['fr'], 'default_language'=>'fr'],
+            'wikisource'=>['name'=>'Wikisource FR', 'description'=>'Textes relus et exportables', 'languages'=>['fr'], 'default_language'=>'fr'],
+            'elg'=>['name'=>'Ebooks Libres et Gratuits', 'description'=>'Catalogue OPDS francophone', 'languages'=>['fr'], 'default_language'=>'fr'],
+            'bnr'=>['name'=>'Bibliothèque numérique romande', 'description'=>'Classiques francophones en EPUB', 'languages'=>['fr'], 'default_language'=>'fr'],
+            'gutenberg'=>['name'=>'Project Gutenberg', 'description'=>'Grand catalogue international du domaine public', 'languages'=>['fr','en'], 'default_language'=>null],
+            'standardebooks'=>['name'=>'Standard Ebooks', 'description'=>'Éditions EPUB soignées indexées via GitHub', 'languages'=>['en'], 'default_language'=>'en'],
+            'openlibrary'=>['name'=>'Open Library', 'description'=>'Catalogue international et accès numériques', 'languages'=>['fr','en'], 'default_language'=>null],
+            'doab'=>['name'=>'DOAB', 'description'=>'Livres académiques en open access', 'languages'=>['fr','en'], 'default_language'=>null],
         ];
     }
 
@@ -54,4 +54,48 @@ final class DiscoveryRegistry
     }
 
     public static function keys(): array { return array_keys(self::definitions()); }
+
+    public static function supportsLanguages(string $key, array $languages): bool
+    {
+        $definition = self::definitions()[$key] ?? null;
+        if (!is_array($definition)) {
+            return false;
+        }
+        return array_intersect($definition['languages'] ?? [], $languages) !== [];
+    }
+
+    public static function normalizeLanguage(?string $language): ?string
+    {
+        $value = mb_strtolower(trim((string) $language), 'UTF-8');
+        if ($value === '') {
+            return null;
+        }
+
+        if (in_array($value, ['fr', 'fra', 'fre', 'fr-fr', 'fr_ca', 'fr-ca'], true) || str_starts_with($value, 'fr-')) {
+            return 'fr';
+        }
+        if (in_array($value, ['en', 'eng', 'en-us', 'en-gb', 'en_us', 'en_gb'], true) || str_starts_with($value, 'en-')) {
+            return 'en';
+        }
+
+        return null;
+    }
+
+    public static function filterResults(string $key, array $results, array $languages): array
+    {
+        $definition = self::definitions()[$key] ?? [];
+        $defaultLanguage = $definition['default_language'] ?? null;
+        $bothSelected = count(array_intersect(['fr', 'en'], $languages)) === 2;
+
+        return array_values(array_filter($results, static function (array $result) use ($languages, $defaultLanguage, $bothSelected): bool {
+            $language = self::normalizeLanguage(isset($result['language']) ? (string) $result['language'] : null)
+                ?? self::normalizeLanguage(is_string($defaultLanguage) ? $defaultLanguage : null);
+
+            if ($language === null) {
+                return $bothSelected;
+            }
+
+            return in_array($language, $languages, true);
+        }));
+    }
 }

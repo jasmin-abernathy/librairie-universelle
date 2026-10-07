@@ -5,8 +5,25 @@ declare(strict_types=1);
 [$config, $pdo] = require dirname(__DIR__) . '/src/bootstrap.php';
 
 $query = isset($_GET['q']) ? trim((string) $_GET['q']) : '';
-$results = $query !== '' ? Search::works($pdo, $query) : [];
-$discoveryDefinitions = !empty($config['federated_search_enabled']) ? DiscoveryRegistry::definitions() : [];
+$requestedLanguages = isset($_GET['lang']) && is_array($_GET['lang']) ? $_GET['lang'] : ['fr', 'en'];
+$languages = array_values(array_intersect(
+    ['fr', 'en'],
+    array_unique(array_map(
+        static fn (mixed $language): string => mb_strtolower(trim((string) $language), 'UTF-8'),
+        $requestedLanguages
+    ))
+));
+if ($languages === []) {
+    $languages = ['fr', 'en'];
+}
+
+$results = $query !== '' ? Search::works($pdo, $query, 30, $languages) : [];
+$discoveryDefinitions = !empty($config['federated_search_enabled'])
+    ? array_filter(
+        DiscoveryRegistry::definitions(),
+        static fn (array $definition): bool => array_intersect($definition['languages'] ?? [], $languages) !== []
+    )
+    : [];
 
 function e(?string $value): string
 {
@@ -64,6 +81,18 @@ function rightsLabel(string $status): string
                 <input id="q" name="q" type="search" value="<?= e($query) ?>" placeholder="Ex. Les Misérables, George Orwell…" autocomplete="off">
                 <button type="submit">Rechercher</button>
             </div>
+            <fieldset class="language-filter">
+                <legend>Langue des résultats</legend>
+                <label>
+                    <input type="checkbox" name="lang[]" value="fr" <?= in_array('fr', $languages, true) ? 'checked' : '' ?>>
+                    Français
+                </label>
+                <label>
+                    <input type="checkbox" name="lang[]" value="en" <?= in_array('en', $languages, true) ? 'checked' : '' ?>>
+                    Anglais
+                </label>
+                <small>Vous pouvez cocher les deux.</small>
+            </fieldset>
         </form>
 
         <div class="try-searches" aria-label="Exemples à essayer">
@@ -123,6 +152,7 @@ function rightsLabel(string $status): string
                             </div>
                             <dl>
                                 <div><dt>Première publication</dt><dd><?= e($result['first_publication_year'] ? (string) $result['first_publication_year'] : '—') ?></dd></div>
+                                <div><dt>Langue d’origine</dt><dd><?= e(strtoupper((string) ($result['language'] ?? '—'))) ?></dd></div>
                                 <div><dt>Domaine public</dt><dd><?= e(rightsLabel($result['public_domain_status'])) ?></dd></div>
                             </dl>
                         </article>
@@ -139,6 +169,7 @@ function rightsLabel(string $status): string
             aria-labelledby="external-results-title"
             data-discovery-search
             data-query="<?= e($query) ?>"
+            data-languages="<?= e(implode(',', $languages)) ?>"
             data-sources="<?= e(json_encode(array_keys($discoveryDefinitions), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) ?>"
         >
             <div class="section-heading">
