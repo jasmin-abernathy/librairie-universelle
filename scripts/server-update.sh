@@ -42,6 +42,7 @@ git worktree add --detach "$TMP" "$TARGET" >/dev/null
   export FEEDBACK_ENABLED=false
   "$PHP_BIN" bin/preflight.php
   "$PHP_BIN" tests/MvpWorkflowTest.php
+  "$PHP_BIN" tests/DiscoverySourcesTest.php
 )
 
 cleanup
