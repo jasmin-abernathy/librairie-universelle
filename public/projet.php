@@ -14,6 +14,7 @@ function e_project(?string $value): string
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="description" content="Comprendre le MVP : une recherche centrée sur l’œuvre, un storefront ebook gratuit et payant et une autoédition validée humainement.">
     <meta name="theme-color" content="#f7f3ea">
     <meta property="og:type" content="website">

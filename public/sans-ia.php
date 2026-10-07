@@ -14,6 +14,7 @@ function e_no_ai(?string $value): string
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="description" content="Pourquoi le projet n’utilise ni IA de recommandation, ni profilage comportemental, ni validation éditoriale automatisée.">
     <meta name="theme-color" content="#f7f3ea">
     <meta property="og:type" content="website">

@@ -30,6 +30,7 @@ function e(?string $value): string
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <title>Donner un retour — <?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>

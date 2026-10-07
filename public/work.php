@@ -108,6 +108,7 @@ $localRows = localAvailabilityRows($localAvailability);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="theme-color" content="#f7f3ea">
     <title><?= $record ? e($record['work']['title']) . ' — ' : '' ?><?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/work.css">

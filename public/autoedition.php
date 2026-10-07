@@ -36,6 +36,7 @@ function old(string $key): string
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="description" content="Déposer un livre indépendant pour validation humaine : EPUB, couverture, ISBN et version papier, sans publication automatique.">
     <title>Autoédition — <?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css">
