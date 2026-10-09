@@ -5,7 +5,25 @@ declare(strict_types=1);
 [$config, $pdo] = require dirname(__DIR__) . '/src/bootstrap.php';
 $mode = isset($_GET['mode']) ? (string) $_GET['mode'] : 'all';
 $query = isset($_GET['q']) ? trim((string) $_GET['q']) : '';
+$requestedLanguages = isset($_GET['lang']) && is_array($_GET['lang']) ? $_GET['lang'] : ['fr', 'en'];
+$languages = array_values(array_intersect(
+    ['fr', 'en'],
+    array_unique(array_map(
+        static fn (mixed $language): string => mb_strtolower(trim((string) $language), 'UTF-8'),
+        $requestedLanguages
+    ))
+));
+if ($languages === []) {
+    $languages = ['fr', 'en'];
+}
+
 $offers = EbookStorefront::browse($pdo, $config, $mode, $query);
+$discoveryDefinitions = $query !== '' && !empty($config['federated_search_enabled'])
+    ? array_filter(
+        DiscoveryRegistry::definitions(),
+        static fn (array $definition): bool => array_intersect($definition['languages'] ?? [], $languages) !== []
+    )
+    : [];
 
 function e(?string $value): string
 {
@@ -33,6 +51,8 @@ function priceLabel(?int $cents, ?string $currency, bool $isFree): string
     <meta name="description" content="Storefront ebook réunissant livres payants et textes gratuits de sources vérifiées, sans recommandation par IA.">
     <title>Ebooks — <?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
+    <link rel="stylesheet" href="/assets/css/discovery.css?v=20261009-2">
+    <script src="/assets/js/discovery.js?v=20261009-2" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -63,10 +83,29 @@ function priceLabel(?int $cents, ?string $currency, bool $isFree): string
                 <input id="ebook-search" type="search" name="q" value="<?= e($query) ?>" placeholder="Ex. 1984, Victor Hugo…">
                 <button type="submit">Filtrer</button>
             </div>
+            <?php if ($mode !== 'all'): ?><input type="hidden" name="mode" value="<?= e($mode) ?>"><?php endif; ?>
+            <fieldset class="language-filter">
+                <legend>Langue des résultats</legend>
+                <label>
+                    <input type="checkbox" name="lang[]" value="fr" <?= in_array('fr', $languages, true) ? 'checked' : '' ?>>
+                    Français
+                </label>
+                <label>
+                    <input type="checkbox" name="lang[]" value="en" <?= in_array('en', $languages, true) ? 'checked' : '' ?>>
+                    Anglais
+                </label>
+                <small>Les deux peuvent être cochées.</small>
+            </fieldset>
+            <?php
+            $languageQuery = '';
+            foreach ($languages as $language) {
+                $languageQuery .= '&amp;lang%5B%5D=' . urlencode($language);
+            }
+            ?>
             <div class="filter-pills" aria-label="Type d’offre">
-                <a href="/ebooks.php<?= $query !== '' ? '?q=' . urlencode($query) : '' ?>"<?= $mode === 'all' ? ' aria-current="page"' : '' ?>>Tout</a>
-                <a href="/ebooks.php?mode=free<?= $query !== '' ? '&amp;q=' . urlencode($query) : '' ?>"<?= $mode === 'free' ? ' aria-current="page"' : '' ?>>Gratuit</a>
-                <a href="/ebooks.php?mode=paid<?= $query !== '' ? '&amp;q=' . urlencode($query) : '' ?>"<?= $mode === 'paid' ? ' aria-current="page"' : '' ?>>Payant</a>
+                <a href="/ebooks.php?mode=all<?= $query !== '' ? '&amp;q=' . urlencode($query) : '' ?><?= $languageQuery ?>"<?= $mode === 'all' ? ' aria-current="page"' : '' ?>>Tout</a>
+                <a href="/ebooks.php?mode=free<?= $query !== '' ? '&amp;q=' . urlencode($query) : '' ?><?= $languageQuery ?>"<?= $mode === 'free' ? ' aria-current="page"' : '' ?>>Gratuit</a>
+                <a href="/ebooks.php?mode=paid<?= $query !== '' ? '&amp;q=' . urlencode($query) : '' ?><?= $languageQuery ?>"<?= $mode === 'paid' ? ' aria-current="page"' : '' ?>>Payant</a>
             </div>
         </form>
 
@@ -102,6 +141,38 @@ function priceLabel(?int $cents, ?string $currency, bool $isFree): string
             </div>
         <?php endif; ?>
     </section>
+
+    <?php if ($query !== '' && $discoveryDefinitions !== []): ?>
+        <section
+            class="content-section external-results"
+            id="external-results"
+            aria-labelledby="external-results-title"
+            data-discovery-search
+            data-query="<?= e($query) ?>"
+            data-languages="<?= e(implode(',', $languages)) ?>"
+            data-sources="<?= e(json_encode(array_keys($discoveryDefinitions), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) ?>"
+        >
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Bibliothèque fédérée</p>
+                    <h2 id="external-results-title">Résultats dans les catalogues externes</h2>
+                </div>
+                <span id="discovery-progress" aria-live="polite">Préparation de la recherche…</span>
+            </div>
+            <p class="lede small">La recherche continue dans les catalogues externes identifiés, notamment les bibliothèques d’EPUB gratuites et du domaine public. Chaque résultat garde sa source et son lien d’accès.</p>
+            <div class="source-pills" aria-label="Sources interrogées">
+                <?php foreach ($discoveryDefinitions as $definition): ?>
+                    <span title="<?= e($definition['description']) ?>"><?= e($definition['name']) ?></span>
+                <?php endforeach; ?>
+            </div>
+            <div id="external-result-list" class="external-result-list" aria-live="polite">
+                <p class="discovery-loading">Les catalogues sont interrogés progressivement pour ne pas bloquer la page.</p>
+            </div>
+            <noscript>
+                <p class="note">La recherche dans les catalogues externes nécessite JavaScript. Les offres déjà présentes dans le catalogue local restent accessibles.</p>
+            </noscript>
+        </section>
+    <?php endif; ?>
 
     <section class="content-section callout">
         <div>
