@@ -86,6 +86,20 @@
         input.focus();
     }
 
+    function renderSuggestionStatus(message, state = 'loading') {
+        suggestions = [];
+        activeSuggestion = -1;
+        suggestionsBox.replaceChildren();
+
+        const notice = document.createElement('span');
+        notice.className = 'address-suggestion-status is-' + state;
+        notice.setAttribute('role', 'status');
+        notice.textContent = message;
+        suggestionsBox.appendChild(notice);
+        suggestionsBox.hidden = false;
+        input.setAttribute('aria-expanded', 'true');
+    }
+
     function renderSuggestions(items) {
         suggestions = items;
         activeSuggestion = -1;
@@ -133,17 +147,30 @@
         }
 
         suggestionTimer = window.setTimeout(async () => {
+            renderSuggestionStatus('Recherche d’adresses…');
             try {
                 const items = await complete(value, {
                     terr: 'METROPOLE',
                     type: 'StreetAddress',
                     maximumResponses: 6,
                 });
+
+                if (input.value.trim() !== value) {
+                    return;
+                }
+
+                if (items.length === 0) {
+                    renderSuggestionStatus('Aucune adresse trouvée. Essayez de préciser la commune.', 'empty');
+                    return;
+                }
+
                 renderSuggestions(items);
             } catch {
-                clearSuggestions();
+                if (input.value.trim() === value) {
+                    renderSuggestionStatus('Suggestions temporairement indisponibles.', 'error');
+                }
             }
-        }, 350);
+        }, 300);
     });
 
     input.addEventListener('keydown', (event) => {
@@ -238,7 +265,7 @@
                 if (entry) located.push(entry);
             });
             completed += batch.length;
-            status.textContent = 'Repérage des librairies : ' + completed + '/' + bookstores.length + '…';
+            setLocatorStatus('Repérage des librairies : ' + completed + '/' + bookstores.length + '…', 'loading');
             writeCache(cache);
 
             if (offset + 5 < pending.length) await wait(700);
@@ -359,21 +386,50 @@
         resultsBox.appendChild(grid);
     }
 
+    function setLocatorStatus(message, state = '') {
+        status.textContent = message;
+        status.className = 'locator-status' + (state ? ' is-' + state : '');
+    }
+
+    function renderSearchLoading(message) {
+        const loading = document.createElement('div');
+        loading.className = 'bookstore-search-loading';
+        loading.setAttribute('role', 'status');
+
+        const spinner = document.createElement('span');
+        spinner.className = 'bookstore-search-spinner';
+        spinner.setAttribute('aria-hidden', 'true');
+
+        const text = document.createElement('span');
+        text.textContent = message;
+
+        loading.append(spinner, text);
+        resultsBox.replaceChildren(loading);
+    }
+
     root.addEventListener('submit', async (event) => {
         event.preventDefault();
         clearSuggestions();
+
+        const idleLabel = submit.textContent || 'Trouver les librairies';
         submit.disabled = true;
-        resultsBox.replaceChildren();
-        status.textContent = 'Recherche de l’adresse…';
+        submit.dataset.loading = 'true';
+        submit.setAttribute('aria-busy', 'true');
+        submit.textContent = 'Recherche…';
+
+        setLocatorStatus('Recherche de l’adresse…', 'loading');
+        renderSearchLoading('Localisation de votre adresse…');
 
         try {
             const origin = await resolveTypedAddress();
             if (!origin) {
-                status.textContent = 'Adresse introuvable. Choisissez une suggestion ou précisez davantage l’adresse.';
+                setLocatorStatus('Adresse introuvable. Choisissez une suggestion ou précisez davantage l’adresse.', 'error');
+                renderSearchLoading('Aucun résultat tant que l’adresse n’est pas reconnue.');
                 return;
             }
 
-            status.textContent = 'Chargement de l’annuaire…';
+            setLocatorStatus('Adresse reconnue. Chargement de l’annuaire…', 'loading');
+            renderSearchLoading('Recherche des librairies dans le rayon choisi…');
             const bookstores = await loadBookstores();
             const located = await geocodeBookstores(bookstores);
             const searchRadius = Number(radius.value) || 10;
@@ -387,13 +443,20 @@
                 .sort((a, b) => a.distance - b.distance);
 
             renderBookstores(matches, searchRadius);
-            status.textContent = located.length < bookstores.length
-                ? 'Résultats affichés. Certaines adresses de librairies n’ont pas pu être localisées.'
-                : 'Résultats triés par distance.';
+            setLocatorStatus(
+                located.length < bookstores.length
+                    ? 'Résultats affichés. Certaines adresses de librairies n’ont pas pu être localisées.'
+                    : 'Résultats triés par distance.',
+                'success'
+            );
         } catch {
-            status.textContent = 'Le service de localisation est temporairement indisponible. Réessayez dans quelques instants.';
+            setLocatorStatus('Le service de localisation est temporairement indisponible. Réessayez dans quelques instants.', 'error');
+            resultsBox.replaceChildren();
         } finally {
             submit.disabled = false;
+            submit.dataset.loading = 'false';
+            submit.removeAttribute('aria-busy');
+            submit.textContent = idleLabel;
         }
     });
 })();

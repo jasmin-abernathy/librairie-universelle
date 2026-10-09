@@ -252,6 +252,23 @@ footer { max-width: 1120px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 2rem)
     padding: .95rem 1.2rem;
     min-height: 3.25rem;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+}
+.locator-grid button[data-loading="true"] {
+    cursor: progress;
+    opacity: .9;
+}
+.locator-grid button[data-loading="true"]::before {
+    content: "";
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(255,255,255,.45);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: bookstore-spin .75s linear infinite;
 }
 .address-combobox { position: relative; display: block; }
 .address-suggestions {
@@ -280,6 +297,14 @@ footer { max-width: 1120px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 2rem)
     cursor: pointer;
 }
 .address-suggestion:last-child { border-bottom: 0; }
+.address-suggestion-status {
+    display: block;
+    padding: .8rem 1rem;
+    color: var(--muted);
+    font-size: .9rem;
+}
+.address-suggestion-status.is-error { color: #8a2d22; }
+.address-suggestion-status.is-empty { color: var(--muted); }
 .address-suggestion:hover,
 .address-suggestion[aria-selected="true"] { background: var(--accent-soft); }
 .locator-privacy,
@@ -289,7 +314,39 @@ footer { max-width: 1120px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 2rem)
     font-size: .9rem;
 }
 .locator-status:empty { display: none; }
+.locator-status.is-loading,
+.locator-status.is-success,
+.locator-status.is-error {
+    padding: .7rem .85rem;
+    border-radius: .7rem;
+    font-weight: 700;
+}
+.locator-status.is-loading { background: var(--accent-soft); color: #173e2d; }
+.locator-status.is-success { background: #eef6f0; color: #173e2d; }
+.locator-status.is-error { background: #fff0ed; color: #8a2d22; }
 .bookstore-results { margin-top: 1.4rem; }
+.bookstore-search-loading {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    min-height: 4.25rem;
+    padding: 1rem 1.1rem;
+    border: 1px dashed var(--line);
+    border-radius: .9rem;
+    background: var(--surface);
+    color: var(--ink);
+    font-weight: 700;
+}
+.bookstore-search-spinner {
+    width: 1.15rem;
+    height: 1.15rem;
+    flex: 0 0 auto;
+    border: 2px solid var(--line);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: bookstore-spin .75s linear infinite;
+}
+@keyframes bookstore-spin { to { transform: rotate(360deg); } }
 .bookstore-results-heading h2 { font-size: clamp(1.4rem, 3vw, 2rem); margin: 0 0 1rem; }
 .bookstore-grid {
     display: grid;
