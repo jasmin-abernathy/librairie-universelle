@@ -71,6 +71,8 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/health.php | grep '"status":"ok"'
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Trouver une librairie près de chez vous.'
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Chercher une œuvre, pas un produit.'
+          curl --fail --silent http://127.0.0.1:8080/ | grep '/assets/js/discovery.js?v=20261009-3'
+          grep -F '.discovery-state {' public/assets/css/discovery.css
           for page in / /ebooks.php /autoedition.php /projet.php /sans-ia.php /feedback.php '/work.php?id=1'; do
             curl --fail --silent "http://127.0.0.1:8080${page}" | grep 'href="/#librairies"'
           done

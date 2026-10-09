@@ -53,10 +53,10 @@ function rightsLabel(string $status): string
     <meta property="og:description" content="Un annuaire local de librairies à Metz et en Moselle, complété par une recherche de livres multi-sources, sans profilage.">
     <title><?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
-    <link rel="stylesheet" href="/assets/css/discovery.css">
+    <link rel="stylesheet" href="/assets/css/discovery.css?v=20261009-3">
     <script src="/assets/js/app.js" defer></script>
     <script src="/assets/js/bookstores.js?v=20261009-1" defer></script>
-    <script src="/assets/js/discovery.js" defer></script>
+    <script src="/assets/js/discovery.js?v=20261009-3" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
