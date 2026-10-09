@@ -73,8 +73,8 @@ function priceLabel(?int $cents, ?string $currency, bool $isFree): string
 
     <section class="content-section" aria-labelledby="browse-title">
         <div class="section-heading">
-            <h2 id="browse-title">Parcourir les ebooks</h2>
-            <span><?= count($offers) ?> offre<?= count($offers) === 1 ? '' : 's' ?></span>
+            <h2 id="browse-title"><?= $query !== '' ? 'Offres déjà indexées' : 'Parcourir les ebooks' ?></h2>
+            <span><?= count($offers) ?> offre<?= count($offers) === 1 ? '' : 's' ?> déjà indexée<?= count($offers) === 1 ? '' : 's' ?></span>
         </div>
 
         <form class="storefront-controls" method="get" action="/ebooks.php">
@@ -109,39 +109,6 @@ function priceLabel(?int $cents, ?string $currency, bool $isFree): string
             </div>
         </form>
 
-        <?php if ($offers === []): ?>
-            <div class="empty-state">
-                <h3>Aucune offre dans ce filtre pour le moment.</h3>
-                <p>Le storefront n’invente pas de disponibilité : il n’affiche que les sources déjà reliées et documentées.</p>
-            </div>
-        <?php else: ?>
-            <div class="ebook-grid">
-                <?php foreach ($offers as $offer): ?>
-                    <article class="ebook-card">
-                        <div class="ebook-card-topline">
-                            <span class="status-badge"><?= $offer['is_free'] ? 'Gratuit' : 'Payant' ?></span>
-                            <?php if ($offer['is_stale']): ?><span class="stale-badge">À revérifier</span><?php endif; ?>
-                        </div>
-                        <p class="work-kind"><?= e($offer['source_name']) ?></p>
-                        <h3><a href="/work.php?id=<?= (int) $offer['work_id'] ?>"><?= e($offer['work_title']) ?></a></h3>
-                        <?php if (!empty($offer['contributors'])): ?><p class="ebook-author"><?= e($offer['contributors']) ?></p><?php endif; ?>
-                        <?php if (!empty($offer['edition_title'])): ?><p class="ebook-edition"><?= e($offer['edition_title']) ?></p><?php endif; ?>
-                        <dl class="ebook-facts">
-                            <div><dt>Prix</dt><dd><?= e(priceLabel($offer['price_cents'] !== null ? (int) $offer['price_cents'] : null, $offer['currency'], (bool) $offer['is_free'])) ?></dd></div>
-                            <div><dt>Format</dt><dd><?= e($offer['offer_format'] ?: $offer['edition_format'] ?: 'Non précisé') ?></dd></div>
-                            <div><dt>DRM</dt><dd><?= e($offer['offer_drm'] ?: 'Non précisé') ?></dd></div>
-                            <?php if (!empty($offer['isbn13'])): ?><div><dt>ISBN</dt><dd><code><?= e($offer['isbn13']) ?></code></dd></div><?php endif; ?>
-                        </dl>
-                        <?php if (!empty($offer['checked_at'])): ?>
-                            <p class="freshness-note">Donnée vérifiée : <?= e(substr((string) $offer['checked_at'], 0, 10)) ?><?= $offer['is_stale'] ? ' — revérification recommandée' : '' ?>.</p>
-                        <?php endif; ?>
-                        <a class="button-link" href="<?= e($offer['url']) ?>" rel="noopener noreferrer">Voir cette offre ↗</a>
-                    </article>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-    </section>
-
     <?php if ($query !== '' && $discoveryDefinitions !== []): ?>
         <section
             class="content-section external-results"
@@ -173,6 +140,43 @@ function priceLabel(?int $cents, ?string $currency, bool $isFree): string
             </noscript>
         </section>
     <?php endif; ?>
+
+        <?php if ($offers === []): ?>
+            <div class="note">
+                <strong>Aucune offre déjà indexée dans ce filtre.</strong>
+                <?php if ($query !== '' && $discoveryDefinitions !== []): ?>
+                    Les catalogues externes sont interrogés juste au-dessus : leurs résultats ne sont pas comptés comme des offres locales tant qu’ils ne sont pas intégrés au catalogue.
+                <?php else: ?>
+                    Le storefront n’affiche ici que les offres déjà reliées et documentées.
+                <?php endif; ?>
+            </div>
+        <?php else: ?>
+            <div class="ebook-grid">
+                <?php foreach ($offers as $offer): ?>
+                    <article class="ebook-card">
+                        <div class="ebook-card-topline">
+                            <span class="status-badge"><?= $offer['is_free'] ? 'Gratuit' : 'Payant' ?></span>
+                            <?php if ($offer['is_stale']): ?><span class="stale-badge">À revérifier</span><?php endif; ?>
+                        </div>
+                        <p class="work-kind"><?= e($offer['source_name']) ?></p>
+                        <h3><a href="/work.php?id=<?= (int) $offer['work_id'] ?>"><?= e($offer['work_title']) ?></a></h3>
+                        <?php if (!empty($offer['contributors'])): ?><p class="ebook-author"><?= e($offer['contributors']) ?></p><?php endif; ?>
+                        <?php if (!empty($offer['edition_title'])): ?><p class="ebook-edition"><?= e($offer['edition_title']) ?></p><?php endif; ?>
+                        <dl class="ebook-facts">
+                            <div><dt>Prix</dt><dd><?= e(priceLabel($offer['price_cents'] !== null ? (int) $offer['price_cents'] : null, $offer['currency'], (bool) $offer['is_free'])) ?></dd></div>
+                            <div><dt>Format</dt><dd><?= e($offer['offer_format'] ?: $offer['edition_format'] ?: 'Non précisé') ?></dd></div>
+                            <div><dt>DRM</dt><dd><?= e($offer['offer_drm'] ?: 'Non précisé') ?></dd></div>
+                            <?php if (!empty($offer['isbn13'])): ?><div><dt>ISBN</dt><dd><code><?= e($offer['isbn13']) ?></code></dd></div><?php endif; ?>
+                        </dl>
+                        <?php if (!empty($offer['checked_at'])): ?>
+                            <p class="freshness-note">Donnée vérifiée : <?= e(substr((string) $offer['checked_at'], 0, 10)) ?><?= $offer['is_stale'] ? ' — revérification recommandée' : '' ?>.</p>
+                        <?php endif; ?>
+                        <a class="button-link" href="<?= e($offer['url']) ?>" rel="noopener noreferrer">Voir cette offre ↗</a>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </section>
 
     <section class="content-section callout">
         <div>

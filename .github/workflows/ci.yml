@@ -92,6 +92,8 @@ jobs:
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=20' | grep 'À vérifier'
           curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep 'Payant ou gratuit'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'Bibliothèque fédérée'
+          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'offre.*déjà indexée'
+          php -r '$html = file_get_contents("http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr"); if (strpos($html, "Bibliothèque fédérée") > strpos($html, "Offres déjà indexées")) { fwrite(STDERR, "La recherche fédérée doit précéder les offres locales.\n"); exit(1); }'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'data-discovery-search'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'Wikisource FR'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=en' | grep 'Standard Ebooks'
