@@ -71,7 +71,7 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/health.php | grep '"status":"ok"'
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Trouver une librairie près de chez vous.'
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Chercher une œuvre, pas un produit.'
-          curl --fail --silent http://127.0.0.1:8080/ | grep '/assets/js/discovery.js?v=20261009-3'
+          curl --fail --silent http://127.0.0.1:8080/ | grep '/assets/js/discovery.js?v=20261009-4'
           grep -F '.discovery-state {' public/assets/css/discovery.css
           for page in / /ebooks.php /autoedition.php /projet.php /sans-ia.php /feedback.php '/work.php?id=1'; do
             curl --fail --silent "http://127.0.0.1:8080${page}" | grep 'href="/#librairies"'
@@ -81,6 +81,9 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/api/bookstores.php | grep '"bookstores"'
           grep -F "connect-src 'self' https://data.geopf.fr" public/.htaccess
           grep -F "Recherche d’adresses…" public/assets/js/bookstores.js
+          grep -F "depcode: '57'" public/assets/js/bookstores.js
+          grep -F "Aucune adresse trouvée en Moselle" public/assets/js/bookstores.js
+          grep -F ".locator-grid .address-suggestion" public/assets/css/app.css
           grep -F "submit.dataset.loading = 'true'" public/assets/js/bookstores.js
           curl --fail --silent 'http://127.0.0.1:8080/?q=George%20Orwell' | grep 'La Ferme des animaux'
           curl --fail --silent 'http://127.0.0.1:8080/?q=Albert%20Camus' | grep '>Non<'
@@ -93,7 +96,8 @@ jobs:
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'traduction française'
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=20' | grep 'À vérifier'
           curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep 'Un titre, plusieurs façons de le lire.'
-          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep '/assets/css/ebooks.css?v=20261009-1'
+          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep '/assets/css/ebooks.css?v=20261009-2'
+          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'data-result-limit="8"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'id="federated-results"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'id="indexed-results"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'Wikisource FR'
@@ -103,6 +107,9 @@ jobs:
           test "$(curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep -c 'data-discovery-search')" = "0"
           php -r '$html = file_get_contents("http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr"); $f = strpos($html, "id=\"federated-results\""); $i = strpos($html, "id=\"indexed-results\""); if ($f === false || $i === false || $f > $i) { fwrite(STDERR, "Les catalogues externes doivent précéder les offres locales.\n"); exit(1); }'
           grep -F "Recherche dans les catalogues…" public/assets/js/discovery.js
+          grep -F "title === normalizedQuery" public/assets/js/discovery.js
+          grep -F "groups.get(key)" public/assets/js/discovery.js
+          grep -F "Afficher " public/assets/js/discovery.js
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Demander des ISBN à l’AFNIL'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Je veux définir la mise en page de ma future version imprimée.'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Sommaire automatique'

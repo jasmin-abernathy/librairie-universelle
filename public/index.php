@@ -52,11 +52,11 @@ function rightsLabel(string $status): string
     <meta property="og:title" content="Trouver une librairie près de chez vous.">
     <meta property="og:description" content="Un annuaire local de librairies à Metz et en Moselle, complété par une recherche de livres multi-sources, sans profilage.">
     <title><?= e($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261009-3">
     <link rel="stylesheet" href="/assets/css/discovery.css?v=20261009-3">
     <script src="/assets/js/app.js" defer></script>
-    <script src="/assets/js/bookstores.js?v=20261009-1" defer></script>
-    <script src="/assets/js/discovery.js?v=20261009-3" defer></script>
+    <script src="/assets/js/bookstores.js?v=20261009-2" defer></script>
+    <script src="/assets/js/discovery.js?v=20261009-4" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -108,7 +108,7 @@ function rightsLabel(string $status): string
                 <button type="submit" data-bookstore-submit>Trouver les librairies</button>
             </div>
             <p class="locator-privacy">
-                Les suggestions d’adresse sont fournies directement par le service public Géoplateforme / Base Adresse Nationale.
+                Les suggestions d’adresse sont fournies directement par le service public Géoplateforme / Base Adresse Nationale et limitées à la Moselle.
                 Votre adresse n’est ni enregistrée ni envoyée au Potager du Web.
             </p>
             <p class="locator-status" data-bookstore-status aria-live="polite"></p>

@@ -76,8 +76,8 @@ function modeLabel(string $mode): string
     <title>Ebooks — <?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
     <link rel="stylesheet" href="/assets/css/discovery.css?v=20261009-3">
-    <link rel="stylesheet" href="/assets/css/ebooks.css?v=20261009-1">
-    <script src="/assets/js/discovery.js?v=20261009-3" defer></script>
+    <link rel="stylesheet" href="/assets/css/ebooks.css?v=20261009-2">
+    <script src="/assets/js/discovery.js?v=20261009-4" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -156,6 +156,7 @@ function modeLabel(string $mode): string
                 data-query="<?= e($query) ?>"
                 data-languages="<?= e(implode(',', $languages)) ?>"
                 data-sources="<?= e(json_encode(array_keys($discoveryDefinitions), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) ?>"
+                data-result-limit="8"
             >
                 <div class="ebook-block-heading">
                     <div>

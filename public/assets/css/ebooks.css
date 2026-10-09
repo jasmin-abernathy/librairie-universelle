@@ -306,3 +306,51 @@
 @media (prefers-reduced-motion: reduce) {
     .discovery-spinner { animation: none; }
 }
+
+/* Résultats plus lisibles : une œuvre par carte, sources regroupées, détails juridiques repliés. */
+.ebook-external-results .external-work-card {
+    padding: 1rem 1.05rem;
+}
+.ebook-external-results .external-work-card h3 {
+    font-size: 1.15rem;
+}
+.ebook-external-results .external-sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem .8rem;
+    margin-top: .65rem;
+}
+.ebook-external-results .external-source {
+    width: fit-content;
+    padding: 0;
+    border-top: 0;
+}
+.external-rights {
+    margin-top: .7rem;
+    color: var(--muted);
+    font-size: .82rem;
+}
+.external-rights summary {
+    width: fit-content;
+    cursor: pointer;
+    font-weight: 750;
+}
+.external-rights p {
+    margin: .45rem 0 0;
+}
+.discovery-more {
+    grid-column: 1 / -1;
+    width: fit-content;
+    justify-self: center;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--accent);
+    padding: .7rem 1rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+.discovery-more:hover {
+    border-color: #8fb09c;
+    background: var(--accent-soft);
+}

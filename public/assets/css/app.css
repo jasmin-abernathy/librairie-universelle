@@ -404,3 +404,40 @@ footer { max-width: 1120px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 2rem)
     .bookstore-card-top { align-items: flex-start; }
 }
 
+
+/* L’autocomplétion est une liste de choix, pas une série de boutons d’action. */
+.locator-grid .address-suggestion {
+    width: 100%;
+    min-height: 0;
+    display: grid;
+    justify-content: stretch;
+    gap: .08rem;
+    padding: .72rem .85rem;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: var(--surface);
+    color: var(--ink);
+    text-align: left;
+    font-weight: 650;
+    cursor: pointer;
+}
+.locator-grid .address-suggestion:last-child { border-bottom: 0; }
+.locator-grid .address-suggestion:hover,
+.locator-grid .address-suggestion[aria-selected="true"] {
+    background: var(--accent-soft);
+    color: var(--ink);
+}
+.address-suggestion-primary {
+    display: block;
+    font-weight: 800;
+    line-height: 1.25;
+}
+.address-suggestion-secondary {
+    display: block;
+    margin-top: .08rem;
+    color: var(--muted);
+    font-size: .82rem;
+    font-weight: 600;
+    line-height: 1.25;
+}

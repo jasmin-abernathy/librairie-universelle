@@ -118,7 +118,29 @@
             button.className = 'address-suggestion';
             button.setAttribute('role', 'option');
             button.setAttribute('aria-selected', 'false');
-            button.textContent = location.label;
+
+            const fullText = location.label;
+            const firstComma = fullText.indexOf(',');
+            const fallbackPrimary = firstComma >= 0 ? fullText.slice(0, firstComma).trim() : fullText;
+            const fallbackSecondary = firstComma >= 0 ? fullText.slice(firstComma + 1).trim() : '';
+            const primaryText = String(item.street || item.name || fallbackPrimary).trim() || fullText;
+            const postalCode = String(item.zipcode || item.postcode || item.postalcode || '').trim();
+            const city = String(item.city || item.commune || '').trim();
+            const secondaryText = [postalCode, city].filter(Boolean).join(' ') || fallbackSecondary;
+
+            const primary = document.createElement('span');
+            primary.className = 'address-suggestion-primary';
+            primary.textContent = primaryText;
+            button.appendChild(primary);
+
+            if (secondaryText && secondaryText !== primaryText) {
+                const secondary = document.createElement('span');
+                secondary.className = 'address-suggestion-secondary';
+                secondary.textContent = secondaryText;
+                button.appendChild(secondary);
+            }
+
+            button.setAttribute('aria-label', fullText);
             button.addEventListener('click', () => chooseSuggestion(index));
             suggestionsBox.appendChild(button);
         });
@@ -150,9 +172,9 @@
             renderSuggestionStatus('Recherche d’adresses…');
             try {
                 const items = await complete(value, {
-                    terr: 'METROPOLE',
+                    depcode: '57',
                     type: 'StreetAddress',
-                    maximumResponses: 6,
+                    maximumResponses: 5,
                 });
 
                 if (input.value.trim() !== value) {
@@ -160,7 +182,7 @@
                 }
 
                 if (items.length === 0) {
-                    renderSuggestionStatus('Aucune adresse trouvée. Essayez de préciser la commune.', 'empty');
+                    renderSuggestionStatus('Aucune adresse trouvée en Moselle. Essayez de préciser la commune.', 'empty');
                     return;
                 }
 
@@ -198,7 +220,7 @@
         const value = input.value.trim();
         if (value.length < 3) return null;
         const items = await complete(value, {
-            terr: 'METROPOLE',
+            depcode: '57',
             type: 'StreetAddress',
             maximumResponses: 1,
         });

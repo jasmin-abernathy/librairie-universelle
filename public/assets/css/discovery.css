@@ -71,3 +71,10 @@
 .language-filter small {
     color: var(--muted);
 }
+
+.discovery-more {
+    grid-column: 1 / -1;
+    width: fit-content;
+    justify-self: center;
+}
+.external-rights summary { color: var(--accent); }
