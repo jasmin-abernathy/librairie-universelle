@@ -7,15 +7,15 @@ final class DiscoveryRegistry
     public static function definitions(): array
     {
         return [
-            'bnf'=>['name'=>'BnF', 'description'=>'Catalogue bibliographique français', 'languages'=>['fr','en'], 'default_language'=>null],
-            'gallica'=>['name'=>'Gallica', 'description'=>'EPUB patrimoniaux BnF', 'languages'=>['fr'], 'default_language'=>'fr'],
-            'wikisource'=>['name'=>'Wikisource FR', 'description'=>'Textes relus et exportables', 'languages'=>['fr'], 'default_language'=>'fr'],
-            'elg'=>['name'=>'Ebooks Libres et Gratuits', 'description'=>'Catalogue OPDS francophone', 'languages'=>['fr'], 'default_language'=>'fr'],
-            'bnr'=>['name'=>'Bibliothèque numérique romande', 'description'=>'Classiques francophones en EPUB', 'languages'=>['fr'], 'default_language'=>'fr'],
-            'gutenberg'=>['name'=>'Project Gutenberg', 'description'=>'Grand catalogue international du domaine public', 'languages'=>['fr','en'], 'default_language'=>null],
-            'standardebooks'=>['name'=>'Standard Ebooks', 'description'=>'Éditions EPUB soignées indexées via GitHub', 'languages'=>['en'], 'default_language'=>'en'],
-            'openlibrary'=>['name'=>'Open Library', 'description'=>'Catalogue international et accès numériques', 'languages'=>['fr','en'], 'default_language'=>null],
-            'doab'=>['name'=>'DOAB', 'description'=>'Livres académiques en open access', 'languages'=>['fr','en'], 'default_language'=>null],
+            'bnf'=>['name'=>'BnF', 'description'=>'Catalogue bibliographique français', 'languages'=>['fr','en'], 'default_language'=>null, 'ebook_surface'=>false, 'modes'=>['all']],
+            'gallica'=>['name'=>'Gallica', 'description'=>'EPUB patrimoniaux BnF', 'languages'=>['fr'], 'default_language'=>'fr', 'ebook_surface'=>true, 'modes'=>['all','free']],
+            'wikisource'=>['name'=>'Wikisource FR', 'description'=>'Textes relus et exportables', 'languages'=>['fr'], 'default_language'=>'fr', 'ebook_surface'=>true, 'modes'=>['all','free']],
+            'elg'=>['name'=>'Ebooks Libres et Gratuits', 'description'=>'Catalogue OPDS francophone', 'languages'=>['fr'], 'default_language'=>'fr', 'ebook_surface'=>true, 'modes'=>['all','free']],
+            'bnr'=>['name'=>'Bibliothèque numérique romande', 'description'=>'Classiques francophones en EPUB', 'languages'=>['fr'], 'default_language'=>'fr', 'ebook_surface'=>true, 'modes'=>['all','free']],
+            'gutenberg'=>['name'=>'Project Gutenberg', 'description'=>'Grand catalogue international du domaine public', 'languages'=>['fr','en'], 'default_language'=>null, 'ebook_surface'=>true, 'modes'=>['all','free']],
+            'standardebooks'=>['name'=>'Standard Ebooks', 'description'=>'Éditions EPUB soignées indexées via GitHub', 'languages'=>['en'], 'default_language'=>'en', 'ebook_surface'=>true, 'modes'=>['all','free']],
+            'openlibrary'=>['name'=>'Open Library', 'description'=>'Catalogue international et accès numériques', 'languages'=>['fr','en'], 'default_language'=>null, 'ebook_surface'=>true, 'modes'=>['all']],
+            'doab'=>['name'=>'DOAB', 'description'=>'Livres académiques en open access', 'languages'=>['fr','en'], 'default_language'=>null, 'ebook_surface'=>true, 'modes'=>['all','free']],
         ];
     }
 
@@ -62,6 +62,26 @@ final class DiscoveryRegistry
             return false;
         }
         return array_intersect($definition['languages'] ?? [], $languages) !== [];
+    }
+
+    public static function supportsEbookSurface(string $key): bool
+    {
+        $definition = self::definitions()[$key] ?? null;
+        return is_array($definition) && !empty($definition['ebook_surface']);
+    }
+
+    public static function supportsMode(string $key, string $mode): bool
+    {
+        if ($mode === 'all') {
+            return true;
+        }
+
+        $definition = self::definitions()[$key] ?? null;
+        if (!is_array($definition)) {
+            return false;
+        }
+
+        return in_array($mode, $definition['modes'] ?? ['all'], true);
     }
 
     public static function normalizeLanguage(?string $language): ?string

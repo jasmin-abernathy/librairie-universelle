@@ -15,6 +15,25 @@
     if (!list || !progress) return;
 
     list.textContent = '';
+
+    const loadingState = document.createElement('div');
+    loadingState.className = 'discovery-state is-loading';
+    loadingState.setAttribute('role', 'status');
+
+    const loadingSpinner = document.createElement('span');
+    loadingSpinner.className = 'discovery-spinner';
+    loadingSpinner.setAttribute('aria-hidden', 'true');
+
+    const loadingText = document.createElement('span');
+    loadingText.textContent = 'Recherche dans les catalogues…';
+
+    loadingState.append(loadingSpinner, loadingText);
+    list.appendChild(loadingState);
+
+    const removeLoadingState = () => {
+        if (loadingState.isConnected) loadingState.remove();
+    };
+
     const cards = new Map();
     let completed = 0;
     let failed = 0;
@@ -73,6 +92,7 @@
 
     const addResult = (result) => {
         if (!result || !result.title) return;
+        removeLoadingState();
         const key = resultKey(result);
         let sourceContainer = cards.get(key);
 
@@ -165,9 +185,10 @@
 
     updateProgress();
     runPool(sources, 4).then(() => {
+        removeLoadingState();
         if (cards.size !== 0) return;
         const empty = document.createElement('div');
-        empty.className = 'empty-state';
+        empty.className = 'discovery-state is-empty';
         const title = document.createElement('h3');
         title.textContent = 'Rien de pertinent trouvé dans les catalogues externes.';
         const text = document.createElement('p');

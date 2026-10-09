@@ -19,6 +19,11 @@ $assert(DiscoveryRegistry::supportsLanguages('wikisource', ['fr']), 'Wikisource 
 $assert(!DiscoveryRegistry::supportsLanguages('wikisource', ['en']), 'Wikisource FR ne doit pas être interrogé pour une recherche anglais uniquement.');
 $assert(DiscoveryRegistry::supportsLanguages('standardebooks', ['en']), 'Standard Ebooks devrait être disponible en anglais.');
 $assert(!DiscoveryRegistry::supportsLanguages('standardebooks', ['fr']), 'Standard Ebooks ne doit pas être interrogé pour une recherche français uniquement.');
+$assert(!DiscoveryRegistry::supportsEbookSurface('bnf'), 'La BnF bibliographique ne doit pas être affichée comme bibliothèque ebook.');
+$assert(DiscoveryRegistry::supportsEbookSurface('gallica'), 'Gallica doit être disponible dans la bibliothèque ebook.');
+$assert(DiscoveryRegistry::supportsMode('wikisource', 'free'), 'Wikisource devrait être interrogé pour le filtre gratuit.');
+$assert(DiscoveryRegistry::supportsMode('standardebooks', 'free'), 'Standard Ebooks devrait être interrogé pour le filtre gratuit.');
+$assert(!DiscoveryRegistry::supportsMode('openlibrary', 'free'), 'Open Library ne doit pas être qualifié automatiquement comme source gratuite.');
 
 $filtered = DiscoveryRegistry::filterResults('bnf', [
     ['language'=>'fre', 'title'=>'Français'],
