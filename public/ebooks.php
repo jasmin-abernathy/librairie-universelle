@@ -32,19 +32,11 @@ function priceLabel(?int $cents, ?string $currency, bool $isFree): string
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="description" content="Storefront ebook réunissant livres payants et textes gratuits de sources vérifiées, sans recommandation par IA.">
     <title>Ebooks — <?= e($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
-<header class="site-header">
-    <a class="brand" href="/">📚 <span>Librairie universelle <small>nom de travail</small></span></a>
-    <nav class="site-nav" aria-label="Navigation principale">
-        <a href="/ebooks.php" aria-current="page">Ebooks</a>
-        <a href="/autoedition.php">Autoédition</a>
-        <a href="/projet.php">Le projet</a>
-        <a href="/sans-ia.php">Sans IA</a>
-    </nav>
-</header>
+<?php $currentNav = 'ebooks'; require dirname(__DIR__) . '/src/views/site-header.php'; ?>
 
 <main id="main">
     <section class="page-hero compact">

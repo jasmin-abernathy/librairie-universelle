@@ -111,19 +111,11 @@ $localRows = localAvailabilityRows($localAvailability);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="theme-color" content="#f7f3ea">
     <title><?= $record ? e($record['work']['title']) . ' — ' : '' ?><?= e($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/work.css">
+    <link rel="stylesheet" href="/assets/css/work.css?v=20261009-2">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
-<header class="site-header">
-    <a class="brand" href="/" aria-label="Accueil — Librairie universelle">📚 <span>Librairie universelle <small>nom de travail</small></span></a>
-    <nav class="site-nav" aria-label="Navigation principale">
-        <a href="/ebooks.php">Ebooks</a>
-        <a href="/autoedition.php">Autoédition</a>
-        <a href="/projet.php">Le projet</a>
-        <a href="/sans-ia.php">Sans IA</a>
-    </nav>
-</header>
+<?php $currentNav = 'ebooks'; require dirname(__DIR__) . '/src/views/site-header.php'; ?>
 
 <main id="main">
 <?php if ($record === null): ?>

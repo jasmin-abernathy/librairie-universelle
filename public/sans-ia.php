@@ -21,19 +21,11 @@ function e_no_ai(?string $value): string
     <meta property="og:title" content="Sans IA — <?= e_no_ai($config['name']) ?>">
     <meta property="og:description" content="Recherche déterministe, validation humaine des autoéditions, sources identifiées et aucune recommandation opaque.">
     <title>Sans IA — <?= e_no_ai($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
-<header class="site-header">
-    <a class="brand" href="/" aria-label="Accueil — Librairie universelle">📚 <span>Librairie universelle <small>nom de travail</small></span></a>
-    <nav class="site-nav" aria-label="Navigation principale">
-        <a href="/ebooks.php">Ebooks</a>
-        <a href="/autoedition.php">Autoédition</a>
-        <a href="/projet.php">Le projet</a>
-        <a aria-current="page" href="/sans-ia.php">Sans IA</a>
-    </nav>
-</header>
+<?php $currentNav = 'sans-ia'; require dirname(__DIR__) . '/src/views/site-header.php'; ?>
 
 <main id="main">
     <section class="page-hero compact" aria-labelledby="no-ai-title">

@@ -32,18 +32,11 @@ function e(?string $value): string
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <title>Donner un retour — <?= e($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
-<header class="site-header">
-    <a class="brand" href="/">📚 <span>Librairie universelle <small>nom de travail</small></span></a>
-    <nav class="site-nav" aria-label="Navigation principale">
-        <a href="/ebooks.php">Ebooks</a>
-        <a href="/autoedition.php">Autoédition</a>
-        <a href="/projet.php">Le projet</a>
-    </nav>
-</header>
+<?php $currentNav = ''; require dirname(__DIR__) . '/src/views/site-header.php'; ?>
 <main id="main">
     <section class="page-hero compact">
         <p class="eyebrow">Alpha</p>

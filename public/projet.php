@@ -21,19 +21,11 @@ function e_project(?string $value): string
     <meta property="og:title" content="Le projet — <?= e_project($config['name']) ?>">
     <meta property="og:description" content="Une recherche centrée sur l’œuvre, des sources identifiées, des ebooks gratuits et payants et aucun moteur de recommandation par IA.">
     <title>Le projet — <?= e_project($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
-<header class="site-header">
-    <a class="brand" href="/" aria-label="Accueil — Librairie universelle">📚 <span>Librairie universelle <small>nom de travail</small></span></a>
-    <nav class="site-nav" aria-label="Navigation principale">
-        <a href="/ebooks.php">Ebooks</a>
-        <a href="/autoedition.php">Autoédition</a>
-        <a aria-current="page" href="/projet.php">Le projet</a>
-        <a href="/sans-ia.php">Sans IA</a>
-    </nav>
-</header>
+<?php $currentNav = 'projet'; require dirname(__DIR__) . '/src/views/site-header.php'; ?>
 
 <main id="main">
     <section class="page-hero" aria-labelledby="project-title">

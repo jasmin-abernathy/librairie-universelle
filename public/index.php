@@ -52,7 +52,7 @@ function rightsLabel(string $status): string
     <meta property="og:title" content="Trouver une librairie près de chez vous.">
     <meta property="og:description" content="Un annuaire local de librairies à Metz et en Moselle, complété par une recherche de livres multi-sources, sans profilage.">
     <title><?= e($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css?v=20261009-1">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
     <link rel="stylesheet" href="/assets/css/discovery.css">
     <script src="/assets/js/app.js" defer></script>
     <script src="/assets/js/bookstores.js?v=20261009-1" defer></script>
@@ -60,16 +60,7 @@ function rightsLabel(string $status): string
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
-<header class="site-header">
-    <a class="brand" href="/" aria-label="Accueil — Librairie universelle">📚 <span>Librairie universelle <small>nom de travail</small></span></a>
-    <nav class="site-nav" aria-label="Navigation principale">
-        <a href="/#librairies">Librairies proches</a>
-        <a href="/ebooks.php">Ebooks</a>
-        <a href="/autoedition.php">Autoédition</a>
-        <a href="/projet.php">Le projet</a>
-        <a href="/sans-ia.php">Sans IA</a>
-    </nav>
-</header>
+<?php $currentNav = 'librairies'; require dirname(__DIR__) . '/src/views/site-header.php'; ?>
 
 <main id="main">
     <section class="hero bookstore-hero" id="librairies" aria-labelledby="hero-title">
