@@ -21,6 +21,10 @@
         description.textContent = 'Aucun prix contractuel affichable pour cette configuration.';
     };
     const render = () => {
+        if (!grids.length) {
+            reset('Aucune grille d’impression autorisée pour le moment. Vous pouvez continuer votre dépôt.');
+            return;
+        }
         if (trimInput && trimInput.value !== 'a5') {
             reset('Pour ce devis, choisissez le format A5 dans la préparation papier.');
             return;
