@@ -40,6 +40,8 @@ function checked(string $key, bool $default = false): string
 }
 
 $printPreparationRequested = !empty($_POST['print_preparation_requested']);
+require_once dirname(__DIR__) . '/src/MosellePrintGridClient.php';
+$publicPrintGrids = (new MosellePrintGridClient((string) ($config['moselle_base_url'] ?? '')))->publishedGrids();
 ?>
 <!doctype html>
 <html lang="fr">
@@ -50,6 +52,7 @@ $printPreparationRequested = !empty($_POST['print_preparation_requested']);
     <meta name="description" content="Déposer un livre indépendant pour validation humaine : EPUB, couverture, ISBN et version papier, sans publication automatique.">
     <title>Autoédition — <?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
+    <link rel="stylesheet" href="/assets/css/printing-estimate.css?v=20261013-1">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -261,6 +264,32 @@ $printPreparationRequested = !empty($_POST['print_preparation_requested']);
                     </label>
                 </div>
 
+
+                <section class="print-cost-panel" id="print-cost-estimator" aria-labelledby="print-cost-title" data-grids="<?= e((string) json_encode($publicPrintGrids, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP)) ?>">
+                    <h3 id="print-cost-title">Simuler le coût d’impression</h3>
+                    <p>Comparez un tirage A5 broché, avec intérieur noir et blanc de 80 g et couverture couleur. Les montants n’apparaissent que si une grille d’imprimeur a été confirmée et autorisée.</p>
+                    <div class="print-cost-controls">
+                        <label>Nombre de pages
+                            <select id="print-estimate-pages">
+                                <option value="120">120 pages</option><option value="200" selected>200 pages</option><option value="300">300 pages</option>
+                            </select>
+                        </label>
+                        <label>Tirage
+                            <select id="print-estimate-quantity">
+                                <option value="10">10 exemplaires</option><option value="30" selected>30 exemplaires</option><option value="50">50 exemplaires</option><option value="100">100 exemplaires</option>
+                            </select>
+                        </label>
+                    </div>
+                    <p id="print-estimate-status" class="print-cost-status" role="status" aria-live="polite">Recherche des grilles disponibles…</p>
+                    <dl class="print-cost-results">
+                        <div><dt>Prix total TTC</dt><dd id="print-estimate-total">—</dd></div>
+                        <div><dt>Coût d’impression par exemplaire</dt><dd id="print-estimate-unit">—</dd></div>
+                        <div style="grid-column: 1 / -1"><dt>Solde indicatif par exemplaire avec une hypothèse de remise libraire de 30 %</dt><dd id="print-estimate-balance">—</dd></div>
+                    </dl>
+                    <p class="print-cost-note" id="print-estimate-source">En attente d’une grille autorisée.</p>
+                    <p class="print-cost-note">Le solde n’est pas un bénéfice : le prix public est fixé par l’autoéditeur, et les frais de livraison, la fiscalité, la rémunération de l’auteur, les invendus et les frais de plateforme ne sont pas encore déduits. Aucune commande n’est déclenchée ici.</p>
+                </section>
+
                 <div class="resource-section" aria-labelledby="printers-title">
                     <h3 id="printers-title">Besoin d’un imprimeur ou d’impression à la demande ?</h3>
                     <p>Ces liens sont fournis comme ressources pratiques, <strong>sans partenariat ni classement sponsorisé</strong>. Comparez les coûts, formats, conditions de distribution, propriété des ISBN et exemplaires tests avant de choisir.</p>
@@ -292,5 +321,6 @@ $printPreparationRequested = !empty($_POST['print_preparation_requested']);
     <p>Autoédition accompagnée et filtrée humainement — sans classement automatique opaque.</p>
 </footer>
 <script src="/assets/js/autoedition-print.js"></script>
+<script src="/assets/js/printing-estimate.js?v=20261013-1"></script>
 </body>
 </html>

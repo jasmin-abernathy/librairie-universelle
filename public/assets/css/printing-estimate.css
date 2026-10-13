@@ -1,0 +1,16 @@
+/* Simulateur d'impression : contraste et adaptation mobile sans surcharge des styles globaux. */
+.print-cost-panel { margin: 1.3rem 0; padding: 1.2rem; border: 1px solid #c7d9cb; border-radius: 14px; background: #f8fbf8; color: #25372b; }
+.print-cost-panel h3 { margin: 0 0 .5rem; }
+.print-cost-panel p { margin: .4rem 0 1rem; }
+.print-cost-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.print-cost-controls label { display: flex; flex-direction: column; gap: .3rem; font-weight: 650; }
+.print-cost-controls select { width: 100%; max-width: 100%; }
+.print-cost-results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin: 1.1rem 0 .6rem; }
+.print-cost-results div { border: 1px solid #cfddd1; background: #fff; border-radius: 10px; padding: .8rem; }
+.print-cost-results dt { font-size: .9rem; color: #435748; }
+.print-cost-results dd { margin: .2rem 0 0; font-size: 1.15rem; font-weight: 750; }
+.print-cost-note { font-size: .9rem; line-height: 1.55; }
+.print-cost-status { min-height: 1.5rem; font-weight: 650; }
+.print-cost-results [aria-live] { white-space: normal; }
+@media (max-width: 560px) { .print-cost-controls, .print-cost-results { grid-template-columns: 1fr; } }
+@media (prefers-contrast: more) { .print-cost-panel, .print-cost-results div { border: 2px solid currentColor; } }
