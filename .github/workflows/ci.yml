@@ -51,6 +51,9 @@ jobs:
       - name: Storefront and indie publishing workflow
         run: php tests/MvpWorkflowTest.php
 
+      - name: Public print grid parsing and non-interpolation
+        run: php tests/MosellePrintGridClientTest.php
+
       - name: EPUB print composition parser
         run: php tests/EpubPrintSourceTest.php
 
