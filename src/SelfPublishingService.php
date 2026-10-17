@@ -96,6 +96,20 @@ SQL);
                 $this->insertFile($submissionId, $kind, $stored);
             }
 
+            // Les deux faces papier restent des pièces privées, distinctes
+            // de l'image de couverture de l'ebook et de l'intérieur PDF.
+            foreach (['paper_cover_front' => 'front', 'paper_cover_back' => 'back'] as $field => $side) {
+                if (!isset($files[$field]) || ($files[$field]['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+                    continue;
+                }
+                $originalName = (string) ($files[$field]['name'] ?? '');
+                $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+                $kind = $extension === 'pdf' ? 'print_pdf' : 'cover';
+                $stored = UploadValidator::validateAndStore($files[$field], $kind, $this->config);
+                $uploaded[] = $stored['path'];
+                $this->insertPaperCover($submissionId, $side, $stored);
+            }
+
             if (!$this->hasKind($submissionId, 'ebook') && !$this->hasKind($submissionId, 'print_pdf')) {
                 throw new InvalidArgumentException('Ajoutez au moins un EPUB ou un PDF prêt à imprimer.');
             }
@@ -141,6 +155,9 @@ SQL);
         $files = $this->pdo->prepare('SELECT * FROM submission_files WHERE submission_id = :id ORDER BY id');
         $files->execute([':id' => $id]);
         $submission['files'] = $files->fetchAll();
+        $coverQuery = $this->pdo->prepare('SELECT * FROM submission_paper_covers WHERE submission_id=:id ORDER BY side DESC');
+        $coverQuery->execute([':id' => $id]);
+        $submission['paper_covers'] = $coverQuery->fetchAll();
 
         $print = $this->pdo->prepare('SELECT * FROM submission_print_settings WHERE submission_id = :id');
         $print->execute([':id' => $id]);
@@ -293,6 +310,29 @@ SQL);
         }
         $file['path'] = rtrim((string) $this->config['storage_path'], '/') . '/submissions/' . $file['stored_name'];
         return $file;
+    }
+
+    public function paperCoverPathForAdmin(int $fileId): ?array
+    {
+        $statement = $this->pdo->prepare('SELECT * FROM submission_paper_covers WHERE id=:id');
+        $statement->execute([':id' => $fileId]);
+        $file = $statement->fetch();
+        if ($file === false) return null;
+        $file['path'] = rtrim((string) $this->config['storage_path'], '/') . '/submissions/' . $file['stored_name'];
+        return $file;
+    }
+
+    private function insertPaperCover(int $submissionId, string $side, array $stored): void
+    {
+        $statement = $this->pdo->prepare(<<<'SQL'
+INSERT INTO submission_paper_covers (submission_id,side,original_name,stored_name,mime_type,size_bytes,sha256)
+VALUES (:submission,:side,:original,:stored,:mime,:size,:sha)
+SQL);
+        $statement->execute([
+            ':submission' => $submissionId, ':side' => $side,
+            ':original' => $stored['original_name'], ':stored' => $stored['stored_name'],
+            ':mime' => $stored['mime_type'], ':size' => $stored['size_bytes'], ':sha' => $stored['sha256'],
+        ]);
     }
 
     private function insertPrintSettings(int $submissionId, array $settings): void

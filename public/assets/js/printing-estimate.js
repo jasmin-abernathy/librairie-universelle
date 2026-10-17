@@ -50,7 +50,7 @@
         unit.textContent = money(perCopy);
         description.textContent = 'Source : ' + grid.printer + ' · grille valable jusqu’au ' +
             grid.valid_until.split('-').reverse().join('/') +
-            '. Coûts annexes et délais à confirmer. Ni commande ni réservation automatique.';
+            '. Prochain réexamen de la grille (date interne, pas une garantie commerciale). BAT papier et frais annexes non compris. Prix et délais à reconfirmer ; aucune commande automatique.';
         const raw = (priceInput?.value || '').trim().replace(',', '.');
         const publicPrice = raw === '' ? NaN : Number(raw);
         balance.textContent = Number.isFinite(publicPrice) && publicPrice >= 0

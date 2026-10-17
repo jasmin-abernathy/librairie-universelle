@@ -1,0 +1,30 @@
+{
+  "id": "corep-metz-2026-10",
+  "printer": "Corep Metz",
+  "currency": "EUR",
+  "tax_included": true,
+  "review_on": "2026-11-17",
+  "recorded_on": "2026-10-13",
+  "disclaimer": "Prix TTC indicatifs autorisés par courriel en octobre 2026. Réexamen interne avant le 17 novembre 2026, sans validité commerciale garantie.",
+  "specifications": "A5 dos carré collé, intérieur noir et blanc recto/verso papier 80 g certifié FSC/PEFC, couverture couleur recto/verso, titre sur tranche.",
+  "amounts_cents": {
+    "120": {
+      "10": 12082,
+      "30": 25202,
+      "50": 34705,
+      "100": 58484
+    },
+    "200": {
+      "10": 13556,
+      "30": 29151,
+      "50": 40483,
+      "100": 66752
+    },
+    "300": {
+      "10": 15704,
+      "30": 34992,
+      "50": 49213,
+      "100": 81362
+    }
+  }
+}

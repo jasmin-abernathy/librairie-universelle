@@ -42,6 +42,12 @@ function checked(string $key, bool $default = false): string
 $printPreparationRequested = !empty($_POST['print_preparation_requested']);
 require_once dirname(__DIR__) . '/src/MosellePrintGridClient.php';
 $publicPrintGrids = (new MosellePrintGridClient((string) ($config['moselle_base_url'] ?? '')))->publishedGrids();
+// Copie locale autorisée seulement si aucun pilote Moselle n'est configuré.
+// Une API configurée renvoyant [] (retrait, panne, expiration) prime toujours.
+if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') === '') {
+    require_once dirname(__DIR__) . '/src/ApprovedPrintPriceSnapshot.php';
+    $publicPrintGrids = ApprovedPrintPriceSnapshot::grids();
+}
 ?>
 <!doctype html>
 <html lang="fr">
@@ -182,13 +188,13 @@ $publicPrintGrids = (new MosellePrintGridClient((string) ($config['moselle_base_
                 <div class="resource-card important-resource">
                     <div>
                         <strong>Composer la version papier ici.</strong>
-                        <p>Choisissez l’EPUB à l’étape 4, puis utilisez l’aperçu ci-dessous. La Librairie extrait les chapitres, génère le sommaire et calcule la pagination recto/verso sans modifier votre EPUB.</p>
+                        <p>Préparez votre livre papier sans modifier votre manuscrit d’origine. Si vous avez un EPUB, il peut servir de source pour l’aperçu intérieur ; vous pouvez aussi fournir directement un PDF de l’intérieur. La couverture se prépare indépendamment.</p>
                     </div>
                 </div>
 
                 <label class="check-row">
                     <input id="print-preparation-requested" type="checkbox" name="print_preparation_requested" value="1" aria-controls="print-layout-settings" aria-expanded="<?= $printPreparationRequested ? 'true' : 'false' ?>"<?= checked('print_preparation_requested') ?>>
-                    <span><strong>Je veux définir la mise en page de ma future version imprimée.</strong><br><span class="field-help">Ces choix deviennent le cahier de composition conservé avec votre soumission. Le formulaire ne fabrique pas encore le PDF : le rendu paginé sera assuré par Atelier EPUB.</span></span>
+                    <span><strong>Je veux préparer la mise en page de mon livre papier.</strong><br><span class="field-help">L’assistant travaille uniquement sur la version papier : l’EPUB d’origine n’est ni réécrit ni corrigé ici. Vous pouvez ensuite imprimer l’aperçu au format PDF.</span></span>
                 </label>
 
                 <div id="print-layout-settings"<?= $printPreparationRequested ? '' : ' hidden' ?>>
@@ -250,7 +256,7 @@ $publicPrintGrids = (new MosellePrintGridClient((string) ($config['moselle_base_
                     <p class="note"><strong>Principe :</strong> les numéros du sommaire ne sont jamais devinés à partir de l’EPUB. Ils sont calculés après composition du PDF, quand le format, les marges, les images et les sauts de page sont définitifs.</p>
                     <div class="submit-row print-preview-row">
                         <button type="submit" class="secondary-action" formaction="/print-preview.php" formtarget="_blank" formnovalidate>Prévisualiser la version imprimée</button>
-                        <span>Utilise l’EPUB sélectionné à l’étape 4. L’aperçu s’ouvre dans un nouvel onglet et ne publie rien.</span>
+                        <span>Lit l’EPUB uniquement comme source, sans le modifier, puis compose le PDF intérieur. Pour un PDF déjà prêt, utilisez directement le champ ci-dessous.</span>
                     </div>
                 </div>
 
@@ -265,9 +271,30 @@ $publicPrintGrids = (new MosellePrintGridClient((string) ($config['moselle_base_
                 </div>
 
 
+
+                <div class="resource-card important-resource" aria-labelledby="paper-covers-title">
+                    <div>
+                        <h3 id="paper-covers-title">Préparer la première et la quatrième de couverture</h3>
+                        <p>Un assistant dédié permet de composer les deux faces, de les prévisualiser et de les enregistrer en PDF séparés. Renseignez le titre, l’auteur, le résumé, l’ISBN et ajoutez éventuellement vos images. <strong>La tranche n’est pas dessinée au hasard :</strong> l’imprimeur la dimensionnera après réception de l’intérieur.</p>
+                        <p>Corep Metz accepte les faces séparées. L’intérieur est transmis en PDF simple dans l’ordre de lecture, sans imposition. Le BAT papier, s’il est demandé, est facturé séparément.</p>
+                    </div>
+                    <a class="button-link secondary" href="/assistant-papier.php">Ouvrir l’assistant de couvertures ↗</a>
+                </div>
+                <div class="form-grid two-columns">
+                    <label>Première de couverture papier <span class="optional">facultatif</span>
+                        <input type="file" name="paper_cover_front" accept=".pdf,application/pdf,.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+                        <span class="field-help">PDF individuel exporté depuis l’assistant ou image déjà prête. Distinct de la couverture de l’ebook.</span>
+                    </label>
+                    <label>Quatrième de couverture papier <span class="optional">facultatif</span>
+                        <input type="file" name="paper_cover_back" accept=".pdf,application/pdf,.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+                        <span class="field-help">PDF individuel ou image. Ne créez pas de tranche : Corep s’occupe de son épaisseur et de l’imposition.</span>
+                    </label>
+                </div>
+                <p class="field-help"><strong>Conseil Corep :</strong> papier intérieur 80 g certifié FSC/PEFC ; 90 g possible sur devis spécifique. L’imprimeur valide les fichiers, la tranche, les éventuels fonds perdus et les choix particuliers avant le BAT.</p>
+
                 <section class="print-cost-panel" id="print-cost-estimator" aria-labelledby="print-cost-title" data-grids="<?= e((string) json_encode($publicPrintGrids, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP)) ?>">
                     <h3 id="print-cost-title">Simuler le coût d’impression</h3>
-                    <p>Comparez un tirage A5 broché, avec intérieur noir et blanc de 80 g et couverture couleur. Les montants n’apparaissent que si une grille d’imprimeur a été confirmée et autorisée.</p>
+                    <p>Comparez un tirage A5 broché, avec intérieur noir et blanc de 80 g et couverture couleur. Les montants sont indicatifs, publiés avec l’accord de l’imprimeur ; ils doivent être reconfirmés pour la commande.</p>
                     <div class="print-cost-controls">
                         <label>Nombre de pages
                             <select id="print-estimate-pages">
@@ -286,7 +313,7 @@ $publicPrintGrids = (new MosellePrintGridClient((string) ($config['moselle_base_
                         <div><dt>Coût d’impression par exemplaire</dt><dd id="print-estimate-unit">—</dd></div>
                         <div style="grid-column: 1 / -1"><dt>Solde indicatif par exemplaire avec une hypothèse de remise libraire de 30 %</dt><dd id="print-estimate-balance">—</dd></div>
                     </dl>
-                    <p class="print-cost-note" id="print-estimate-source">En attente d’une grille autorisée.</p>
+                    <p class="print-cost-note" id="print-estimate-source">Tarif indicatif à confirmer avant commande.</p><p class="print-cost-note">Le BAT papier est hors grille Corep : une épreuve papier est facturée à l’unité. Le BAT numérique est possible et la tranche est calculée par l’imprimeur.</p>
                     <p class="print-cost-note">Le solde n’est pas un bénéfice : le prix public est fixé par l’autoéditeur, et les frais de livraison, la fiscalité, la rémunération de l’auteur, les invendus et les frais de plateforme ne sont pas encore déduits. Aucune commande n’est déclenchée ici.</p>
                 </section>
 

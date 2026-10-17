@@ -129,6 +129,16 @@ $submissions = $service->listSubmissions($statusFilter);
                     <?php if ($current['files'] === []): ?><p>Aucun fichier.</p><?php else: ?><ul class="file-list">
                         <?php foreach ($current['files'] as $file): ?><li><strong><?= e($file['kind']) ?></strong> — <?= e($file['original_name']) ?> · <?= number_format(((int) $file['size_bytes']) / 1048576, 2, ',', ' ') ?> Mo · <a href="/admin/file.php?id=<?= (int) $file['id'] ?>">ouvrir/télécharger</a></li><?php endforeach; ?>
                     </ul><?php endif; ?>
+                    <h3>Couvertures papier (fichiers séparés)</h3>
+                    <?php if ($current['paper_covers'] === []): ?><p>Aucune face papier fournie.</p>
+                    <?php else: ?><ul class="file-list">
+                        <?php foreach ($current['paper_covers'] as $cover): ?><li>
+                            <strong><?= $cover['side'] === 'front' ? 'Première de couverture' : 'Quatrième de couverture' ?></strong>
+                            — <?= e($cover['original_name']) ?>
+                            · <a href="/admin/file.php?paper_cover=1&amp;id=<?= (int) $cover['id'] ?>">ouvrir/télécharger</a>
+                        </li><?php endforeach; ?>
+                    </ul><?php endif; ?>
+                    <p>Les deux faces doivent être contrôlées avant impression ; la tranche et l’imposition restent à la charge de l’imprimeur.</p>
 
                     <form class="submission-form review-form" method="post">
                         <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>">

@@ -54,6 +54,9 @@ jobs:
       - name: Public print grid parsing and non-interpolation
         run: php tests/MosellePrintGridClientTest.php
 
+      - name: Approved local paper rate snapshot
+        run: php tests/ApprovedPrintPriceSnapshotTest.php
+
       - name: EPUB print composition parser
         run: php tests/EpubPrintSourceTest.php
 
@@ -114,7 +117,9 @@ jobs:
           grep -F "groups.get(key)" public/assets/js/discovery.js
           grep -F "Afficher " public/assets/js/discovery.js
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Demander des ISBN à l’AFNIL'
-          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Je veux définir la mise en page de ma future version imprimée.'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'id="print-preparation-requested"'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'href="/assistant-papier.php"'
+          curl --fail --silent http://127.0.0.1:8080/assistant-papier.php | grep 'id="paper-export-back"'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Sommaire automatique'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Prévisualiser la version imprimée'
           test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/print-preview.php)" = "200"

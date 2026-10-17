@@ -154,6 +154,24 @@ CREATE TABLE IF NOT EXISTS submission_files (
 
 CREATE INDEX IF NOT EXISTS idx_submission_files_submission ON submission_files(submission_id);
 
+
+-- Fichiers de couverture pour l'édition papier : séparés de l'ebook
+-- et des fichiers généraux existants, sans migration risquée de CHECK.
+CREATE TABLE IF NOT EXISTS submission_paper_covers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    submission_id INTEGER NOT NULL REFERENCES author_submissions(id) ON DELETE CASCADE,
+    side TEXT NOT NULL CHECK (side IN ('front', 'back')),
+    original_name TEXT NOT NULL,
+    stored_name TEXT NOT NULL UNIQUE,
+    mime_type TEXT NOT NULL,
+    size_bytes INTEGER NOT NULL,
+    sha256 TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(submission_id, side)
+);
+CREATE INDEX IF NOT EXISTS idx_submission_paper_covers_submission
+    ON submission_paper_covers(submission_id);
+
 CREATE TABLE IF NOT EXISTS submission_print_settings (
     submission_id INTEGER PRIMARY KEY REFERENCES author_submissions(id) ON DELETE CASCADE,
     trim_size TEXT NOT NULL DEFAULT '140x210'
