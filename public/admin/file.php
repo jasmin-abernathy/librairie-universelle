@@ -6,7 +6,8 @@ declare(strict_types=1);
 AdminAuth::enforce($config);
 $service = new SelfPublishingService($pdo, $config);
 $fileId = isset($_GET['id']) ? max(0, (int) $_GET['id']) : 0;
-$file = $fileId > 0 ? $service->filePathForAdmin($fileId) : null;
+$paperCover = ($_GET['paper_cover'] ?? '') === '1';
+$file = $fileId > 0 ? ($paperCover ? $service->paperCoverPathForAdmin($fileId) : $service->filePathForAdmin($fileId)) : null;
 
 if ($file === null || !is_file($file['path'])) {
     http_response_code(404);

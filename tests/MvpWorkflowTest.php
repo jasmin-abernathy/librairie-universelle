@@ -30,7 +30,7 @@ $assert($listedBookstoreCount >= 21, 'Librairies publiques insuffisantes.');
 $assert($reviewBookstoreCount >= 2, 'Fiches à vérifier absentes de la curation.');
 
 $tables = array_flip($pdo->query("SELECT name FROM sqlite_master WHERE type = 'table'")->fetchAll(PDO::FETCH_COLUMN));
-foreach (['author_submissions', 'submission_files', 'submission_print_settings', 'feedback', 'sync_runs', 'bookstores'] as $table) {
+foreach (['author_submissions', 'submission_files', 'submission_paper_covers', 'submission_print_settings', 'feedback', 'sync_runs', 'bookstores'] as $table) {
     $assert(isset($tables[$table]), 'Table manquante: ' . $table);
 }
 
@@ -76,7 +76,16 @@ SQL);
 $print->execute([':submission' => $submissionId]);
 
 $service = new SelfPublishingService($pdo, $config);
+$paperCoverStmt = $pdo->prepare("INSERT INTO submission_paper_covers
+ (submission_id,side,original_name,stored_name,mime_type,size_bytes,sha256)
+ VALUES (:id,'back','quatrieme.pdf','quatrieme.pdf','application/pdf',100,:sha)");
+$paperCoverStmt->execute([':id' => $submissionId, ':sha' => str_repeat('b', 64)]);
 $submissionDetail = $service->find($submissionId);
+$assert(count($submissionDetail['paper_covers']) === 1 && $submissionDetail['paper_covers'][0]['side'] === 'back',
+    'Fichier de quatrième de couverture absent.');
+$paperPath = $service->paperCoverPathForAdmin((int) $submissionDetail['paper_covers'][0]['id']);
+$assert($paperPath !== null && str_ends_with($paperPath['path'], 'quatrieme.pdf'),
+    'Téléchargement privé de la quatrième de couverture non résolu.');
 $assert($submissionDetail !== null && $submissionDetail['print_settings'] !== null, 'Réglages de composition papier absents de la soumission.');
 $assert($submissionDetail['print_settings']['chapter_start'] === 'right', 'Règle de début de chapitre non conservée.');
 $assert((int) $submissionDetail['print_settings']['toc_enabled'] === 1, 'Sommaire automatique non conservé.');

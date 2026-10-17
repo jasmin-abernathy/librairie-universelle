@@ -54,6 +54,9 @@ jobs:
       - name: Public print grid parsing and non-interpolation
         run: php tests/MosellePrintGridClientTest.php
 
+      - name: Approved local paper rate snapshot
+        run: php tests/ApprovedPrintPriceSnapshotTest.php
+
       - name: EPUB print composition parser
         run: php tests/EpubPrintSourceTest.php
 
