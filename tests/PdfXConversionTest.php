@@ -32,7 +32,18 @@ try {
    $bytes=file_get_contents($out);
    if(!str_contains($bytes,$claim)||!str_contains($bytes,'/OutputIntents'))throw new RuntimeException('Missing PDF/X metadata');
    echo "Ghostscript ".$version." PDF/X output: ".filesize($out)." bytes\n";
+   if (file_exists($dir.'/definition.ps') || file_exists($dir.'/ghostscript-errors.log'))
+       throw new RuntimeException('Ghostscript working files leaked beside the PDF export.');
  }
+ $outCli=$dir.'/from-cli.pdf';
+ $cmd=[PHP_BINARY,dirname(__DIR__).'/bin/pdfx-export.php',
+       '--input='.$pdf,'--output='.$outCli,'--format=x4','--icc='.$icc,
+       '--condition=CI test only'];
+ $proc=proc_open($cmd,[0=>['file','/dev/null','r'],
+       1=>['file',$dir.'/cli.out','w'],2=>['file',$dir.'/cli.err','w']],$pipes);
+ if(!is_resource($proc)||proc_close($proc)!==0||!PdfXExport::validPdf($outCli,26214400))
+     throw new RuntimeException('CLI test failed: '.(string)@file_get_contents($dir.'/cli.err'));
+ echo "Local CLI PDF/X export: ".filesize($outCli)." bytes\n";
 }finally{
  foreach(glob($dir.'/*')?:[] as $f)@unlink($f);
  @rmdir($dir);
