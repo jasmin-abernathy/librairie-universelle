@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 [$config, $pdo] = require dirname(__DIR__) . '/src/bootstrap.php';
+require_once dirname(__DIR__) . '/src/UploadLimits.php';
 $service = new SelfPublishingService($pdo, $config);
 $errors = [];
 $successId = null;
@@ -10,7 +11,9 @@ $sourceTool = isset($_GET['source']) ? trim((string) $_GET['source']) : '';
 $fromAtelier = $sourceTool === 'atelier-epub';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!Csrf::validate($_POST['csrf_token'] ?? null)) {
+    if (UploadLimits::postExceeded((int) ($_SERVER['CONTENT_LENGTH'] ?? 0))) {
+        $errors[] = 'Fichiers trop volumineux pour cet envoi. Réduisez la taille totale ou transmettez les fichiers séparément.';
+    } elseif (!Csrf::validate($_POST['csrf_token'] ?? null)) {
         $errors[] = 'La session du formulaire a expiré. Rechargez la page puis réessayez.';
     } else {
         try {
@@ -251,7 +254,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                         <p>Formats actuellement convertibles : <strong>.docx, .odt</strong> (Word ou LibreOffice). Pour un ancien fichier <code>.doc</code>, enregistrez-le d'abord en DOCX ou ODT. Les fichiers TXT ne sont pas pris en charge.</p>
                         <label>Manuscrit papier à mettre en page
                             <input type="file" name="office_manuscript" accept=".docx,.odt,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.oasis.opendocument.text">
-                            <span class="field-help">Fichier lu temporairement pour l'aperçu, jamais envoyé à l'imprimeur automatiquement. Maximum 30 Mo.</span>
+                            <span class="field-help">Fichier lu temporairement pour l'aperçu, jamais envoyé à l'imprimeur automatiquement. Maximum affiché selon votre serveur : <?= e(UploadLimits::officeLabel($config)) ?>. Si la limite du serveur est inférieure à 30 Mo, elle prévaut.</span>
                         </label>
                     </div>
                 </div>

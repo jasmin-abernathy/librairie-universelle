@@ -10,6 +10,7 @@ require_once dirname(__DIR__) . '/src/Csrf.php';
 require_once dirname(__DIR__) . '/src/PrintSettings.php';
 require_once dirname(__DIR__) . '/src/EpubPrintSource.php';
 require_once dirname(__DIR__) . '/src/OfficePrintSource.php';
+require_once dirname(__DIR__) . '/src/UploadLimits.php';
 
 function e(?string $value): string
 {
@@ -22,6 +23,8 @@ $settings = null;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $error = 'Ouvrez cet outil depuis le formulaire d’autoédition.';
+} elseif (UploadLimits::postExceeded((int) ($_SERVER['CONTENT_LENGTH'] ?? 0))) {
+    $error = 'Le manuscrit est trop volumineux pour la limite HTTP du serveur. Réduisez le fichier puis réessayez.';
 } elseif (!Csrf::validate($_POST['csrf_token'] ?? null)) {
     $error = 'La session du formulaire a expiré. Revenez à la page d’autoédition puis réessayez.';
 } else {
@@ -29,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         $settings = PrintSettings::normalize($_POST);
         $office = $_FILES['office_manuscript'] ?? [];
         if (($office['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
-            $book = OfficePrintSource::fromUpload($office, min(31457280, (int) $config['max_epub_bytes']));
+            $book = OfficePrintSource::fromUpload($office, UploadLimits::office($config));
         } elseif (($_FILES['ebook']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
             // Compatibilité des anciennes compositions utilisant un EPUB existant.
             $book = EpubPrintSource::fromUpload($_FILES['ebook'], (int) $config['max_epub_bytes']);

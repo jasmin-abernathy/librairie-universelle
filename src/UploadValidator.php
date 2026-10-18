@@ -6,8 +6,15 @@ final class UploadValidator
 {
     public static function validateAndStore(array $file, string $kind, array $config): array
     {
-        if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-            throw new RuntimeException('Fichier manquant ou transfert incomplet.');
+        $uploadError = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+        if (in_array($uploadError, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
+            throw new RuntimeException('Fichier trop volumineux pour les limites de l’hébergement. Réduisez sa taille avant un nouvel envoi.');
+        }
+        if ($uploadError === UPLOAD_ERR_PARTIAL) {
+            throw new RuntimeException('Envoi interrompu avant la réception complète du fichier. Réessayez.');
+        }
+        if ($uploadError !== UPLOAD_ERR_OK) {
+            throw new RuntimeException('Fichier absent ou transfert invalide.');
         }
 
         $tmp = (string) ($file['tmp_name'] ?? '');
