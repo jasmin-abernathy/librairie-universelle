@@ -71,10 +71,11 @@ header('Referrer-Policy: no-referrer');
   <aside class="kit-results" aria-labelledby="kit-results-title">
     <p class="eyebrow">Votre récapitulatif</p>
     <h2 id="kit-results-title">Un dossier clair pour l'imprimeur</h2>
-    <p>Après le contrôle, vous pourrez télécharger une fiche JSON et copier un message qui décrit les pièces jointes.</p>
+    <p>Après le contrôle, téléchargez le ZIP comprenant vos trois PDF et la fiche de transmission, ou récupérez la fiche seule. Cette préparation reste locale à votre appareil.</p>
     <ul id="kit-file-report"><li>Intérieur PDF : en attente</li><li>Première de couverture : en attente</li><li>Quatrième de couverture : en attente</li></ul>
     <div class="kit-actions">
-      <button type="button" id="kit-download" disabled>Télécharger la fiche du dossier</button>
+      <button type="button" id="kit-zip" disabled>Télécharger les trois PDF et la fiche (.zip)</button>
+      <button type="button" id="kit-download" disabled>Télécharger la fiche seule (.json)</button>
       <button type="button" id="kit-copy" disabled>Copier le message pour l'imprimeur</button>
     </div>
     <div class="kit-warning">
@@ -87,5 +88,6 @@ header('Referrer-Policy: no-referrer');
 </main>
 <footer><div class="footer-links"><a href="/autoedition.php">Autoédition</a><a href="/projet.php">Le projet</a></div><p>Pas de transfert automatique de manuscrit ni de commande.</p></footer>
 <script src="/assets/js/paper-barcode.js?v=20261018-1"></script>
-<script src="/assets/js/printer-kit.js?v=20261018-2"></script>
+<script src="/assets/js/printer-zip.js?v=20261018-1"></script>
+<script src="/assets/js/printer-kit.js?v=20261018-3"></script>
 </body></html>

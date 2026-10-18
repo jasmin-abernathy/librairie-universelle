@@ -80,6 +80,9 @@ jobs:
           npm pack pagedjs@0.4.3 --pack-destination /tmp --silent --ignore-scripts
           tar -xOf /tmp/pagedjs-0.4.3.tgz package/dist/paged.polyfill.js | cmp - public/assets/vendor/pagedjs/paged.polyfill.js
 
+      - name: Verify printer ZIP archive
+        run: node tests/PrinterZipTest.cjs
+
       - name: Printer handoff package tests
         run: node tests/PrinterKitTest.cjs
 
