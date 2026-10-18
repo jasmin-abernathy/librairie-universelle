@@ -16,8 +16,12 @@ final class OfficePrintSource
 
     public static function fromUpload(array $file, int $maxBytes): array
     {
-        if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-            throw new RuntimeException('Ajoutez votre manuscrit DOCX ou ODT pour générer le PDF intérieur.');
+        $error = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+        if (in_array($error, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
+            throw new RuntimeException('Manuscrit trop volumineux pour le serveur. Réduisez sa taille ou compressez les illustrations.');
+        }
+        if ($error !== UPLOAD_ERR_OK) {
+            throw new RuntimeException('Ajoutez un manuscrit DOCX/ODT valide. Si l’envoi a été interrompu, réessayez.');
         }
         $path = (string) ($file['tmp_name'] ?? '');
         $size = (int) ($file['size'] ?? 0);

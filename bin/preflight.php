@@ -9,8 +9,8 @@ if (PHP_SAPI !== 'cli') {
 
 $config = require dirname(__DIR__) . '/config/app.php';
 
-$requiredExtensions = ['pdo_sqlite', 'mbstring', 'SimpleXML', 'fileinfo'];
-$recommendedExtensions = ['curl', 'zip'];
+$requiredExtensions = ['pdo_sqlite', 'mbstring', 'SimpleXML', 'fileinfo', 'zip', 'dom'];
+$recommendedExtensions = ['curl'];
 $errors = 0;
 
 fwrite(STDOUT, "Librairie universelle — préflight\n");
@@ -56,6 +56,7 @@ if ($config['self_publishing_enabled'] || $config['feedback_enabled']) {
 fwrite(STDOUT, sprintf("[INFO] autoédition: %s\n", $config['self_publishing_enabled'] ? 'ouverte' : 'fermée'));
 fwrite(STDOUT, sprintf("[INFO] feedback: %s\n", $config['feedback_enabled'] ? 'ouvert' : 'fermé'));
 fwrite(STDOUT, sprintf("[INFO] fraîcheur max des offres: %d jours\n", (int) $config['offer_max_age_days']));
+fwrite(STDOUT, sprintf("[INFO] limite PHP CLI des fichiers: %s (peut différer de la limite PHP web ; voir .user.ini)\n", ini_get('upload_max_filesize')));
 
 if ($errors > 0) {
     fwrite(STDERR, "\nPréflight terminé avec {$errors} erreur(s).\n");

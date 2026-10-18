@@ -78,6 +78,9 @@ jobs:
       - name: Printer handoff package tests
         run: node tests/PrinterKitTest.cjs
 
+      - name: Runtime upload ceiling calculations
+        run: php tests/UploadLimitsTest.php
+
       - name: EPUB print composition parser
         run: php tests/EpubPrintSourceTest.php
 
