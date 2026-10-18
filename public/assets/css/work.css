@@ -83,3 +83,10 @@
     .offer-card { grid-template-columns: 1fr; align-items: start; }
     .primary-link { justify-self: start; white-space: normal; }
 }
+
+.work-access-filters{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;padding:.85rem;border:1px solid #cadccc;border-radius:12px;margin-bottom:1rem;background:#f6faf5}
+.work-access-filters button{border:1px solid #82a58e;background:white;color:#254b32;border-radius:99px;padding:.55rem .8rem;font:inherit;cursor:pointer}
+.work-access-filters button[aria-pressed=true]{background:#24543b;color:#fff}
+.work-access-filters button:focus-visible{outline:3px solid #2854a8;outline-offset:3px}
+.work-access-filters span{flex-basis:100%;font-size:.85rem}
+.work-access-filters[hidden],.work-access-filters button[hidden],.offer-card[hidden]{display:none!important}
