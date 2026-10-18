@@ -103,7 +103,7 @@ jobs:
           trap 'kill "$PHP_SERVER_PID"' EXIT
           sleep 1
           curl --fail --silent http://127.0.0.1:8080/health.php | grep '"status":"ok"'
-          curl --fail --silent http://127.0.0.1:8080/deploy-version.php | grep -E '^[a-f0-9]{40}
+          curl --fail --silent http://127.0.0.1:8080/deploy-version.php | grep -E '^[a-f0-9]{40}$'
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Trouver une librairie près de chez vous.'
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Chercher une œuvre, pas un produit.'
           curl --fail --silent http://127.0.0.1:8080/ | grep '/assets/js/discovery.js?v=20261009-4'
