@@ -1,0 +1,13 @@
+/* Navigation compacte vers les quatre parties de l'autoédition */
+.autoedition-entry{max-width:1100px;margin:0 auto 1rem;padding:1rem 1.2rem;border:1px solid #c1d4c8;border-radius:.9rem;background:#f5faf6}
+.autoedition-entry h2{margin:.2rem 0 .5rem;font-size:1.25rem}
+.autoedition-entry p{margin:.4rem 0;line-height:1.55}
+.autoedition-tabs{max-width:1100px;margin:1.2rem auto 1.4rem;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.55rem}
+.autoedition-tabs button{border:2px solid #b3c7ba;border-radius:.85rem;background:#fff;color:#234233;font:inherit;font-weight:750;text-align:left;cursor:pointer;padding:.85rem}
+.autoedition-tabs button small{display:block;font-size:.82rem;font-weight:400;margin-top:.25rem}
+.autoedition-tabs button[aria-selected="true"]{background:#e8f3eb;border-color:#236744;box-shadow:inset 0 0 0 1px #236744}
+.autoedition-tabs button:focus-visible{outline:3px solid #284dba;outline-offset:3px}
+.autoedition-panel[hidden]{display:none!important}
+.autoedition-panel>fieldset{margin-top:0}
+@media(max-width:760px){.autoedition-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:360px){.autoedition-tabs{grid-template-columns:minmax(0,1fr)}}
