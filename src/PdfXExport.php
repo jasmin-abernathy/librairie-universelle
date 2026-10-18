@@ -30,6 +30,18 @@ final class PdfXExport
                 return 'Moteur ou limiteur de durée non configuré par l’hébergeur.';
             }
         }
+        // Versions prior to 10.05 cannot generate both target PDF/X formats.
+        // Query only the operator-configured binary; never accept a user path.
+        $gs=(string)$config['pdfx_gs_bin'];
+        $descriptors=[0=>['file','/dev/null','r'],1=>['pipe','w'],2=>['file','/dev/null','w']];
+        $proc=@proc_open([$gs,'--version'],$descriptors,$pipes,null,null,['bypass_shell'=>true]);
+        if(!is_resource($proc))return 'Impossible de lire la version de Ghostscript.';
+        $version=isset($pipes[1])&&is_resource($pipes[1])?trim((string)stream_get_contents($pipes[1],64)):'';
+        if(isset($pipes[1])&&is_resource($pipes[1]))fclose($pipes[1]);
+        if(proc_close($proc)!==0 || !preg_match('/^\d+\.\d+(?:\.\d+)?$/D',$version)
+           || version_compare($version,'10.05.0','<')) {
+            return 'Ghostscript 10.05.0 ou plus récent est nécessaire pour PDF/X-4 et PDF/X-1a.';
+        }
         if (!self::profileOk((string)($config['pdfx_icc_profile']??''))) {
             return 'Profil ICC CMJN approuvé absent ou non valide.';
         }
