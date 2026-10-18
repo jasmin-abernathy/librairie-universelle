@@ -32,6 +32,13 @@ $config = [
     'max_cover_bytes' => max(262_144, (int) (getenv('MAX_COVER_BYTES') ?: 15_728_640)),
     'moselle_base_url' => rtrim((string) (getenv('MOSELLE_BASE_URL') ?: ''), '/'),
     'atelier_epub_url' => trim((string) (getenv('ATELIER_EPUB_URL') ?: '')),
+    // Do not expose untrusted PDFs to Ghostscript without an explicit operator opt-in.
+    'pdfx_enabled' => $boolEnv('PDFX_ENABLED', false),
+    'pdfx_gs_bin' => (string) (getenv('PDFX_GS_BIN') ?: '/usr/bin/gs'),
+    'pdfx_timeout_bin' => (string) (getenv('PDFX_TIMEOUT_BIN') ?: '/usr/bin/timeout'),
+    'pdfx_icc_profile' => (string) (getenv('PDFX_ICC_PROFILE') ?: ''),
+    'pdfx_output_condition' => (string) (getenv('PDFX_OUTPUT_CONDITION') ?: 'Custom CMYK - confirm with printer'),
+    'pdfx_max_bytes' => min(26214400, max(1048576, (int) (getenv('PDFX_MAX_BYTES') ?: 26214400))),
 ];
 
 $localConfigPath = getenv('APP_LOCAL_CONFIG') ?: $root . '/config/local.php';
