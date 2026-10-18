@@ -8,7 +8,7 @@
     const VERSION=1, DAYS=30, MAX_SIZE=180000;
     function collect(form) {
         const fields=[...form.querySelectorAll('input[name],select[name],textarea[name]')]
-            .filter(el=>el.name && !['file','hidden','submit','button','password'].includes(el.type));
+            .filter(el=>el.name && !['file','hidden','submit','button','password'].includes(el.type) && !/(^|_)(confirmed|consent|agree|accept|attest)/i.test(el.name));
         return {version:VERSION, savedAt:new Date().toISOString(), fields:fields.map((el,i)=>({
             index:i,name:el.name,type:el.type,
             value:el.type==='checkbox'||el.type==='radio'?String(el.value):String(el.value||''),
@@ -29,11 +29,12 @@
     function apply(form,data) {
         if(!valid(data))throw new Error('Brouillon absent, expiré ou incompatible.');
         const fields=[...form.querySelectorAll('input[name],select[name],textarea[name]')]
-            .filter(el=>el.name&&!['file','hidden','submit','button','password'].includes(el.type));
+            .filter(el=>el.name&&!['file','hidden','submit','button','password'].includes(el.type) && !/(^|_)(confirmed|consent|agree|accept|attest)/i.test(el.name));
         let count=0;
         for(const entry of data.fields) {
             const el=fields[entry.index];
-            if(!el||el.name!==entry.name||el.type!==entry.type)continue;
+            if(!el||el.name!==entry.name||el.type!==entry.type
+               ||/(^|_)(confirmed|consent|agree|accept|attest)/i.test(entry.name))continue;
             if(el.type==='checkbox'||el.type==='radio')el.checked=Boolean(entry.checked);
             else el.value=entry.value;
             el.dispatchEvent(new Event('input',{bubbles:true}));
