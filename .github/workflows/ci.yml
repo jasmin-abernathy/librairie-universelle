@@ -158,6 +158,8 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Générer et prévisualiser le PDF intérieur'
           test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/print-preview.php)" = "200"
           curl --fail --silent --head http://127.0.0.1:8080/print-preview.php | grep -i 'Content-Security-Policy:'
+          grep -A4 '<Files "print-preview.php">' public/.htaccess | grep -F "connect-src 'none'"
+          grep -A4 '<Files "print-preview.php">' public/.htaccess | grep -F "style-src 'self' 'unsafe-inline'"
           test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/assets/vendor/pagedjs/paged.polyfill.js)" = "200"
           grep -F '/assets/vendor/pagedjs/paged.polyfill.js?v=0.4.3' public/print-preview.php
           ! grep -q 'https://unpkg.com/pagedjs' public/print-preview.php
