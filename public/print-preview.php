@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
+// Un manuscrit non publié doit être paginé sans exécuter de script distant.
+header('Content-Security-Policy: default-src \'none\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data: blob:; font-src \'self\' data:; connect-src \'none\'; base-uri \'none\'; frame-ancestors \'none\'; form-action \'self\'; object-src \'none\'');
+header('Referrer-Policy: no-referrer');
 require_once dirname(__DIR__) . '/src/Csrf.php';
 require_once dirname(__DIR__) . '/src/PrintSettings.php';
 require_once dirname(__DIR__) . '/src/EpubPrintSource.php';
@@ -148,7 +151,7 @@ $gutter = $settings['gutter_mode'] === 'custom'
 <div id="book-pages" aria-live="polite"></div>
 
 <script src="/assets/js/print-preview-config.js"></script>
-<script src="https://unpkg.com/pagedjs@0.4.3/dist/paged.polyfill.js"></script>
+<script src="/assets/vendor/pagedjs/paged.polyfill.js?v=0.4.3"></script>
 <script src="/assets/js/print-preview.js"></script>
 </body>
 </html>
