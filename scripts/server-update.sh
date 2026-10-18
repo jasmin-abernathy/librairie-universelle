@@ -13,6 +13,15 @@ normalize_public_permissions() {
   find "$ROOT/public" -type f ! -perm -004 -exec chmod o+r '{}' +
 }
 
+record_live_commit() {
+  # Public commit marker, not a credential. Written after successful preflight.
+  local marker
+  marker="$(mktemp "$ROOT/public/.deploy-version.XXXXXX")"
+  printf '%s\n' "$(git rev-parse HEAD)" > "$marker"
+  chmod 644 "$marker"
+  mv -f "$marker" "$ROOT/public/deploy-version.txt"
+}
+
 if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
   echo "ERREUR: le clone de déploiement contient des modifications suivies." >&2
   git status --short >&2
@@ -25,6 +34,8 @@ TARGET="$(git rev-parse origin/main)"
 
 if [ "$CURRENT" = "$TARGET" ]; then
   normalize_public_permissions
+  "$PHP_BIN" bin/preflight.php
+  record_live_commit
   echo "Déjà à jour: $CURRENT"
   exit 0
 fi
@@ -60,5 +71,6 @@ trap - EXIT
 ( umask 022; git merge --ff-only "$TARGET" )
 normalize_public_permissions
 "$PHP_BIN" bin/preflight.php
+record_live_commit
 
 echo "Déployé: $(git rev-parse HEAD)"
