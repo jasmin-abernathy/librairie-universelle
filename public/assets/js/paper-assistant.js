@@ -27,7 +27,26 @@
     setText('paper-front-author',items['paper-author'].value.trim() || 'Nom de l’auteur');
     setText('paper-front-subtitle',items['paper-subtitle'].value.trim());
     setText('paper-back-description',items['paper-description'].value.trim() || 'Votre résumé apparaîtra ici.');
-    setText('paper-back-isbn',items['paper-isbn'].value.trim() ? 'ISBN : '+items['paper-isbn'].value.trim() : 'Emplacement réservé au code-barres');
+    const isbn = items['paper-isbn'].value.trim();
+    const provided = el('paper-barcode-image').files?.[0];
+    const check = el('paper-isbn-check');
+    if (provided) {
+      check.textContent = 'Image de code-barres fournie : vérifiez qu’elle correspond exactement à l’ISBN du livre.';
+    } else if (isbn && window.PaperBarcode?.valid(isbn)) {
+      const code = window.PaperBarcode.digits(isbn);
+      el('paper-barcode-visual').src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(window.PaperBarcode.svg(code));
+      el('paper-barcode-visual').hidden = false;
+      check.textContent = 'ISBN-13 valide : EAN-13 calculé (chiffre de contrôle vérifié). Vérifiez sa lisibilité après export.';
+    } else if (isbn) {
+      el('paper-barcode-visual').removeAttribute('src');
+      el('paper-barcode-visual').hidden = true;
+      check.textContent = 'Attention : cet ISBN-13 n’est pas valide. Vérifiez les 13 chiffres et le chiffre de contrôle.';
+    } else {
+      el('paper-barcode-visual').removeAttribute('src');
+      el('paper-barcode-visual').hidden = true;
+      check.textContent = 'ISBN absent : le code-barres n’est pas généré. Aucun numéro ne sera inventé.';
+    }
+    setText('paper-back-isbn',isbn ? 'ISBN : '+isbn : 'Emplacement réservé au code-barres');
     el('paper-front-text').hidden = items['paper-front-ready'].checked;
     const warning = el('paper-print-check');
     const summary = items['paper-description'].value.trim();
@@ -48,6 +67,7 @@
       const file = input.files && input.files[0];
       if (!file) {
         if (message) message.textContent = 'Aucune image ajoutée.';
+        update();
         return;
       }
       if (!['image/jpeg','image/png','image/webp'].includes(file.type) || file.size > maxBytes) {
@@ -69,6 +89,7 @@
       }, {once:true});
       image.src = url;
       image.hidden = false;
+      update();
     });
   }
   photoInput('paper-front-image','paper-front-visual','paper-front-image-check',true);
@@ -76,6 +97,12 @@
   photoInput('paper-barcode-image','paper-barcode-visual',null,false);
   const print = side => {
     update();
+    if (side === 'back' && items['paper-isbn'].value.trim()
+      && !window.PaperBarcode?.valid(items['paper-isbn'].value.trim())) {
+      el('paper-print-check').textContent = 'Export interrompu : l’ISBN-13 saisi est invalide. Corrigez-le ou retirez-le.';
+      items['paper-isbn'].focus();
+      return;
+    }
     const [w,h] = formats[items['paper-size'].value] || formats['148x210'];
     el('paper-sheet-size').textContent = '@media print{@page{size:'+w+'mm '+h+'mm;margin:0}}';
     document.documentElement.dataset.paperPrint = side;

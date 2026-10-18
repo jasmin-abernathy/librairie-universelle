@@ -85,7 +85,8 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
                 <label>Image du véritable code-barres ISBN <span class="optional">facultatif</span>
                     <input id="paper-barcode-image" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp">
                 </label>
-                <p class="paper-help">Le numéro ISBN n'est <strong>pas</strong> un code-barres. Nous n'en inventons pas : ajoutez le vrai code-barres avant une impression commerciale.</p>
+                <p id="paper-isbn-check" class="paper-help" role="status" aria-live="polite">Saisissez votre ISBN-13 attribué pour calculer automatiquement son code EAN-13 vérifié. Vous pouvez aussi fournir votre propre image.</p>
+                <p class="paper-help">Le code EAN-13 est calculé depuis votre ISBN, jamais attribué par l'outil. Vérifiez l'ISBN officiel, la lisibilité du code imprimé et les dimensions finales auprès de l'imprimeur.</p>
             </fieldset>
             <fieldset>
                 <legend>4. Enregistrer les deux faces</legend>
@@ -132,5 +133,6 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
     </div>
 </main>
 <footer><div class="footer-links"><a href="/autoedition.php">Autoédition</a><a href="/projet.php">Le projet</a></div><p>L'impression finale et le BAT restent soumis à la validation de l'imprimeur.</p></footer>
-<script src="/assets/js/paper-assistant.js?v=20261017-1"></script>
+<script src="/assets/js/paper-barcode.js?v=20261018-1"></script>
+<script src="/assets/js/paper-assistant.js?v=20261018-2"></script>
 </body></html>
