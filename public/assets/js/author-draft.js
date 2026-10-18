@@ -83,6 +83,8 @@
     });
     document.getElementById('draft-import')?.addEventListener('change',async event=>{
         const f=event.target.files?.[0];
+        const fileLabel=document.getElementById('draft-import-name');
+        if (fileLabel) fileLabel.textContent=f ? 'Fichier choisi : '+f.name : 'Aucun fichier sélectionné';
         if(!f)return;
         try {
             if(f.size>window.AuthorDraft.MAX_SIZE)throw Error('Fichier JSON trop volumineux.');

@@ -64,7 +64,8 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
     <link rel="stylesheet" href="/assets/css/printing-estimate.css?v=20261013-1">
     <link rel="stylesheet" href="/assets/css/autoedition-tabs.css?v=20261018-2">
-    <link rel="stylesheet" href="/assets/css/author-draft.css?v=20261018-1">
+    <link rel="stylesheet" href="/assets/css/author-draft.css?v=20261018-3">
+    <link rel="stylesheet" href="/assets/css/autoedition-paper.css?v=20261018-1">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -144,7 +145,9 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 <button type="button" id="draft-save">Enregistrer ici</button>
                 <button type="button" id="draft-restore">Reprendre</button>
                 <button type="button" id="draft-export">Exporter</button>
-                <label class="draft-file-label">Importer un brouillon <input type="file" id="draft-import" accept=".json,application/json"></label>
+                <input class="draft-file-input" type="file" id="draft-import" accept=".json,application/json" aria-describedby="draft-import-name">
+                <label class="draft-file-label" for="draft-import">Importer un brouillon (.json)</label>
+                <span id="draft-import-name" class="draft-import-name" role="status" aria-live="polite">Aucun fichier sélectionné</span>
                 <button type="button" id="draft-clear">Effacer le brouillon</button>
             </div>
             <p id="draft-status" role="status" aria-live="polite">Aucune donnée envoyée au serveur lors de la sauvegarde d'un brouillon.</p>
@@ -239,6 +242,13 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
             <section class="autoedition-panel" id="panel-paper" role="tabpanel" aria-labelledby="tab-paper" data-panel-name="paper">
             <fieldset>
                 <legend>Publication papier : préparation et impression</legend>
+                <nav class="paper-step-nav" aria-label="Accès aux étapes de préparation papier">
+                    <a href="#paper-interior-step"><span>1</span> Intérieur PDF</a>
+                    <a href="#paper-pdfx-step"><span>2</span> PDF/X <small>facultatif</small></a>
+                    <a href="#paper-covers-step"><span>3</span> Couvertures</a>
+                    <a href="#print-cost-estimator"><span>4</span> Coût estimé</a>
+                    <a href="#paper-dossier-step"><span>5</span> Dossier imprimeur</a>
+                </nav>
 
                 <div class="resource-card important-resource">
                     <div>
@@ -248,7 +258,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     </div>
                 </div>
 
-                <div class="resource-card important-resource">
+                <div class="resource-card important-resource" id="paper-interior-step">
                     <div>
                         <strong>1. Importer votre manuscrit pour composer l'intérieur PDF</strong>
                         <p>Formats actuellement convertibles : <strong>.docx, .odt</strong> (Word ou LibreOffice). Pour un ancien fichier <code>.doc</code>, enregistrez-le d'abord en DOCX ou ODT. Les fichiers TXT ne sont pas pris en charge.</p>
@@ -327,7 +337,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     </div>
                 </div>
 
-                <h3>2. Votre fichier PDF pour l'imprimeur</h3>
+                <h3>Votre PDF intérieur, une fois la mise en page terminée</h3>
                 <p class="field-help">Après la génération, enregistrez l'aperçu en PDF et joignez-le ici pour une éventuelle soumission. La génération n'envoie rien automatiquement.</p>
                 <div class="form-grid two-columns">
                     <label>PDF déjà prêt à imprimer <span class="optional">facultatif</span>
@@ -341,13 +351,25 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 
 
 
-                <div class="resource-card important-resource" aria-labelledby="paper-covers-title">
+                <div class="resource-card important-resource paper-step-card paper-pdfx-step" id="paper-pdfx-step">
                     <div>
-                        <h3 id="paper-covers-title">Préparer la première et la quatrième de couverture</h3>
+                        <p class="paper-step-eyebrow">Étape 2 · facultative</p>
+                        <h3>Convertir votre PDF au format PDF/X</h3>
+                        <p>Après avoir enregistré le PDF intérieur, vous pouvez le convertir en PDF/X-4 ou PDF/X-1a <strong>si votre imprimeur le demande</strong>. L'atelier peut nécessiter une configuration supplémentaire : votre PDF standard reste utilisable si l'imprimeur l'accepte.</p>
+                        <p class="field-help">Les couvertures pourront être converties de la même manière, une fois leurs PDF créés. Le PDF/X obtenu doit toujours être contrôlé avant impression.</p>
+                    </div>
+                    <div class="paper-step-actions">
+                        <a class="button-link secondary" href="/export-pdfx.php">Ouvrir l'export PDF/X <span aria-hidden="true">↗</span></a>
+                    </div>
+                </div>
+
+                <div class="resource-card important-resource paper-step-card paper-covers-step" id="paper-covers-step" aria-labelledby="paper-covers-title">
+                    <div>
+                        <h3 id="paper-covers-title">3. Préparer la première et la quatrième de couverture</h3>
                         <p>Un assistant dédié permet de composer les deux faces, de les prévisualiser et de les enregistrer en PDF séparés. Renseignez le titre, l’auteur, le résumé, l’ISBN et ajoutez éventuellement vos images. <strong>La tranche n’est pas dessinée au hasard :</strong> l’imprimeur la dimensionnera après réception de l’intérieur.</p>
                         <p>Corep Metz accepte les faces séparées. L’intérieur est transmis en PDF simple dans l’ordre de lecture, sans imposition. Le BAT papier, s’il est demandé, est facturé séparément.</p>
                     </div>
-                    <a class="button-link secondary" href="/assistant-papier.php">Ouvrir l’assistant de couvertures ↗</a>
+                    <div class="paper-step-actions"><a class="button-link secondary" href="/assistant-papier.php">Ouvrir l’assistant de couvertures <span aria-hidden="true">↗</span></a></div>
                 </div>
                 <div class="form-grid two-columns">
                     <label>Première de couverture papier <span class="optional">facultatif</span>
@@ -361,18 +383,8 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 </div>
                 <p class="field-help"><strong>Conseil Corep :</strong> papier intérieur 80 g certifié FSC/PEFC ; 90 g possible sur devis spécifique. L’imprimeur valide les fichiers, la tranche, les éventuels fonds perdus et les choix particuliers avant le BAT.</p>
 
-                <div class="resource-card important-resource">
-                    <div>
-                        <h3>3. Constituer le dossier pour l'imprimeur</h3>
-                        <p>Une fois vos PDF prêts, vérifiez les trois fichiers et préparez une fiche récapitulative. Aucun document n'est transmis automatiquement à Corep ou à un autre prestataire.</p>
-                    </div>
-                    <div class="paper-pro-links">
-                      <a class="button-link secondary" href="/export-pdfx.php">Export professionnel PDF/X-4 ou PDF/X-1a ↗</a>
-                      <a class="button-link secondary" href="/dossier-impression.php">Préparer le dossier d'impression ↗</a>
-                    </div>
-                </div>
                 <section class="print-cost-panel" id="print-cost-estimator" aria-labelledby="print-cost-title" data-grids="<?= e((string) json_encode($publicPrintGrids, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP)) ?>">
-                    <h3 id="print-cost-title">Simuler le coût d’impression</h3>
+                    <h3 id="print-cost-title">4. Estimer le coût d’impression</h3>
                     <p>Comparez un tirage A5 broché, avec intérieur noir et blanc de 80 g et couverture couleur. Les montants sont indicatifs, publiés avec l’accord de l’imprimeur ; ils doivent être reconfirmés pour la commande.</p>
                     <div class="print-cost-controls">
                         <label>Nombre de pages
@@ -395,6 +407,18 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     <p class="print-cost-note" id="print-estimate-source">Tarif indicatif à confirmer avant commande.</p><p class="print-cost-note">Le BAT papier est hors grille Corep : une épreuve papier est facturée à l’unité. Le BAT numérique est possible et la tranche est calculée par l’imprimeur.</p>
                     <p class="print-cost-note">Le solde n’est pas un bénéfice : le prix public est fixé par l’autoéditeur, et les frais de livraison, la fiscalité, la rémunération de l’auteur, les invendus et les frais de plateforme ne sont pas encore déduits. Aucune commande n’est déclenchée ici.</p>
                 </section>
+
+                <div class="resource-card important-resource paper-step-card paper-dossier-step" id="paper-dossier-step">
+                    <div>
+                        <p class="paper-step-eyebrow">Dernière étape</p>
+                        <h3>5. Constituer le dossier pour l'imprimeur</h3>
+                        <p>Une fois votre PDF intérieur et vos deux couvertures prêts, contrôlez les trois fichiers et téléchargez votre dossier ZIP. Aucun document n'est transmis automatiquement à Corep ou à un autre prestataire.</p>
+                    </div>
+                    <div class="paper-step-actions">
+                        <a class="button-link secondary" href="/dossier-impression.php">Préparer le dossier d'impression <span aria-hidden="true">↗</span></a>
+                    </div>
+                </div>
+
 
                 <div class="resource-section" aria-labelledby="printers-title">
                     <h3 id="printers-title">Besoin d’un imprimeur ou d’impression à la demande ?</h3>
@@ -431,7 +455,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 </footer>
 <script src="/assets/js/autoedition-print.js"></script>
 <script src="/assets/js/autoedition-tabs.js?v=20261018-2"></script>
-<script src="/assets/js/author-draft.js?v=20261018-1"></script>
+<script src="/assets/js/author-draft.js?v=20261018-3"></script>
 <script src="/assets/js/printing-estimate.js?v=20261013-1"></script>
 </body>
 </html>
