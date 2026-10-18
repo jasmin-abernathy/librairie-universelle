@@ -63,6 +63,12 @@ jobs:
       - name: Local draft privacy test
         run: node tests/AuthorDraftTest.cjs
 
+      - name: Verify locally hosted pagination engine matches upstream npm release
+        run: |
+          node --check public/assets/vendor/pagedjs/paged.polyfill.js
+          npm pack pagedjs@0.4.3 --pack-destination /tmp --silent --ignore-scripts
+          tar -xOf /tmp/pagedjs-0.4.3.tgz package/dist/paged.polyfill.js | cmp - public/assets/vendor/pagedjs/paged.polyfill.js
+
       - name: EPUB print composition parser
         run: php tests/EpubPrintSourceTest.php
 
@@ -137,6 +143,10 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Sommaire automatique'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Générer et prévisualiser le PDF intérieur'
           test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/print-preview.php)" = "200"
+          curl --fail --silent --head http://127.0.0.1:8080/print-preview.php | grep -i 'Content-Security-Policy:'
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/assets/vendor/pagedjs/paged.polyfill.js)" = "200"
+          grep -F '/assets/vendor/pagedjs/paged.polyfill.js?v=0.4.3' public/print-preview.php
+          ! grep -q 'https://unpkg.com/pagedjs' public/print-preview.php
           curl --fail --silent 'http://127.0.0.1:8080/print-style.php?print_chapter_start=right&print_page_number_position=outside&print_hide_chapter_openers=1' | grep '@page:left'
           grep -F "script-src 'self' https://unpkg.com" public/.htaccess
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Bookelis'
