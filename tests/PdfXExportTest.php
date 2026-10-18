@@ -33,6 +33,8 @@ try{
   $cmd=PdfXExport::command($cfg,'x4',$dir.'/definition.ps',$source,$dir.'/result.pdf');
   $assert($cmd[3]==='/usr/bin/gs','Unexpected Ghostscript binary.');
   $assert(in_array('-dSAFER',$cmd,true),'SAFER disabled.');
+  $assert(in_array('<</NeverEmbed []>> setdistillerparams',$cmd,true),
+    'Base-14 font embedding policy is missing.');
   $assert(!in_array('-dNOSAFER',$cmd,true),'Unsafe mode enabled.');
   $assert(in_array('--permit-file-read='.$icc,$cmd,true),'ICC file permission missing.');
   // Unit tests may execute before Ghostscript is installed on the runner.

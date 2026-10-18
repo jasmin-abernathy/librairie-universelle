@@ -32,3 +32,7 @@ php bin/pdfx-export.php --input=/livres/interieur.pdf --output=/livres/interieur
 ```
 
 Pour PDF/X-1a, utiliser `--format=x1a`. Le PDF source reste intact, le nouveau fichier ne doit pas déjà exister, et les fichiers temporaires PostScript/journaux sont créés dans un répertoire privé séparé puis supprimés. Aucun fichier n'est téléversé sur un service externe. **Le résultat n'est pas une certification ISO** ; un contrôle indépendant reste nécessaire.
+
+## Polices et géométrie contrôlées en CI
+
+L'option Ghostscript `-dEmbedAllFonts=true` **ne suffit pas à incorporer les 14 polices PDF de base** (par exemple Helvetica) : elles peuvent rester référencées sans être incluses, ce qui empêche une sortie PDF/X réellement exploitable. La conversion active désormais `<</NeverEmbed []>> setdistillerparams` afin de ne laisser aucune police dans la liste d'exclusion. Le test Ghostscript des deux formats contrôle désormais avec Poppler `pdffonts` que **toutes les polices du fichier de test sont incorporées**, et utilise `pdfinfo -box` pour contrôler le nombre de pages et la géométrie. Ce contrôle est ciblé sur les fichiers de test : il **ne constitue pas** un validateur ISO ni un contrôle de tous les PDF d'auteurs.
