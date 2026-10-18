@@ -11,7 +11,7 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
     <title>Assistant de publication papier — <?= htmlspecialchars((string) $config['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></title>
     <meta name="description" content="Composer séparément la première et la quatrième de couverture d'un livre papier, sans modifier votre manuscrit ni votre EPUB.">
     <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
-    <link rel="stylesheet" href="/assets/css/paper-assistant.css?v=20261017-1">
+    <link rel="stylesheet" href="/assets/css/paper-assistant.css?v=20261018-2">
     <style id="paper-sheet-size"></style>
 </head>
 <body>
@@ -75,6 +75,10 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
                 <label>Résumé / présentation
                     <textarea id="paper-description" maxlength="1050" rows="8" placeholder="Quelques paragraphes pour donner envie de découvrir le livre."></textarea>
                 </label>
+                <label>Prix public TTC <span class="optional">facultatif</span>
+                    <input id="paper-price" type="number" min="0" max="9999" step="0.01" inputmode="decimal" placeholder="Ex. 14,90">
+                    <span class="paper-help">Si le livre est commercialisé, indiquez le prix de vente fixé par l’éditeur. Il devra être visible sur le livre.</span>
+                </label>
                 <label>ISBN papier <span class="optional">facultatif</span>
                     <input id="paper-isbn" inputmode="numeric" maxlength="24" placeholder="978…">
                 </label>
@@ -95,6 +99,12 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
                     <button type="button" id="paper-export-front">PDF : première de couverture</button>
                     <button type="button" id="paper-export-back" class="secondary-action">PDF : quatrième de couverture</button>
                 </div>
+                <div class="paper-draft-actions">
+                    <button type="button" id="paper-save-draft" class="secondary-action">Sauvegarder la couverture</button>
+                    <button type="button" id="paper-restore-draft" class="secondary-action">Reprendre la couverture</button>
+                    <button type="button" id="paper-clear-draft" class="secondary-action">Effacer la sauvegarde</button>
+                </div>
+                <p id="paper-draft-status" role="status" class="paper-help">Les textes et couleurs peuvent être conservés localement. Les images ne seront pas sauvegardées.</p>
                 <p class="paper-help" role="status" id="paper-print-check">Contrôlez toujours les PDF exportés et faites valider les réglages particuliers par l'imprimeur.</p>
                 <p>Vous pourrez ensuite joindre séparément les deux PDF depuis <a href="/autoedition.php">l’étape « Version papier » du formulaire</a>. Aucun envoi ni commande ne part de cet assistant.</p>
             </fieldset>
@@ -123,6 +133,7 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
                             <div id="paper-barcode-zone" class="paper-barcode-zone">
                                 <img id="paper-barcode-visual" alt="Code-barres ISBN fourni par l'auteur" hidden>
                                 <span id="paper-back-isbn">Emplacement réservé au code-barres</span>
+                                <span id="paper-back-price" class="paper-back-price" hidden></span>
                             </div>
                         </div>
                     </article>
@@ -134,5 +145,5 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
 </main>
 <footer><div class="footer-links"><a href="/autoedition.php">Autoédition</a><a href="/projet.php">Le projet</a></div><p>L'impression finale et le BAT restent soumis à la validation de l'imprimeur.</p></footer>
 <script src="/assets/js/paper-barcode.js?v=20261018-1"></script>
-<script src="/assets/js/paper-assistant.js?v=20261018-2"></script>
+<script src="/assets/js/paper-assistant.js?v=20261018-3"></script>
 </body></html>

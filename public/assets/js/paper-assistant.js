@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const el = id => document.getElementById(id);
-  const ids = ['paper-size','paper-title','paper-author','paper-subtitle','paper-bg','paper-ink','paper-description','paper-isbn','paper-front-ready'];
+  const ids = ['paper-size','paper-title','paper-author','paper-subtitle','paper-bg','paper-ink','paper-description','paper-isbn','paper-price','paper-front-ready'];
   const items = Object.fromEntries(ids.map(id => [id, el(id)]));
   const front = el('paper-front-preview');
   const back = el('paper-back-preview');
@@ -47,6 +47,10 @@
       check.textContent = 'ISBN absent : le code-barres n’est pas généré. Aucun numéro ne sera inventé.';
     }
     setText('paper-back-isbn',isbn ? 'ISBN : '+isbn : 'Emplacement réservé au code-barres');
+    const price = Number(items['paper-price'].value);
+    const priceLabel = el('paper-back-price');
+    priceLabel.hidden = items['paper-price'].value.trim() === '' || !Number.isFinite(price) || price < 0;
+    if (!priceLabel.hidden) priceLabel.textContent = 'Prix public : ' + new Intl.NumberFormat('fr-FR', {style:'currency',currency:'EUR'}).format(price);
     el('paper-front-text').hidden = items['paper-front-ready'].checked;
     const warning = el('paper-print-check');
     const summary = items['paper-description'].value.trim();
@@ -95,6 +99,37 @@
   photoInput('paper-front-image','paper-front-visual','paper-front-image-check',true);
   photoInput('paper-back-image','paper-back-visual','paper-back-image-check',true);
   photoInput('paper-barcode-image','paper-barcode-visual',null,false);
+  const draftKey = 'librairie:paper-cover-draft:v1';
+  const draftStatus = el('paper-draft-status');
+  const draftFields = Object.keys(items);
+  el('paper-save-draft').addEventListener('click', () => {
+    try {
+      const fields = Object.fromEntries(draftFields.map(key => [key,items[key].type === 'checkbox' ? items[key].checked : items[key].value]));
+      localStorage.setItem(draftKey,JSON.stringify({version:1,savedAt:Date.now(),fields}));
+      draftStatus.textContent = 'Réglages sauvegardés sur cet appareil. Les images devront être rechargées.';
+    } catch (_) {draftStatus.textContent='Sauvegarde locale indisponible dans ce navigateur.';}
+  });
+  el('paper-restore-draft').addEventListener('click', () => {
+    try {
+      const state=JSON.parse(localStorage.getItem(draftKey) || 'null');
+      if(!state || state.version!==1 || Date.now()-state.savedAt>30*86400000 || Date.now()<state.savedAt){
+        throw Error('aucun brouillon récent');
+      }
+      for(const key of draftFields){
+        const value=state.fields?.[key];
+        if(typeof value!=='string' && typeof value!=='boolean') continue;
+        if(String(value).length>1200) continue;
+        if(items[key].type==='checkbox')items[key].checked=Boolean(value);
+        else items[key].value=String(value);
+      }
+      update();
+      draftStatus.textContent='Réglages restaurés. Rechargez les images si elles étaient utilisées.';
+    }catch(_){draftStatus.textContent='Aucun brouillon valide de moins de 30 jours.';}
+  });
+  el('paper-clear-draft').addEventListener('click', () => {
+    try {localStorage.removeItem(draftKey);draftStatus.textContent='Sauvegarde locale supprimée.';}
+    catch(_){draftStatus.textContent='Effacement local indisponible.';}
+  });
   const print = side => {
     update();
     if (side === 'back' && items['paper-isbn'].value.trim()

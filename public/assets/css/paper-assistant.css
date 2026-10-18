@@ -59,3 +59,7 @@
   .paper-barcode-zone { min-width:38mm!important; }
   .paper-barcode-zone img { width:37.3mm!important; max-width:none!important; }
 }
+
+.paper-draft-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin:.8rem 0}
+.paper-draft-actions button{padding:.5rem .7rem;font-size:.84rem;border:1px solid #88ad93;border-radius:.55rem;cursor:pointer}
+.paper-back-price{font-weight:800;margin-top:.4rem}
