@@ -9,6 +9,15 @@ DirectoryIndex index.php
     Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data:; style-src 'self'; script-src 'self' https://unpkg.com; connect-src 'self' https://data.geopf.fr; upgrade-insecure-requests"
 </IfModule>
 
+# Manuels non publiés : CSP stricte et styles dynamiques Paged.js autorisés
+# sur la seule page de prévisualisation, jamais sur le reste du site.
+<Files "print-preview.php">
+  <IfModule mod_headers.c>
+    Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'; object-src 'none'"
+    Header always set Referrer-Policy "no-referrer"
+  </IfModule>
+</Files>
+
 <FilesMatch "^\.">
     Require all denied
 </FilesMatch>
