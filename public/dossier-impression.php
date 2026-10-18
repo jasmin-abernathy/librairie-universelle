@@ -45,7 +45,7 @@ header('Referrer-Policy: no-referrer');
     </fieldset>
     <fieldset>
       <legend>Les trois fichiers PDF</legend>
-      <p class="kit-note">Ces fichiers restent sur votre appareil. Ils sont lus localement pour vérifier leur en-tête PDF, puis seuls leurs noms et tailles figurent dans la fiche générée.</p>
+      <p class="kit-note">Ces fichiers restent sur votre appareil. Leurs débuts et fins sont lus localement pour repérer les marqueurs PDF. Seuls leurs noms et tailles figurent dans la fiche générée.</p>
       <label>PDF de l'intérieur <span class="kit-required">obligatoire</span>
         <input id="kit-interior" type="file" accept="application/pdf,.pdf" required>
         <small>Pages simples dans l'ordre de lecture, avec pages blanches nécessaires au recto verso. L'imprimeur s'occupe de l'imposition.</small>
@@ -80,7 +80,7 @@ header('Referrer-Policy: no-referrer');
     </div>
     <div class="kit-warning">
       <strong>Ce que l'outil ne prétend pas vérifier</strong>
-      <p>La conformité PDF/X, l'incorporation des polices, la taille réelle des pages, la définition des images, les couleurs et le BAT. Le contrôle des fichiers reste à confirmer par l'imprimeur. Le dossier ne transmet aucun document automatiquement.</p>
+      <p>La conformité PDF/X, la structure complète des pages, l'incorporation des polices, la taille réelle des pages, la définition des images, les couleurs et le BAT. Le contrôle des fichiers reste à confirmer par l'imprimeur. Le dossier ne transmet aucun document automatiquement.</p>
     </div>
     <p><a href="/assistant-papier.php">Reprendre la création des couvertures →</a></p>
   </aside>

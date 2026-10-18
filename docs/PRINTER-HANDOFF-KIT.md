@@ -9,3 +9,6 @@ La fiche JSON (noms et tailles des trois PDF, description et date) et le message
 **Limites :** vérifier l'en-tête n'est pas vérifier les pages, les dimensions, les images, les polices, le fond perdu, le code-barres, la couleur ou le BAT. Le dossier ne peut pas être qualifié de « prêt à imprimer » sans cette validation humaine. Toute commande et tout devis restent manuels.
 
 Les tarifs Corep restent indicatifs et n'ont pas été modifiés ; pas de comparaison des autres imprimeurs.
+
+## Contrôle indicatif des extrémités du PDF
+Avant de composer la fiche, le navigateur lit désormais les cinq premiers octets et au plus les 4 096 derniers octets de chacun des trois fichiers. Il recherche l'en-tête `%PDF-` et le marqueur de clôture `%%EOF`. Si l'un manque, il demande de réexporter le document. Ce filtrage détecte certains PDF incomplets ou simplement renommés, mais **ne garantit pas** que les pages sont valides, ni le respect du PDF/X, des dimensions, des polices ou du BAT. Aucune donnée du document n'est envoyée à un service extérieur.

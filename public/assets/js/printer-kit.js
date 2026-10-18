@@ -20,6 +20,13 @@
     return bytes instanceof Uint8Array && bytes.length>=5 &&
       bytes[0]===37 && bytes[1]===80 && bytes[2]===68 && bytes[3]===70 && bytes[4]===45;
   }
+  function pdfTrailer(bytes) {
+    if (!(bytes instanceof Uint8Array)) return false;
+    // Limited structural check; a recognized trailer does NOT prove PDF/X
+    // conformity or complete pages. Search only the tail of the selected file.
+    const tail=new TextDecoder('latin1').decode(bytes);
+    return /%%EOF[\s\u0000]*$/.test(tail);
+  }
   const safe=(text,n=180)=>String(text||'').trim().replace(/[\u0000-\u001f\u007f]/g,' ').slice(0,n);
   function manifest(data,descriptors){
     if(!Array.isArray(descriptors)||descriptors.length!==3||
@@ -43,7 +50,7 @@
       requested_specification:{format:safe(data.format,20),paper:safe(data.paper,20),pages,quantity},
       files,
       notes:['L’intérieur est un PDF à pages simples, sans imposition.','La première et la quatrième sont des PDF distincts.','Épaisseur de tranche à calculer par l’imprimeur.','Tarifs, BAT, couleurs, fonds perdus, polices, conformité des PDF et délais à reconfirmer.'],
-      preflight:'Contrôle limité à l’en-tête PDF et à une vérification visuelle déclarée. Aucun devis ni BAT automatique.'
+      preflight:'Contrôle limité aux marqueurs de début et de fin PDF et à une vérification visuelle déclarée. Aucun devis ni BAT automatique.'
     };
   }
   function message(doc){
@@ -64,7 +71,7 @@
     lines.push('','Les pages intérieures ne sont pas imposées. Merci de vérifier les fichiers, la tranche, les fonds perdus et les conditions du BAT, puis de confirmer le prix et le délai avant toute commande.','','Merci et bonne journée.');
     return lines.join('\n');
   }
-  return{pdfSignature,manifest,message};
+  return{pdfSignature,pdfTrailer,manifest,message};
 });
 (function(){
   'use strict';
@@ -84,13 +91,19 @@
     const file=$(id).files?.[0];
     if(!file)throw new Error('Sélectionnez les trois PDF avant de continuer.');
     if(!/\.pdf$/i.test(file.name)||file.size<5)throw new Error('Fichier non conforme : '+file.name+'. Choisissez un PDF.');
-    const bytes=new Uint8Array(await file.slice(0,5).arrayBuffer());
-    if(!window.PrinterKit.pdfSignature(bytes))throw new Error('Le fichier '+file.name+' ne commence pas par un en-tête PDF valide.');
+    const [header,tail]=await Promise.all([
+      file.slice(0,5).arrayBuffer(),
+      file.slice(Math.max(0,file.size-4096)).arrayBuffer()
+    ]);
+    if(!window.PrinterKit.pdfSignature(new Uint8Array(header)))
+      throw new Error('Le fichier '+file.name+' ne commence pas par un en-tête PDF valide.');
+    if(!window.PrinterKit.pdfTrailer(new Uint8Array(tail)))
+      throw new Error('La fin du fichier '+file.name+' ne contient pas le marqueur de fin PDF. Réexportez-le depuis votre logiciel.');
     return {role,name:file.name,size:file.size,pdfValid:true};
   };
   form.addEventListener('submit',async event=>{
     event.preventDefault();
-    status.textContent='Vérification locale des en-têtes PDF…';
+    status.textContent='Vérification locale des débuts et fins de fichiers PDF…';
     prepared=null;download.disabled=true;zipButton.disabled=true;copy.disabled=true;
     try{
       if(!['kit-check-pages','kit-check-covers','kit-check-printer'].every(id=>$(id).checked))
@@ -110,7 +123,7 @@
       list.replaceChildren(...descriptors.map(d=>{
         const li=document.createElement('li');
         li.textContent=({interior:'Intérieur',front:'Première de couverture',back:'Quatrième de couverture'}[d.role])+
-          ' : '+d.name+' ('+(d.size/1048576).toFixed(2)+' Mo) · en-tête PDF reconnu';
+          ' : '+d.name+' ('+(d.size/1048576).toFixed(2)+' Mo) · signatures PDF reconnues';
         return li;
       }));
       const large=descriptors.filter(d=>d.size>20*1048576);

@@ -4,6 +4,11 @@ const kit=require('../public/assets/js/printer-kit.js');
 assert.equal(kit.pdfSignature(Uint8Array.from([37,80,68,70,45,49,46,55])),true);
 assert.equal(kit.pdfSignature(Uint8Array.from([37,80,68,70,88,49,46,55])),false);
 assert.equal(kit.pdfSignature(new Uint8Array(0)),false);
+assert.equal(kit.pdfTrailer(new TextEncoder().encode('%PDF-1.7\n1 0 obj\nendobj\nstartxref\n0\n%%EOF\n')),true);
+assert.equal(kit.pdfTrailer(new TextEncoder().encode('%PDF-1.7\n1 0 obj\nendobj\n')),false);
+assert.equal(kit.pdfTrailer(new TextEncoder().encode('document.txt\n%%EOF nonsense')),false);
+assert.equal(kit.pdfTrailer(new Uint8Array(0)),false);
+assert.equal(kit.pdfTrailer(new TextEncoder().encode('... %%EOF\r\n\x00')),true);
 const files=[
  {role:'interior',name:'interieur.pdf',size:150000,pdfValid:true},
  {role:'front',name:'premiere.pdf',size:12000,pdfValid:true},
