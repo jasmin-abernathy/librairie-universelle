@@ -35,10 +35,16 @@
             display(tabs[next].dataset.panel, true);
         });
     });
-    // Le navigateur émet invalid avant submit.
+    // Le navigateur peut émettre plusieurs événements invalid successifs.
+    // N'ouvrir que le panneau du PREMIER champ invalide : sinon le dernier
+    // panneau prend le dessus et le navigateur ne peut plus focaliser le premier.
+    let switchingForInvalid = false;
     form.addEventListener('invalid', event => {
+        if (switchingForInvalid) return;
+        switchingForInvalid = true;
         const parent = event.target.closest('.autoedition-panel');
         if (parent) display(parent.dataset.panelName);
+        window.requestAnimationFrame(() => { switchingForInvalid = false; });
     }, true);
     form.addEventListener('submit', event => {
         if (event.submitter && event.submitter.hasAttribute('formnovalidate')) return;
