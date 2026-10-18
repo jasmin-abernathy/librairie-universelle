@@ -86,5 +86,6 @@ header('Referrer-Policy: no-referrer');
 </div>
 </main>
 <footer><div class="footer-links"><a href="/autoedition.php">Autoédition</a><a href="/projet.php">Le projet</a></div><p>Pas de transfert automatique de manuscrit ni de commande.</p></footer>
-<script src="/assets/js/printer-kit.js?v=20261018-1"></script>
+<script src="/assets/js/paper-barcode.js?v=20261018-1"></script>
+<script src="/assets/js/printer-kit.js?v=20261018-2"></script>
 </body></html>

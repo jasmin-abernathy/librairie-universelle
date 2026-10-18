@@ -5,6 +5,17 @@
   if(root)root.PrinterKit=api;
 })(typeof window!=='undefined'?window:null,function(){
   'use strict';
+  const isbnBarcode = typeof module !== 'undefined' && module.exports
+    ? require('./paper-barcode.js')
+    : (typeof window !== 'undefined' ? window.PaperBarcode : null);
+  function validateISBN(input) {
+    const value=String(input||'').trim();
+    if(!value)return null;
+    if(!isbnBarcode||!isbnBarcode.valid(value)){
+      throw new Error('ISBN-13 invalide : vérifiez les 13 chiffres et leur chiffre de contrôle.');
+    }
+    return isbnBarcode.digits(value);
+  }
   function pdfSignature(bytes){
     return bytes instanceof Uint8Array && bytes.length>=5 &&
       bytes[0]===37 && bytes[1]===80 && bytes[2]===68 && bytes[3]===70 && bytes[4]===45;
@@ -20,12 +31,15 @@
     if((pages!==null&&(!Number.isInteger(pages)||pages<1||pages>5000))||
        (quantity!==null&&(!Number.isInteger(quantity)||quantity<1||quantity>10000)))
       throw new Error('Nombre de pages ou tirage invalide.');
+    const roles=new Set(descriptors.map(f=>f.role));
+    if(roles.size!==3||!['interior','front','back'].every(role=>roles.has(role)))
+      throw new Error('Fournissez un intérieur, une première et une quatrième distincts.');
     const files=descriptors.map(f=>({role:f.role,name:safe(f.name,250),bytes:f.size}));
     const unique=new Set(files.map(f=>f.name.toLowerCase()+'|'+f.bytes));
     if(unique.size!==3)throw new Error('Des fichiers semblent dupliqués : vérifiez les trois rôles.');
     return {
       schema:'librairie-print-package-v1',generated_at:new Date().toISOString(),
-      work:{title:safe(data.title),author:safe(data.author),isbn13:safe(data.isbn,24)||null},
+      work:{title:safe(data.title),author:safe(data.author),isbn13:validateISBN(data.isbn)},
       requested_specification:{format:safe(data.format,20),paper:safe(data.paper,20),pages,quantity},
       files,
       notes:['L’intérieur est un PDF à pages simples, sans imposition.','La première et la quatrième sont des PDF distincts.','Épaisseur de tranche à calculer par l’imprimeur.','Tarifs, BAT, couleurs, fonds perdus, polices, conformité des PDF et délais à reconfirmer.'],
@@ -84,7 +98,8 @@
       if(!$('kit-title').value.trim()||!$('kit-author').value.trim())
         throw new Error('Indiquez le titre et le nom figurant sur le livre.');
       const isbn=$('kit-isbn').value.trim().replace(/[\s-]/g,'');
-      if(isbn && !/^97[89]\d{10}$/.test(isbn))throw new Error('ISBN papier : indiquez 13 chiffres, ou laissez le champ vide.');
+      if(isbn && !window.PaperBarcode?.valid(isbn))
+        throw new Error('ISBN-13 invalide : vérifiez les 13 chiffres et le chiffre de contrôle.');
       const descriptors=await Promise.all(roles.map(([role,id])=>descriptor(role,id)));
       const manifest=window.PrinterKit.manifest({
         title:$('kit-title').value,author:$('kit-author').value,isbn,

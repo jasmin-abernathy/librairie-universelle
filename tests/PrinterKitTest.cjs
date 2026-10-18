@@ -14,6 +14,15 @@ assert.equal(manifest.schema,'librairie-print-package-v1');
 assert.equal(manifest.files.length,3);
 assert.equal(manifest.requested_specification.pages,200);
 assert.equal(manifest.work.title,'Livre test');
+const withISBN=kit.manifest({title:'Livre test',author:'A. Test',isbn:'978 2-07-293824-5',format:'a5',paper:'80g',pages:'200',quantity:'30'},files);
+assert.equal(withISBN.work.isbn13,'9782072938245');
+assert.throws(()=>kit.manifest({title:'Livre test',author:'A. Test',isbn:'9782072938244',format:'a5',paper:'80g',pages:'200',quantity:'30'},files),/ISBN-13 invalide/);
+assert.throws(()=>kit.manifest({title:'Livre test',author:'A. Test',isbn:'1234567890128',format:'a5',paper:'80g',pages:'200',quantity:'30'},files));
+assert.throws(()=>kit.manifest({title:'A',author:'B',isbn:'',pages:'',quantity:''},[
+  {role:'front',name:'un.pdf',size:100,pdfValid:true},
+  {role:'front',name:'deux.pdf',size:100,pdfValid:true},
+  {role:'back',name:'trois.pdf',size:100,pdfValid:true}
+]),/intérieur/);
 assert.ok(kit.message(manifest).includes('quatrieme.pdf'));
 assert.ok(kit.message(manifest).includes('confirmer le prix'));
 assert.throws(()=>kit.manifest({title:'A',author:'B',pages:'0',quantity:''},files));
