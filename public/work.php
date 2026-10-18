@@ -111,7 +111,7 @@ $localRows = localAvailabilityRows($localAvailability);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="theme-color" content="#f7f3ea">
     <title><?= $record ? e($record['work']['title']) . ' — ' : '' ?><?= e($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/work.css?v=20261009-2">
+    <link rel="stylesheet" href="/assets/css/work.css?v=20261018-1">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -162,10 +162,19 @@ $localRows = localAvailabilityRows($localAvailability);
                     <p>L’œuvre est déjà dans le corpus, mais le MVP préfère afficher « rien » plutôt qu’un lien dont les droits, le format ou la disponibilité n’ont pas été vérifiés.</p>
                 </div>
             <?php else: ?>
-                <div class="offer-list">
+                <div class="work-access-filters" id="work-access-filters" hidden aria-label="Modes d'accès">
+                    <strong>Voir :</strong>
+                    <button type="button" data-mode="all" aria-pressed="true">Tout</button>
+                    <button type="button" data-mode="free" aria-pressed="false">Gratuit</button>
+                    <button type="button" data-mode="borrow" aria-pressed="false">Emprunter</button>
+                    <button type="button" data-mode="digital" aria-pressed="false">Numérique</button>
+                    <button type="button" data-mode="paper" aria-pressed="false">Papier</button>
+                    <span id="work-filter-status" role="status" aria-live="polite"></span>
+                </div>
+                <div class="offer-list" id="work-offer-list">
                 <?php foreach ($record['offers'] as $offer): ?>
                     <?php $stale = offerIsStale($offer['checked_at'], (int) $config['offer_max_age_days']); ?>
-                    <article class="offer-card">
+                    <article class="offer-card" data-mode="<?= e($offer['offer_type']) ?>">
                         <div>
                             <p class="work-kind"><?= e($offer['source_name']) ?></p>
                             <h3><?= e(offerLabel($offer['offer_type'])) ?> · <?= e(priceLabel($offer['price_cents'] !== null ? (int) $offer['price_cents'] : null, $offer['currency'])) ?></h3>
@@ -262,5 +271,6 @@ $localRows = localAvailabilityRows($localAvailability);
     <div class="footer-links"><a href="/ebooks.php">Ebooks</a><a href="/autoedition.php">Autoédition</a><a href="/feedback.php">Donner un retour</a></div>
     <p>Prototype sans publicité, sans traqueur et sans moteur de recommandation opaque.</p>
 </footer>
+<script src="/assets/js/work-filter.js?v=20261018-1"></script>
 </body>
 </html>
