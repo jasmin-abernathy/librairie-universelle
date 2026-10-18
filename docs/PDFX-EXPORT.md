@@ -20,3 +20,15 @@ L'exécutable Ghostscript est lancé sans shell, avec `-dSAFER`, un accès cibl�
 Le moteur Ghostscript génère une déclaration PDF/X et un OutputIntent. Le contrôle vérifie quelques marqueurs PDF : ce n'est **pas** un validateur ISO PDF/X indépendant. Il faut faire valider le résultat par un outil de prépresse reconnu par l'imprimeur, ainsi que les polices, le fond perdu, les boîtes de page, la résolution, la couleur et le BAT. veraPDF est principalement un validateur PDF/A et PDF/UA, pas un validateur PDF/X.
 
 L'automatisation directe DOCX/ODT → PDF/X sans passer par l'impression PDF du navigateur n'est **pas encore terminée**. Elle requiert un moteur de rendu automatisé et un environnement isolé ; ne pas l'annoncer comme existante.
+
+## Conversion utilisable sur une machine locale
+
+Pour tester ou produire un PDF/X sans configuration du serveur o2switch, la conversion peut se faire **entièrement en local** (PHP CLI, Ghostscript >= 10.05, GNU timeout et profil ICC CMJN approuvé nécessaires) :
+
+```bash
+php bin/pdfx-export.php --input=/livres/interieur.pdf --output=/livres/interieur-pdfx4.pdf \\
+  --format=x4 --icc=/profils/profil-imprimeur-cmyk.icc \\
+  --condition="Condition d'impression validée avec l'imprimeur"
+```
+
+Pour PDF/X-1a, utiliser `--format=x1a`. Le PDF source reste intact, le nouveau fichier ne doit pas déjà exister, et les fichiers temporaires PostScript/journaux sont créés dans un répertoire privé séparé puis supprimés. Aucun fichier n'est téléversé sur un service externe. **Le résultat n'est pas une certification ISO** ; un contrôle indépendant reste nécessaire.

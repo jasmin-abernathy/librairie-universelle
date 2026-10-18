@@ -114,19 +114,33 @@ final class PdfXExport
         $max=(int)$config['pdfx_max_bytes'];
         if (!self::validPdf($input,$max))throw new RuntimeException('PDF source absent, trop lourd ou incomplet.');
         if (!in_array($version,['x4','x1a'],true))throw new RuntimeException('Format PDF/X non reconnu.');
-        $definition=dirname($output).'/definition.ps';
-        if (file_put_contents($definition,self::definition($version,(string)$config['pdfx_icc_profile'],(string)$config['pdfx_output_condition']),LOCK_EX)===false) {
-            throw new RuntimeException('Préparation du profil colorimétrique impossible.');
+        // Never leave Ghostscript PostScript/error logs in the author's folder.
+        // Do not overwrite an existing output, even if it is a valid PDF.
+        if (file_exists($output) || is_link($output) || realpath($input) === realpath($output)) {
+            throw new RuntimeException('Le fichier de destination existe déjà. Choisissez un autre nom.');
         }
-        chmod($definition,0600);
-        $cmd=self::command($config,$version,$definition,$input,$output);
-        $descriptors=[0=>['file','/dev/null','r'],1=>['file','/dev/null','w'],2=>['file',dirname($output).'/ghostscript-errors.log','w']];
-        $proc=@proc_open($cmd,$descriptors,$pipes,dirname($output),null,['bypass_shell'=>true]);
-        if (!is_resource($proc))throw new RuntimeException('Conversion PDF/X indisponible.');
-        // Standard output is discarded directly; closing a pipe early could SIGPIPE Ghostscript.
-        $code=proc_close($proc);
-        if ($code!==0 || !self::validPdf($output,$max*3)) {
-            throw new RuntimeException('Ghostscript n’a pas produit un PDF/X exploitable. Réexportez le PDF standard et réessayez.');
+        $workDir=rtrim(sys_get_temp_dir(),'/').'/librairie-pdfx-'.bin2hex(random_bytes(12));
+        if (!@mkdir($workDir,0700)) throw new RuntimeException('Espace temporaire privé indisponible.');
+        $definition=$workDir.'/definition.ps';
+        $errors=$workDir.'/ghostscript-errors.log';
+        try {
+            if (file_put_contents($definition,self::definition($version,(string)$config['pdfx_icc_profile'],(string)$config['pdfx_output_condition']),LOCK_EX)===false) {
+                throw new RuntimeException('Préparation du profil colorimétrique impossible.');
+            }
+            chmod($definition,0600);
+            $cmd=self::command($config,$version,$definition,$input,$output);
+            $descriptors=[0=>['file','/dev/null','r'],1=>['file','/dev/null','w'],2=>['file',$errors,'w']];
+            $proc=@proc_open($cmd,$descriptors,$pipes,$workDir,null,['bypass_shell'=>true]);
+            if (!is_resource($proc)) throw new RuntimeException('Conversion PDF/X indisponible.');
+            $code=proc_close($proc);
+            if ($code!==0 || !self::validPdf($output,$max*3)) {
+                @unlink($output);
+                throw new RuntimeException('Ghostscript n’a pas produit de PDF/X exploitable. Réexportez le PDF standard.');
+            }
+        } finally {
+            @unlink($definition);
+            @unlink($errors);
+            @rmdir($workDir);
         }
         // Necessary indicators, NOT an independent ISO PDF/X preflight.
         $sample=file_get_contents($output,false,null,0,min(1048576,(int)filesize($output)));
