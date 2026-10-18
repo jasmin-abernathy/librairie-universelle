@@ -35,7 +35,10 @@ try{
   $assert(in_array('-dSAFER',$cmd,true),'SAFER disabled.');
   $assert(!in_array('-dNOSAFER',$cmd,true),'Unsafe mode enabled.');
   $assert(in_array('--permit-file-read='.$icc,$cmd,true),'ICC file permission missing.');
-  $assert(PdfXExport::reason($cfg)===null,'Configured PDF/X unexpectedly disabled.');
+  // Unit tests may execute before Ghostscript is installed on the runner.
+  if (is_file('/usr/bin/gs') && is_executable('/usr/bin/gs') && is_file('/usr/bin/timeout')) {
+      $assert(PdfXExport::reason($cfg)===null,'Configured PDF/X unexpectedly disabled.');
+  }
   echo "PDF/X configuration and security tests passed\n";
 }finally{
  foreach(glob($dir.'/*')?:[] as $f)@unlink($f);
