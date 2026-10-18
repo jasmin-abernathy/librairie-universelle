@@ -71,6 +71,9 @@ jobs:
       - name: DOCX / ODT office manuscript parser
         run: php tests/OfficePrintSourceTest.php
 
+      - name: Paper author journey and mobile UX regression
+        run: php tests/AutoeditionPaperFlowTest.php
+
       - name: Local draft privacy test
         run: node tests/AuthorDraftTest.cjs
 

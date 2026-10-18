@@ -1,0 +1,26 @@
+/* Le chemin papier suit l'ordre réel : intérieur, PDF/X éventuel, couvertures, devis, dossier. */
+#panel-paper .paper-step-nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr));gap:.55rem;margin:0 0 1.4rem;padding:0}
+#panel-paper .paper-step-nav a{display:flex;align-items:center;gap:.45rem;min-width:0;padding:.63rem .7rem;border:1px solid #becdc1;border-radius:.7rem;color:#224a32;background:#f7faf7;font-size:.83rem;font-weight:750;text-decoration:none;line-height:1.35;overflow-wrap:anywhere}
+#panel-paper .paper-step-nav a:hover{background:#edf5ee;border-color:#61876b}
+#panel-paper .paper-step-nav a:focus-visible,#panel-paper .paper-step-actions a:focus-visible{outline:3px solid #256c52;outline-offset:3px}
+#panel-paper .paper-step-nav a span{display:inline-grid;place-items:center;border-radius:50%;background:#e1ece3;color:#28533d;width:1.55rem;height:1.55rem;flex:none;font-variant-numeric:tabular-nums}
+#panel-paper .paper-step-nav small{font-size:.68rem;font-weight:500;color:#516b58}
+#panel-paper [id$="-step"],#panel-paper #print-cost-estimator{scroll-margin-top:1.5rem}
+#panel-paper .paper-step-card{min-width:0;gap:.8rem;align-items:start}
+#panel-paper .paper-step-card h3{margin:.2rem 0 .65rem;line-height:1.26;overflow-wrap:anywhere}
+#panel-paper .paper-step-card p{margin:.4rem 0;line-height:1.55}
+#panel-paper .paper-step-eyebrow{font-size:.76rem!important;font-weight:800;letter-spacing:.02em;color:#365f45!important}
+#panel-paper .paper-step-actions{display:flex;flex-wrap:wrap;gap:.55rem;align-items:flex-start;min-width:0}
+#panel-paper .paper-step-actions .button-link{flex:0 1 auto;max-width:100%;width:auto;min-width:0;min-height:2.65rem;padding:.68rem .9rem;font-size:.88rem;font-weight:750;line-height:1.35;text-align:center;border-radius:.7rem;white-space:normal;overflow-wrap:anywhere;text-wrap:pretty}
+#panel-paper .paper-pdfx-step{background:#f7faf7}
+#panel-paper .paper-pdfx-step .button-link{background:#fff;color:#234d38;border:1px solid #759780}
+#panel-paper .paper-dossier-step .button-link{background:#28533d;color:#fff}
+#panel-paper .paper-step-actions .button-link:hover{filter:brightness(.94)}
+#panel-paper .form-grid{min-width:0}
+@media(max-width:600px){
+ #panel-paper .paper-step-nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #panel-paper .paper-step-nav a{padding:.55rem;gap:.35rem;font-size:.78rem}
+ #panel-paper .paper-step-actions .button-link{width:100%;flex:1 1 100%}
+ #panel-paper .paper-step-card{padding:.9rem}
+}
+@media(max-width:350px){#panel-paper .paper-step-nav{grid-template-columns:1fr}}
