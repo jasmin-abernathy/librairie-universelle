@@ -69,6 +69,9 @@ jobs:
           npm pack pagedjs@0.4.3 --pack-destination /tmp --silent --ignore-scripts
           tar -xOf /tmp/pagedjs-0.4.3.tgz package/dist/paged.polyfill.js | cmp - public/assets/vendor/pagedjs/paged.polyfill.js
 
+      - name: Printer handoff package tests
+        run: node tests/PrinterKitTest.cjs
+
       - name: EPUB print composition parser
         run: php tests/EpubPrintSourceTest.php
 
@@ -132,6 +135,8 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'id="print-preparation-requested"'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'href="/assistant-papier.php"'
           curl --fail --silent http://127.0.0.1:8080/assistant-papier.php | grep 'id="paper-export-back"'
+          curl --fail --silent http://127.0.0.1:8080/dossier-impression.php | grep 'id="printer-kit-form"'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'href="/dossier-impression.php"'
           curl --fail --silent http://127.0.0.1:8080/assistant-papier.php | grep 'id="paper-price"'
           curl --fail --silent http://127.0.0.1:8080/assistant-papier.php | grep 'id="paper-save-draft"'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'role="tablist"'

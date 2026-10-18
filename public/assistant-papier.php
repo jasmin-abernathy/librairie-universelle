@@ -107,6 +107,7 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
                 <p id="paper-draft-status" role="status" class="paper-help">Les textes et couleurs peuvent être conservés localement. Les images ne seront pas sauvegardées.</p>
                 <p class="paper-help" role="status" id="paper-print-check">Contrôlez toujours les PDF exportés et faites valider les réglages particuliers par l'imprimeur.</p>
                 <p>Vous pourrez ensuite joindre séparément les deux PDF depuis <a href="/autoedition.php">l’étape « Version papier » du formulaire</a>. Aucun envoi ni commande ne part de cet assistant.</p>
+                <p><a href="/dossier-impression.php">Mes deux PDF sont prêts : préparer le dossier d'impression →</a></p>
             </fieldset>
         </section>
         <section class="paper-previews" aria-label="Aperçu des couvertures">
