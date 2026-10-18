@@ -46,6 +46,7 @@
 });
 (function(){
     'use strict';
+    if (typeof document === 'undefined') return; // pure helpers stay testable under Node
     const form=document.getElementById('autoedition-form');
     const status=document.getElementById('draft-status');
     if(!form||!status||!window.AuthorDraft)return;
