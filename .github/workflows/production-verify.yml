@@ -1,0 +1,36 @@
+name: Verify deployed Librairie
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: librairie-production-check
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - name: Checkout source of truth
+        uses: actions/checkout@v7
+      - name: Validate probe script syntax
+        run: bash -n scripts/verify-production.sh
+      - name: Compare running o2switch commit and public pages
+        shell: bash
+        run: |
+          for attempt in {1..12}; do
+            echo "Public verification attempt $attempt/12"
+            if bash scripts/verify-production.sh "$GITHUB_SHA"; then
+              echo "Production commit matches GitHub" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            if [ "$attempt" -lt 12 ]; then sleep 20; fi
+          done
+          echo "Production deployment did not reach the expected version." >> "$GITHUB_STEP_SUMMARY"
+          exit 1
