@@ -24,7 +24,7 @@ assert_content() {
   fi
   echo "OK $path"
 }
-fetch '/deploy-version.txt' "$TMP/commit"
+fetch '/deploy-version.php' "$TMP/commit"
 DEPLOYED="$(tr -d '\r\n' < "$TMP/commit")"
 if [[ "$DEPLOYED" != "$EXPECTED" ]]; then
   echo "KO : GitHub=$EXPECTED mais o2switch=$DEPLOYED" >&2

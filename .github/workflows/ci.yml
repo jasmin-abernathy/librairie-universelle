@@ -43,7 +43,11 @@ jobs:
         run: |
           bash -n scripts/server-update.sh
           bash -n scripts/verify-production.sh
-          grep -F 'record_live_commit' scripts/server-update.sh
+          test -f public/deploy-version.php
+          test -f src/GitRevision.php
+
+      - name: Git revision introspection fixtures
+        run: php tests/GitRevisionTest.php
 
       - name: Runtime preflight
         run: php bin/preflight.php
@@ -99,6 +103,81 @@ jobs:
           trap 'kill "$PHP_SERVER_PID"' EXIT
           sleep 1
           curl --fail --silent http://127.0.0.1:8080/health.php | grep '"status":"ok"'
+          curl --fail --silent http://127.0.0.1:8080/deploy-version.php | grep -E '^[a-f0-9]{40}
+          curl --fail --silent http://127.0.0.1:8080/ | grep 'Trouver une librairie près de chez vous.'
+          curl --fail --silent http://127.0.0.1:8080/ | grep 'Chercher une œuvre, pas un produit.'
+          curl --fail --silent http://127.0.0.1:8080/ | grep '/assets/js/discovery.js?v=20261009-4'
+          grep -F '.discovery-state {' public/assets/css/discovery.css
+          for page in / /ebooks.php /autoedition.php /projet.php /sans-ia.php /feedback.php '/work.php?id=1'; do
+            curl --fail --silent "http://127.0.0.1:8080${page}" | grep 'href="/#librairies"'
+          done
+          test "$(grep -R -l '<header class="site-header">' public/*.php | wc -l)" = "0"
+          grep -F "'librairies' => ['href' => '/#librairies'" src/views/site-header.php
+          curl --fail --silent http://127.0.0.1:8080/api/bookstores.php | grep '"bookstores"'
+          grep -F "connect-src 'self' https://data.geopf.fr" public/.htaccess
+          grep -F "Recherche d’adresses…" public/assets/js/bookstores.js
+          grep -F "depcode: '57'" public/assets/js/bookstores.js
+          grep -F "Aucune adresse trouvée en Moselle" public/assets/js/bookstores.js
+          grep -F ".locator-grid .address-suggestion" public/assets/css/app.css
+          grep -F "submit.dataset.loading = 'true'" public/assets/js/bookstores.js
+          curl --fail --silent 'http://127.0.0.1:8080/?q=George%20Orwell' | grep 'La Ferme des animaux'
+          curl --fail --silent 'http://127.0.0.1:8080/?q=Albert%20Camus' | grep '>Non<'
+          curl --fail --silent 'http://127.0.0.1:8080/?q=Le%20Petit%20Prince' | grep 'À vérifier'
+          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=1' | grep '9782070409228'
+          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'Josée Kamoun'
+          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep '9782072938245'
+          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'Adobe DRM'
+          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'DRM : CARE'
+          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'traduction française'
+          curl --fail --silent 'http://127.0.0.1:8080/work.php?id=20' | grep 'À vérifier'
+          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep 'Un titre, plusieurs façons de le lire.'
+          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep '/assets/css/ebooks.css?v=20261009-2'
+          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'data-result-limit="8"'
+          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'id="federated-results"'
+          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'id="indexed-results"'
+          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'Wikisource FR'
+          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr&mode=free' | grep 'Ebooks Libres et Gratuits'
+          test "$(curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr&mode=free' | grep -c '>BnF<')" = "0"
+          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep 'Recherche externe désactivée en mode payant'
+          test "$(curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep -c 'data-discovery-search')" = "0"
+          php -r '$html = file_get_contents("http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr"); $f = strpos($html, "id=\"federated-results\""); $i = strpos($html, "id=\"indexed-results\""); if ($f === false || $i === false || $f > $i) { fwrite(STDERR, "Les catalogues externes doivent précéder les offres locales.\n"); exit(1); }'
+          grep -F "Recherche dans les catalogues…" public/assets/js/discovery.js
+          grep -F "title === normalizedQuery" public/assets/js/discovery.js
+          grep -F "groups.get(key)" public/assets/js/discovery.js
+          grep -F "Afficher " public/assets/js/discovery.js
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Demander des ISBN à l’AFNIL'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'id="print-preparation-requested"'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'href="/assistant-papier.php"'
+          curl --fail --silent http://127.0.0.1:8080/assistant-papier.php | grep 'id="paper-export-back"'
+          curl --fail --silent http://127.0.0.1:8080/dossier-impression.php | grep 'id="printer-kit-form"'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'href="/dossier-impression.php"'
+          curl --fail --silent http://127.0.0.1:8080/assistant-papier.php | grep 'id="paper-price"'
+          curl --fail --silent http://127.0.0.1:8080/assistant-papier.php | grep 'id="paper-save-draft"'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'role="tablist"'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'autoedition-tabs.css?v=20261018-2'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'autoedition-tabs.js?v=20261018-2'
+          grep -F '.autoedition-tab[aria-selected="true"]' public/assets/css/autoedition-tabs.css
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'name="office_manuscript"'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'id="paper-generate-button"'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Sommaire automatique'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Générer et prévisualiser le PDF intérieur'
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/print-preview.php)" = "200"
+          curl --fail --silent --head http://127.0.0.1:8080/print-preview.php | grep -i 'Content-Security-Policy:'
+          grep -A4 '<Files "print-preview.php">' public/.htaccess | grep -F "connect-src 'none'"
+          grep -A4 '<Files "print-preview.php">' public/.htaccess | grep -F "style-src 'self' 'unsafe-inline'"
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/assets/vendor/pagedjs/paged.polyfill.js)" = "200"
+          grep -F '/assets/vendor/pagedjs/paged.polyfill.js?v=0.4.3' public/print-preview.php
+          ! grep -q 'https://unpkg.com/pagedjs' public/print-preview.php
+          curl --fail --silent 'http://127.0.0.1:8080/print-style.php?print_chapter_start=right&print_page_number_position=outside&print_hide_chapter_openers=1' | grep '@page:left'
+          grep -F "script-src 'self' https://unpkg.com" public/.htaccess
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Bookelis'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'CoolLibri'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Books on Demand'
+          curl --fail --silent http://127.0.0.1:8080/feedback.php | grep 'Qu’est-ce qui coince ?'
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/admin/)" = "503"
+          curl --fail --silent http://127.0.0.1:8080/projet.php | grep 'Toutes les façons légales de lire.'
+          curl --fail --silent http://127.0.0.1:8080/sans-ia.php | grep 'Pas d’IA pour décider ce que vous devriez lire.'
+
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Trouver une librairie près de chez vous.'
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Chercher une œuvre, pas un produit.'
           curl --fail --silent http://127.0.0.1:8080/ | grep '/assets/js/discovery.js?v=20261009-4'
