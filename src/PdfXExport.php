@@ -108,11 +108,10 @@ final class PdfXExport
         }
         chmod($definition,0600);
         $cmd=self::command($config,$version,$definition,$input,$output);
-        $descriptors=[0=>['file','/dev/null','r'],1=>['pipe','w'],2=>['file',dirname($output).'/ghostscript-errors.log','w']];
+        $descriptors=[0=>['file','/dev/null','r'],1=>['file','/dev/null','w'],2=>['file',dirname($output).'/ghostscript-errors.log','w']];
         $proc=@proc_open($cmd,$descriptors,$pipes,dirname($output),null,['bypass_shell'=>true]);
         if (!is_resource($proc))throw new RuntimeException('Conversion PDF/X indisponible.');
-        // Ghostscript -q normally emits no stdout; a pipe is intentionally bounded.
-        if (isset($pipes[1])&&is_resource($pipes[1])){stream_set_timeout($pipes[1],2);fclose($pipes[1]);}
+        // Standard output is discarded directly; closing a pipe early could SIGPIPE Ghostscript.
         $code=proc_close($proc);
         if ($code!==0 || !self::validPdf($output,$max*3)) {
             throw new RuntimeException('Ghostscript n’a pas produit un PDF/X exploitable. Réexportez le PDF standard et réessayez.');
