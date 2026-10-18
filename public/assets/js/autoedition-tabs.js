@@ -16,6 +16,14 @@
         });
         panels.forEach(panel => { panel.hidden = panel.dataset.panelName !== name; });
         activeInput.value = name;
+        const contexts = {
+            paper: 'Livre papier · Composez votre manuscrit et préparez son impression.',
+            project: 'Mon livre · Renseignez les informations sur votre ouvrage.',
+            digital: 'Version numérique · Préparez votre EPUB, si vous en souhaitez un.',
+            submit: 'Déposer mon projet · Vérifiez les autorisations avant l’envoi.'
+        };
+        const context = document.getElementById('autoedition-tab-context');
+        if (context) context.textContent = contexts[name];
         if (window.history && window.history.replaceState) {
             const url = new URL(window.location.href);
             url.searchParams.set('partie', name);

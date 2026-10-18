@@ -124,6 +124,9 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'href="/assistant-papier.php"'
           curl --fail --silent http://127.0.0.1:8080/assistant-papier.php | grep 'id="paper-export-back"'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'role="tablist"'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'autoedition-tabs.css?v=20261018-2'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'autoedition-tabs.js?v=20261018-2'
+          grep -F '.autoedition-tab[aria-selected="true"]' public/assets/css/autoedition-tabs.css
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'name="office_manuscript"'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'id="paper-generate-button"'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Sommaire automatique'

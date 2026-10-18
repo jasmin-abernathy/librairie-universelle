@@ -60,7 +60,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <title>Autoédition — <?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
     <link rel="stylesheet" href="/assets/css/printing-estimate.css?v=20261013-1">
-    <link rel="stylesheet" href="/assets/css/autoedition-tabs.css?v=20261018-1">
+    <link rel="stylesheet" href="/assets/css/autoedition-tabs.css?v=20261018-2">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -104,15 +104,35 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
         <?php endif; ?>
 
         <section class="autoedition-entry" aria-labelledby="autoedition-entry-heading">
-            <h2 id="autoedition-entry-heading">Que souhaitez-vous préparer ?</h2>
-            <p><strong>Livre papier :</strong> notre générateur met en page votre manuscrit <strong>DOCX ou ODT</strong> pour produire un PDF intérieur paginé, à contrôler avant l’envoi à l’imprimeur. Vous n'avez pas besoin d'un EPUB.</p>
+            <div class="autoedition-entry-main">
+                <p class="autoedition-entry-eyebrow">Votre livre, à votre rythme</p>
+                <h2 id="autoedition-entry-heading">Par où souhaitez-vous commencer ?</h2>
+                <p>Un livre papier, un EPUB ou les deux : choisissez votre parcours. Vous pourrez changer d’onglet à tout moment.</p>
+            </div>
+            <div class="autoedition-entry-promise">
+                <span aria-hidden="true" class="autoedition-entry-promise-icon">✓</span>
+                <span><strong>Mise en page papier incluse</strong><small>Importez un DOCX ou ODT. Notre générateur compose les pages avant votre export PDF.</small></span>
+            </div>
         </section>
-        <nav class="autoedition-tabs" role="tablist" aria-label="Étapes de l'autoédition">
-            <button type="button" id="tab-paper" role="tab" aria-controls="panel-paper" aria-selected="true" tabindex="0" data-panel="paper">📖 Livre papier <small>PDF + impression</small></button>
-            <button type="button" id="tab-project" role="tab" aria-controls="panel-project" aria-selected="false" tabindex="-1" data-panel="project">Mon livre <small>Auteur, titre, ISBN</small></button>
-            <button type="button" id="tab-digital" role="tab" aria-controls="panel-digital" aria-selected="false" tabindex="-1" data-panel="digital">Version numérique <small>EPUB</small></button>
-            <button type="button" id="tab-submit" role="tab" aria-controls="panel-submit" aria-selected="false" tabindex="-1" data-panel="submit">Déposer mon projet <small>Vérifications</small></button>
+        <nav class="autoedition-tabs" role="tablist" aria-label="Parties du parcours d’autoédition">
+            <button type="button" class="autoedition-tab" id="tab-paper" role="tab" aria-controls="panel-paper" aria-selected="true" tabindex="0" data-panel="paper">
+                <span class="autoedition-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5c-2.7-1.8-5.3-2.3-9-1.5v14c3.7-.8 6.3-.3 9 1.5m0-14c2.7-1.8 5.3-2.3 9-1.5v14c-3.7-.8-6.3-.3-9 1.5m0-14v14"/></svg></span>
+                <span class="autoedition-tab-copy"><strong>Livre papier</strong><small>Mise en page et impression</small></span>
+            </button>
+            <button type="button" class="autoedition-tab" id="tab-project" role="tab" aria-controls="panel-project" aria-selected="false" tabindex="-1" data-panel="project">
+                <span class="autoedition-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm7 0v6h5M9 13h6M9 17h7"/></svg></span>
+                <span class="autoedition-tab-copy"><strong>Mon livre</strong><small>Auteur, titre, ISBN</small></span>
+            </button>
+            <button type="button" class="autoedition-tab" id="tab-digital" role="tab" aria-controls="panel-digital" aria-selected="false" tabindex="-1" data-panel="digital">
+                <span class="autoedition-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2"/><path d="M10 18h4"/></svg></span>
+                <span class="autoedition-tab-copy"><strong>Numérique</strong><small>Version EPUB</small></span>
+            </button>
+            <button type="button" class="autoedition-tab" id="tab-submit" role="tab" aria-controls="panel-submit" aria-selected="false" tabindex="-1" data-panel="submit">
+                <span class="autoedition-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l3 3v15H5V6l3-3zm0 10 3 3 5-5"/></svg></span>
+                <span class="autoedition-tab-copy"><strong>Déposer</strong><small>Vérifier et envoyer</small></span>
+            </button>
         </nav>
+        <p class="autoedition-tab-context" id="autoedition-tab-context" role="status" aria-live="polite">Livre papier · Composez votre manuscrit et préparez son impression.</p>
         <form class="submission-form" method="post" enctype="multipart/form-data" id="autoedition-form">
             <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>">
             <input type="hidden" name="active_panel" value="<?= e((string) ($_POST['active_panel'] ?? 'paper')) ?>" id="active-panel">
@@ -384,7 +404,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <p>Autoédition accompagnée et filtrée humainement — sans classement automatique opaque.</p>
 </footer>
 <script src="/assets/js/autoedition-print.js"></script>
-<script src="/assets/js/autoedition-tabs.js?v=20261018-1"></script>
+<script src="/assets/js/autoedition-tabs.js?v=20261018-2"></script>
 <script src="/assets/js/printing-estimate.js?v=20261013-1"></script>
 </body>
 </html>

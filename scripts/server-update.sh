@@ -5,6 +5,14 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PHP_BIN="${PHP_BIN:-php}"
 cd "$ROOT"
 
+# Le site pointe sur public/ via une réécriture Apache. Avec un umask
+# restrictif (600), un nouvel asset CSS/JS existe mais renvoie HTTP 403.
+# Corriger uniquement les fichiers SERVIS au public, jamais data/storage/src.
+normalize_public_permissions() {
+  find "$ROOT/public" -type d ! -perm -005 -exec chmod o+rx '{}' +
+  find "$ROOT/public" -type f ! -perm -004 -exec chmod o+r '{}' +
+}
+
 if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
   echo "ERREUR: le clone de déploiement contient des modifications suivies." >&2
   git status --short >&2
@@ -16,6 +24,7 @@ CURRENT="$(git rev-parse HEAD)"
 TARGET="$(git rev-parse origin/main)"
 
 if [ "$CURRENT" = "$TARGET" ]; then
+  normalize_public_permissions
   echo "Déjà à jour: $CURRENT"
   exit 0
 fi
@@ -48,7 +57,8 @@ git worktree add --detach "$TMP" "$TARGET" >/dev/null
 cleanup
 trap - EXIT
 
-git merge --ff-only "$TARGET"
+( umask 022; git merge --ff-only "$TARGET" )
+normalize_public_permissions
 "$PHP_BIN" bin/preflight.php
 
 echo "Déployé: $(git rev-parse HEAD)"
