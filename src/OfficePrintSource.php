@@ -75,6 +75,7 @@ final class OfficePrintSource
                 : $xpath->query('//*[local-name()="body"]/*[local-name()="text"]')->item(0);
             if (!$root instanceof DOMNode) throw new RuntimeException('Structure du manuscrit non reconnue.');
             $rels = $ext === 'docx' ? self::relationships($zip) : [];
+            $odtStyles = $ext === 'odt' ? self::odtTextStyles($doc, $zip) : [];
             $chapters = [];
             $parts = [];
             $warnings = ['Mise en page recomposée : tableaux, zones flottantes, notes et polices particulières doivent être relus dans le PDF.'];
@@ -83,7 +84,7 @@ final class OfficePrintSource
             $headingTitle = 'Manuscrit';
             $n = 0;
             $blocks = $ext === 'docx'
-                ? $xpath->query('.//*[local-name()="p" or local-name()="tbl"]', $root)
+                ? $xpath->query('./*[local-name()="p" or local-name()="tbl"]', $root)
                 : $xpath->query('.//*[local-name()="h" or local-name()="p"]', $root);
             foreach ($blocks as $node) {
                 if ($n++ > 6500) throw new RuntimeException('Trop de blocs dans le manuscrit.');
@@ -92,7 +93,7 @@ final class OfficePrintSource
                     continue;
                 }
                 $heading = $ext === 'docx' ? self::wordHeading($node, $xpath) : $node->localName === 'h';
-                $html = self::paragraph($node, $ext, $xpath, $zip, $rels, $warnings, $imageTotal);
+                $html = self::paragraph($node, $ext, $xpath, $zip, $rels, $odtStyles, $warnings, $imageTotal);
                 $plain = trim($node->textContent);
                 if ($plain !== '') $wordCount += count(preg_split('/\s+/u', $plain, -1, PREG_SPLIT_NO_EMPTY) ?: []);
                 if ($heading && trim(strip_tags($html)) !== '') {
@@ -145,7 +146,7 @@ final class OfficePrintSource
         return (bool) preg_match('/^(heading\s*[1-2]|titre\s*[1-2]|title)$/i', $style->getAttributeNS('http://schemas.openxmlformats.org/wordprocessingml/2006/main', 'val') ?: $style->getAttribute('w:val'));
     }
 
-    private static function paragraph(DOMNode $node, string $ext, DOMXPath $xpath, ZipArchive $zip, array $rels, array &$warnings, int &$imageTotal): string
+    private static function paragraph(DOMNode $node, string $ext, DOMXPath $xpath, ZipArchive $zip, array $rels, array $odtStyles, array &$warnings, int &$imageTotal): string
     {
         $html = '';
         if ($ext === 'docx') {
@@ -161,20 +162,20 @@ final class OfficePrintSource
                     }
                 }
                 if ($chunk !== '') {
-                    if ($xpath->query('./*[local-name()="rPr"]/*[local-name()="b"]', $run)->length) $chunk = '<strong>'.$chunk.'</strong>';
-                    if ($xpath->query('./*[local-name()="rPr"]/*[local-name()="i"]', $run)->length) $chunk = '<em>'.$chunk.'</em>';
+                    if (self::docxRunFlag($xpath, $run, 'b')) $chunk = '<strong>'.$chunk.'</strong>';
+                    if (self::docxRunFlag($xpath, $run, 'i')) $chunk = '<em>'.$chunk.'</em>';
                 }
                 $html .= $chunk;
             }
         } else {
             foreach ($node->childNodes as $child) {
-                $html .= self::odtInline($child, $zip, $warnings, $imageTotal);
+                $html .= self::odtInline($child, $zip, $odtStyles, $warnings, $imageTotal);
             }
         }
         return trim($html);
     }
 
-    private static function odtInline(DOMNode $node, ZipArchive $zip, array &$warnings, int &$imageTotal): string
+    private static function odtInline(DOMNode $node, ZipArchive $zip, array $styles, array &$warnings, int &$imageTotal): string
     {
         if ($node instanceof DOMText) return self::esc($node->wholeText);
         if (!$node instanceof DOMElement) return '';
@@ -190,22 +191,111 @@ final class OfficePrintSource
             return self::image($zip, $src, $warnings, $imageTotal);
         }
         $result = '';
-        foreach ($node->childNodes as $child) $result .= self::odtInline($child,$zip,$warnings,$imageTotal);
+        foreach ($node->childNodes as $child) $result .= self::odtInline($child,$zip,$styles,$warnings,$imageTotal);
+        if ($node->localName === 'span'
+            && $node->namespaceURI === 'urn:oasis:names:tc:opendocument:xmlns:text:1.0') {
+            $styleName = $node->getAttributeNS('urn:oasis:names:tc:opendocument:xmlns:text:1.0', 'style-name');
+            $style = $styles[$styleName] ?? [];
+            if (($style['bold'] ?? false) === true) $result = '<strong>'.$result.'</strong>';
+            if (($style['italic'] ?? false) === true) $result = '<em>'.$result.'</em>';
+        }
         return $result;
+    }
+
+    /** Limited text styles: no untrusted stylesheets, font names or CSS. */
+    private static function odtTextStyles(DOMDocument $content, ZipArchive $zip): array
+    {
+        $docs = [$content];
+        $raw = $zip->getFromName('styles.xml');
+        if (is_string($raw) && strlen($raw) <= 8388608) {
+            $external = new DOMDocument();
+            if (@$external->loadXML($raw, LIBXML_NONET | LIBXML_COMPACT)) $docs[] = $external;
+        }
+        $styleNS = 'urn:oasis:names:tc:opendocument:xmlns:style:1.0';
+        $foNS = 'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0';
+        $defs = [];
+        foreach ($docs as $doc) {
+            foreach ($doc->getElementsByTagNameNS($styleNS, 'style') as $node) {
+                if (!$node instanceof DOMElement || $node->getAttributeNS($styleNS, 'family') !== 'text') continue;
+                $name = $node->getAttributeNS($styleNS, 'name');
+                if ($name === '' || strlen($name) > 120 || count($defs) > 3000) continue;
+                $weight = null;
+                $italic = null;
+                foreach ($node->getElementsByTagNameNS($styleNS, 'text-properties') as $prop) {
+                    if ($prop->hasAttributeNS($foNS, 'font-weight')) {
+                        $value = strtolower($prop->getAttributeNS($foNS, 'font-weight'));
+                        $weight = $value === 'bold' || (ctype_digit($value) && (int) $value >= 600);
+                    }
+                    if ($prop->hasAttributeNS($foNS, 'font-style')) {
+                        $italic = in_array(strtolower($prop->getAttributeNS($foNS, 'font-style')), ['italic','oblique'], true);
+                    }
+                    break;
+                }
+                $defs[$name] = [
+                    'bold'=>$weight, 'italic'=>$italic,
+                    'parent'=>$node->getAttributeNS($styleNS, 'parent-style-name')
+                ];
+            }
+        }
+        $resolved = [];
+        foreach ($defs as $name => $_) {
+            $seen = [];
+            $cur = $name;
+            $values = ['bold'=>null, 'italic'=>null];
+            for ($depth = 0; $depth < 12 && isset($defs[$cur]) && !isset($seen[$cur]); $depth++) {
+                $seen[$cur] = true;
+                foreach (['bold','italic'] as $prop) {
+                    if ($values[$prop] === null && $defs[$cur][$prop] !== null) $values[$prop] = $defs[$cur][$prop];
+                }
+                $cur = $defs[$cur]['parent'];
+            }
+            $resolved[$name] = ['bold'=>$values['bold'] === true, 'italic'=>$values['italic'] === true];
+        }
+        return $resolved;
+    }
+
+    private static function docxRunFlag(DOMXPath $xpath, DOMNode $run, string $kind): bool
+    {
+        $flag = $xpath->query('./*[local-name()="rPr"]/*[local-name()="'.$kind.'"]', $run)->item(0);
+        if (!$flag instanceof DOMElement) return false;
+        $value = $flag->getAttributeNS('http://schemas.openxmlformats.org/wordprocessingml/2006/main', 'val');
+        if ($value === '') $value = $flag->getAttribute('w:val');
+        return !in_array(strtolower($value), ['0','false','off','no'], true);
     }
 
     private static function image(ZipArchive $zip, string $path, array &$warnings, int &$imageTotal): string
     {
-        if ($path === '' || $imageTotal >= self::MAX_IMAGE_TOTAL) return '';
+        if ($path === '') {
+            $warnings[] = 'Une illustration référencée dans le manuscrit est absente ou inaccessible.';
+            return '';
+        }
+        if ($imageTotal >= self::MAX_IMAGE_TOTAL) {
+            $warnings[] = 'Certaines illustrations ont été omises : limite cumulée de 28 Mo atteinte.';
+            return '';
+        }
         $stat = $zip->statName($path);
-        if (!is_array($stat) || (int) $stat['size'] > self::MAX_IMAGE_BYTES) {
-            $warnings[] = 'Une illustration trop volumineuse n’a pas été intégrée à l’aperçu.';
+        if (!is_array($stat)) {
+            $warnings[] = 'Une illustration est introuvable dans le document importé.';
+            return '';
+        }
+        if ((int) $stat['size'] > self::MAX_IMAGE_BYTES) {
+            $warnings[] = 'Une illustration de plus de 8 Mo n’a pas été intégrée à l’aperçu.';
             return '';
         }
         $bytes = $zip->getFromName($path);
-        if (!is_string($bytes) || $imageTotal + strlen($bytes) > self::MAX_IMAGE_TOTAL) return '';
+        if (!is_string($bytes)) {
+            $warnings[] = 'Une illustration du manuscrit n’a pas pu être lue.';
+            return '';
+        }
+        if ($imageTotal + strlen($bytes) > self::MAX_IMAGE_TOTAL) {
+            $warnings[] = 'Certaines illustrations ont été omises : limite cumulée de 28 Mo atteinte.';
+            return '';
+        }
         $mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($bytes);
-        if (!in_array($mime, ['image/jpeg','image/png','image/webp'], true)) return '';
+        if (!in_array($mime, ['image/jpeg','image/png','image/webp'], true)) {
+            $warnings[] = 'Une illustration au format non compatible (par exemple SVG, WMF ou EMF) a été omise : convertissez-la en PNG ou JPEG.';
+            return '';
+        }
         $imageTotal += strlen($bytes);
         return '<img alt="Illustration du manuscrit" src="data:'.$mime.';base64,'.base64_encode($bytes).'">';
     }

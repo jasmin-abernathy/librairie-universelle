@@ -17,3 +17,5 @@ Cette première version prend en charge DOCX et ODT, pas les anciens DOC ; il re
 
 ## Vérifications
 PHP lint et Node syntax check de la CI, tests/OfficePrintSourceTest.php, tests/EpubPrintSourceTest.php et HTTP smoke de l'interface.
+## Préservation et alertes du manuscrit
+Les paragraphes situés dans des cellules de tableaux DOCX ne sont plus extraits comme du texte ordinaire. Les tableaux restent exclus de cette première recomposition et un avertissement invite à les vérifier dans le PDF. Les styles de caractères DOCX explicitement désactivés restent sans gras/italique. Pour les ODT, le gras et l'italique des styles de texte (`content.xml` et `styles.xml`) sont repris, y compris un niveau d'héritage de styles, sans importer des feuilles CSS arbitraires. Une illustration manquante, trop volumineuse ou non compatible est signalée clairement : l'auteur doit corriger le manuscrit avant de considérer le PDF complet.
