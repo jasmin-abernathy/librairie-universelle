@@ -72,11 +72,11 @@
   const form=document.getElementById('printer-kit-form');
   if(!form||!window.PrinterKit)return;
   const $=id=>document.getElementById(id);
-  const status=$('kit-status'),list=$('kit-file-report'),download=$('kit-download'),copy=$('kit-copy');
+  const status=$('kit-status'),list=$('kit-file-report'),download=$('kit-download'),zipButton=$('kit-zip'),copy=$('kit-copy');
   const roles=[['interior','kit-interior'],['front','kit-front'],['back','kit-back']];
   let prepared=null;
   const clear=()=>{
-    prepared=null;download.disabled=true;copy.disabled=true;
+    prepared=null;download.disabled=true;zipButton.disabled=true;copy.disabled=true;
     status.textContent='Fichiers et renseignements modifiés : relancez la préparation du dossier.';
   };
   for(const control of form.querySelectorAll('input,select'))control.addEventListener('change',clear);
@@ -91,7 +91,7 @@
   form.addEventListener('submit',async event=>{
     event.preventDefault();
     status.textContent='Vérification locale des en-têtes PDF…';
-    prepared=null;download.disabled=true;copy.disabled=true;
+    prepared=null;download.disabled=true;zipButton.disabled=true;copy.disabled=true;
     try{
       if(!['kit-check-pages','kit-check-covers','kit-check-printer'].every(id=>$(id).checked))
         throw new Error('Cochez les trois vérifications avant la préparation du dossier.');
@@ -116,7 +116,7 @@
       const large=descriptors.filter(d=>d.size>20*1048576);
       if(large.length){const item=document.createElement('li');item.textContent=
         'Attention : '+large.length+' fichier(s) de plus de 20 Mo ; vérifiez les limites des pièces jointes de l’imprimeur.';list.appendChild(item);}
-      download.disabled=false;copy.disabled=false;
+      download.disabled=false;zipButton.disabled=false;copy.disabled=false;
       status.textContent='Dossier préparé localement. Vérifiez maintenant les PDF avec votre imprimeur.';
     }catch(error){
       status.textContent='Dossier incomplet : '+(error?.message||'vérification impossible.');
@@ -129,6 +129,27 @@
     const a=document.createElement('a');a.href=url;a.download='dossier-impression-'+new Date().toISOString().slice(0,10)+'.json';
     document.body.appendChild(a);a.click();a.remove();
     setTimeout(()=>URL.revokeObjectURL(url),15000);
+  });
+  zipButton.addEventListener('click',async()=>{
+    if(!prepared||!window.PrinterZip)return;
+    const snapshot=prepared;zipButton.disabled=true;
+    status.textContent='Préparation de l’archive sur votre appareil…';
+    try{
+      const entries=[
+        {name:'interieur.pdf',blob:$('kit-interior').files[0]},
+        {name:'premiere-couverture.pdf',blob:$('kit-front').files[0]},
+        {name:'quatrieme-couverture.pdf',blob:$('kit-back').files[0]},
+        {name:'fiche-imprimeur.json',blob:new Blob([JSON.stringify(snapshot,null,2)],{type:'application/json'})}
+      ];
+      const archive=await window.PrinterZip.create(entries);
+      if(prepared!==snapshot)throw Error('Les fichiers ont changé : recommencez la vérification.');
+      const url=URL.createObjectURL(archive),a=document.createElement('a');
+      a.href=url;a.download='dossier-impression-'+new Date().toISOString().slice(0,10)+'.zip';
+      document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),15000);
+      status.textContent='Archive ZIP prête : les trois PDF et leur fiche y figurent. Faites confirmer la conformité par l’imprimeur.';
+    }catch(e){status.textContent='Archive non créée : '+(e?.message||'erreur');}
+    finally{zipButton.disabled=!prepared;}
   });
   copy.addEventListener('click',async()=>{
     if(!prepared)return;
