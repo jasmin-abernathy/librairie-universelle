@@ -105,7 +105,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 
         <section class="autoedition-entry" aria-labelledby="autoedition-entry-heading">
             <h2 id="autoedition-entry-heading">Que souhaitez-vous préparer ?</h2>
-            <p>**Livre papier :** notre générateur met en page votre manuscrit <strong>DOCX ou ODT</strong> pour produire un PDF intérieur paginé, à contrôler avant l’envoi à l’imprimeur. Vous n'avez pas besoin d'un EPUB.</p>
+            <p><strong>Livre papier :</strong> notre générateur met en page votre manuscrit <strong>DOCX ou ODT</strong> pour produire un PDF intérieur paginé, à contrôler avant l’envoi à l’imprimeur. Vous n'avez pas besoin d'un EPUB.</p>
         </section>
         <nav class="autoedition-tabs" role="tablist" aria-label="Étapes de l'autoédition">
             <button type="button" id="tab-paper" role="tab" aria-controls="panel-paper" aria-selected="true" tabindex="0" data-panel="paper">📖 Livre papier <small>PDF + impression</small></button>
