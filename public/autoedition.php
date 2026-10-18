@@ -366,7 +366,10 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                         <h3>3. Constituer le dossier pour l'imprimeur</h3>
                         <p>Une fois vos PDF prêts, vérifiez les trois fichiers et préparez une fiche récapitulative. Aucun document n'est transmis automatiquement à Corep ou à un autre prestataire.</p>
                     </div>
-                    <a class="button-link secondary" href="/dossier-impression.php">Préparer le dossier d'impression ↗</a>
+                    <div class="paper-pro-links">
+                      <a class="button-link secondary" href="/export-pdfx.php">Export professionnel PDF/X-4 ou PDF/X-1a ↗</a>
+                      <a class="button-link secondary" href="/dossier-impression.php">Préparer le dossier d'impression ↗</a>
+                    </div>
                 </div>
                 <section class="print-cost-panel" id="print-cost-estimator" aria-labelledby="print-cost-title" data-grids="<?= e((string) json_encode($publicPrintGrids, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP)) ?>">
                     <h3 id="print-cost-title">Simuler le coût d’impression</h3>
