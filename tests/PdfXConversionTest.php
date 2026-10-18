@@ -23,7 +23,11 @@ try {
  if(!is_resource($proc)||proc_close($proc)!==0)throw new RuntimeException('Failed to generate test PDF');
  foreach(['x4'=>'PDF/X-4','x1a'=>'PDF/X-1a:2001'] as $version=>$claim) {
    $out=$dir.'/'.$version.'.pdf';
-   PdfXExport::convert($pdf,$out,$version,$cfg);
+   try{PdfXExport::convert($pdf,$out,$version,$cfg);}
+   catch(Throwable $problem){
+     fwrite(STDERR,"Ghostscript ".$version." error detail (synthetic fixture): ".substr((string)@file_get_contents($dir.'/ghostscript-errors.log'),0,4000)."\n");
+     throw $problem;
+   }
    if(!PdfXExport::validPdf($out,26214400))throw new RuntimeException($version.' output invalid');
    $bytes=file_get_contents($out);
    if(!str_contains($bytes,$claim)||!str_contains($bytes,'/OutputIntents'))throw new RuntimeException('Missing PDF/X metadata');
