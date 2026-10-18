@@ -39,7 +39,8 @@ function checked(string $key, bool $default = false): string
     return $default ? ' checked' : '';
 }
 
-$printPreparationRequested = !empty($_POST['print_preparation_requested']);
+$printPreparationRequested = $_SERVER['REQUEST_METHOD'] === 'POST'
+    ? !empty($_POST['print_preparation_requested']) : true;
 require_once dirname(__DIR__) . '/src/MosellePrintGridClient.php';
 $publicPrintGrids = (new MosellePrintGridClient((string) ($config['moselle_base_url'] ?? '')))->publishedGrids();
 // Copie locale autorisée seulement si aucun pilote Moselle n'est configuré.
@@ -59,6 +60,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <title>Autoédition — <?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
     <link rel="stylesheet" href="/assets/css/printing-estimate.css?v=20261013-1">
+    <link rel="stylesheet" href="/assets/css/autoedition-tabs.css?v=20261018-1">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -101,9 +103,21 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
             </div>
         <?php endif; ?>
 
-        <form class="submission-form" method="post" enctype="multipart/form-data">
+        <section class="autoedition-entry" aria-labelledby="autoedition-entry-heading">
+            <h2 id="autoedition-entry-heading">Que souhaitez-vous préparer ?</h2>
+            <p><strong>Livre papier :</strong> notre générateur met en page votre manuscrit <strong>DOCX ou ODT</strong> pour produire un PDF intérieur paginé, à contrôler avant l’envoi à l’imprimeur. Vous n'avez pas besoin d'un EPUB.</p>
+        </section>
+        <nav class="autoedition-tabs" role="tablist" aria-label="Étapes de l'autoédition">
+            <button type="button" id="tab-paper" role="tab" aria-controls="panel-paper" aria-selected="true" tabindex="0" data-panel="paper">📖 Livre papier <small>PDF + impression</small></button>
+            <button type="button" id="tab-project" role="tab" aria-controls="panel-project" aria-selected="false" tabindex="-1" data-panel="project">Mon livre <small>Auteur, titre, ISBN</small></button>
+            <button type="button" id="tab-digital" role="tab" aria-controls="panel-digital" aria-selected="false" tabindex="-1" data-panel="digital">Version numérique <small>EPUB</small></button>
+            <button type="button" id="tab-submit" role="tab" aria-controls="panel-submit" aria-selected="false" tabindex="-1" data-panel="submit">Déposer mon projet <small>Vérifications</small></button>
+        </nav>
+        <form class="submission-form" method="post" enctype="multipart/form-data" id="autoedition-form">
             <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>">
+            <input type="hidden" name="active_panel" value="<?= e((string) ($_POST['active_panel'] ?? 'paper')) ?>" id="active-panel">
 
+            <section class="autoedition-panel" id="panel-project" role="tabpanel" aria-labelledby="tab-project" data-panel-name="project">
             <fieldset>
                 <legend>1. Qui publie ?</legend>
                 <div class="form-grid two-columns">
@@ -160,8 +174,11 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 </div>
             </fieldset>
 
+            </section>
+            <section class="autoedition-panel" id="panel-digital" role="tabpanel" aria-labelledby="tab-digital" data-panel-name="digital">
+            <p class="field-help">La publication numérique est indépendante de l’impression papier. Si vous ne souhaitez qu’un livre papier, passez directement à l’onglet « Livre papier ».</p>
             <fieldset>
-                <legend>4. Version numérique</legend>
+                <legend>Version numérique — EPUB</legend>
                 <div class="form-grid two-columns">
                     <label>EPUB
                         <input type="file" name="ebook" accept=".epub,application/epub+zip">
@@ -182,18 +199,32 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 </div>
             </fieldset>
 
+            </section>
+            <section class="autoedition-panel" id="panel-paper" role="tabpanel" aria-labelledby="tab-paper" data-panel-name="paper">
             <fieldset>
-                <legend>5. Version papier et impression</legend>
+                <legend>Publication papier : préparation et impression</legend>
 
                 <div class="resource-card important-resource">
                     <div>
-                        <strong>Composer la version papier ici.</strong>
-                        <p>Préparez votre livre papier sans modifier votre manuscrit d’origine. Si vous avez un EPUB, il peut servir de source pour l’aperçu intérieur ; vous pouvez aussi fournir directement un PDF de l’intérieur. La couverture se prépare indépendamment.</p>
+                        <strong>Notre générateur réalise la mise en page de votre manuscrit.</strong>
+                        <p><strong>Ajoutez votre livre en DOCX ou ODT</strong> : la Librairie recomposera l'intérieur en pages de livre, avec sommaire, marges de reliure, pagination recto-verso et pages blanches nécessaires. Vous pourrez ensuite enregistrer le résultat en PDF pour l'imprimeur. Aucun EPUB n'est nécessaire.</p>
+                        <p>Le manuscrit source reste inchangé. La conversion n'est pas une reproduction exacte du document bureautique : relisez l'aperçu, en particulier les tableaux, les notes et les images, puis faites valider le PDF final par l'imprimeur.</p>
+                    </div>
+                </div>
+
+                <div class="resource-card important-resource">
+                    <div>
+                        <strong>1. Importer votre manuscrit pour composer l'intérieur PDF</strong>
+                        <p>Formats actuellement convertibles : <strong>.docx, .odt</strong> (Word ou LibreOffice). Pour un ancien fichier <code>.doc</code>, enregistrez-le d'abord en DOCX ou ODT. Les fichiers TXT ne sont pas pris en charge.</p>
+                        <label>Manuscrit papier à mettre en page
+                            <input type="file" name="office_manuscript" accept=".docx,.odt,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.oasis.opendocument.text">
+                            <span class="field-help">Fichier lu temporairement pour l'aperçu, jamais envoyé à l'imprimeur automatiquement. Maximum 30 Mo.</span>
+                        </label>
                     </div>
                 </div>
 
                 <label class="check-row">
-                    <input id="print-preparation-requested" type="checkbox" name="print_preparation_requested" value="1" aria-controls="print-layout-settings" aria-expanded="<?= $printPreparationRequested ? 'true' : 'false' ?>"<?= checked('print_preparation_requested') ?>>
+                    <input id="print-preparation-requested" type="checkbox" name="print_preparation_requested" value="1" aria-controls="print-layout-settings" aria-expanded="<?= $printPreparationRequested ? 'true' : 'false' ?>"<?= checked('print_preparation_requested', true) ?>>
                     <span><strong>Je veux préparer la mise en page de mon livre papier.</strong><br><span class="field-help">L’assistant travaille uniquement sur la version papier : l’EPUB d’origine n’est ni réécrit ni corrigé ici. Vous pouvez ensuite imprimer l’aperçu au format PDF.</span></span>
                 </label>
 
@@ -253,13 +284,15 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 
                     <label class="check-row"><input type="checkbox" name="print_toc_enabled" value="1"<?= checked('print_toc_enabled', true) ?>> <span><strong>Sommaire automatique</strong> — construit depuis les chapitres et recalculé après pagination.</span></label>
                     <label class="check-row"><input type="checkbox" name="print_hide_chapter_openers" value="1"<?= checked('print_hide_chapter_openers', true) ?>> <span>Masquer le numéro visible sur la première page de chaque chapitre.</span></label>
-                    <p class="note"><strong>Principe :</strong> les numéros du sommaire ne sont jamais devinés à partir de l’EPUB. Ils sont calculés après composition du PDF, quand le format, les marges, les images et les sauts de page sont définitifs.</p>
+                    <p class="note"><strong>Principe :</strong> le manuscrit DOCX/ODT est recomposé en pages ; les numéros du sommaire sont calculés après pagination, et non copiés depuis Word. Les sauts recto/verso sont pris en charge par la composition.</p>
                     <div class="submit-row print-preview-row">
-                        <button type="submit" class="secondary-action" formaction="/print-preview.php" formtarget="_blank" formnovalidate>Prévisualiser la version imprimée</button>
-                        <span>Lit l’EPUB uniquement comme source, sans le modifier, puis compose le PDF intérieur. Pour un PDF déjà prêt, utilisez directement le champ ci-dessous.</span>
+                        <button type="submit" class="secondary-action" formaction="/print-preview.php" formtarget="_blank" formnovalidate id="paper-generate-button">Générer et prévisualiser le PDF intérieur</button>
+                        <span>Le générateur lit le DOCX ou l'ODT choisi ci-dessus, applique vos réglages et ouvre un aperçu paginé. Vous pourrez utiliser « Enregistrer en PDF » depuis la boîte d'impression. Vérifiez le résultat avant l'envoi à Corep.</span>
                     </div>
                 </div>
 
+                <h3>2. Votre fichier PDF pour l'imprimeur</h3>
+                <p class="field-help">Après la génération, enregistrez l'aperçu en PDF et joignez-le ici pour une éventuelle soumission. La génération n'envoie rien automatiquement.</p>
                 <div class="form-grid two-columns">
                     <label>PDF déjà prêt à imprimer <span class="optional">facultatif</span>
                         <input type="file" name="print_pdf" accept="application/pdf,.pdf">
@@ -328,8 +361,10 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 </div>
             </fieldset>
 
+            </section>
+            <section class="autoedition-panel" id="panel-submit" role="tabpanel" aria-labelledby="tab-submit" data-panel-name="submit">
             <fieldset>
-                <legend>6. Déclarations avant envoi</legend>
+                <legend>Vérifications et envoi</legend>
                 <label class="check-row"><input type="checkbox" name="rights_confirmed" value="1" required<?= !empty($_POST['rights_confirmed']) ? ' checked' : '' ?>> <span>Je confirme disposer des droits nécessaires sur le texte, la couverture et les fichiers transmis, ou des autorisations correspondantes.</span></label>
                 <label class="check-row"><input type="checkbox" name="quality_confirmed" value="1" required<?= !empty($_POST['quality_confirmed']) ? ' checked' : '' ?>> <span>Je confirme qu’il s’agit d’un véritable projet éditorial et non d’un dépôt industriel ou automatisé, d’une série de variantes répétitives sans valeur, d’un contenu trompeur ou manifestement bâclé destiné à remplir artificiellement le catalogue.</span></label>
                 <p class="field-help"><strong>La publication reste une décision humaine.</strong> Un fichier techniquement valide peut être refusé pour des raisons éditoriales. Aucun score d’IA ne décide de l’acceptation.</p>
@@ -339,6 +374,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 <button type="submit"<?= !$config['self_publishing_enabled'] ? ' disabled' : '' ?>>Envoyer pour validation humaine</button>
                 <span>Aucune publication automatique.</span>
             </div>
+            </section>
         </form>
     <?php endif; ?>
 </main>
@@ -348,6 +384,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <p>Autoédition accompagnée et filtrée humainement — sans classement automatique opaque.</p>
 </footer>
 <script src="/assets/js/autoedition-print.js"></script>
+<script src="/assets/js/autoedition-tabs.js?v=20261018-1"></script>
 <script src="/assets/js/printing-estimate.js?v=20261013-1"></script>
 </body>
 </html>

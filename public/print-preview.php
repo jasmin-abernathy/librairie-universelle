@@ -6,6 +6,7 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
 require_once dirname(__DIR__) . '/src/Csrf.php';
 require_once dirname(__DIR__) . '/src/PrintSettings.php';
 require_once dirname(__DIR__) . '/src/EpubPrintSource.php';
+require_once dirname(__DIR__) . '/src/OfficePrintSource.php';
 
 function e(?string $value): string
 {
@@ -23,7 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 } else {
     try {
         $settings = PrintSettings::normalize($_POST);
-        $book = EpubPrintSource::fromUpload($_FILES['ebook'] ?? [], (int) $config['max_epub_bytes']);
+        $office = $_FILES['office_manuscript'] ?? [];
+        if (($office['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+            $book = OfficePrintSource::fromUpload($office, min(31457280, (int) $config['max_epub_bytes']));
+        } elseif (($_FILES['ebook']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+            // Compatibilité des anciennes compositions utilisant un EPUB existant.
+            $book = EpubPrintSource::fromUpload($_FILES['ebook'], (int) $config['max_epub_bytes']);
+        } else {
+            throw new RuntimeException('Ajoutez votre manuscrit DOCX ou ODT dans l’onglet « Livre papier » avant de générer le PDF.');
+        }
     } catch (Throwable $exception) {
         $error = $exception->getMessage();
     }
@@ -90,7 +99,7 @@ $gutter = $settings['gutter_mode'] === 'custom'
     </div>
     <div class="actions">
         <a href="/autoedition.php">Retour aux réglages</a>
-        <button id="print-button" type="button" disabled>Imprimer / enregistrer en PDF</button>
+        <button id="print-button" type="button" disabled>Enregistrer l’intérieur en PDF</button>
     </div>
 </div>
 
@@ -98,7 +107,7 @@ $gutter = $settings['gutter_mode'] === 'custom'
     Format <?= (int) $pageWidth ?> × <?= (int) $pageHeight ?> mm ·
     <?= $settings['binding'] === 'hardcover' ? 'relié' : 'broché' ?> ·
     marge intérieure <?= number_format($gutter, 1, ',', ' ') ?> mm<?= $settings['gutter_mode'] === 'auto' ? ' (auto)' : '' ?>.
-    Dans la boîte d’impression du navigateur, désactivez les en-têtes/pieds de page ajoutés par le navigateur.
+    Notre générateur a recomposé votre manuscrit en pages de livre. Sélectionnez « Enregistrer au format PDF » dans le navigateur, avec les arrière-plans, à 100 %, sans en-têtes/pieds de page automatiques. Vérifiez soigneusement les pages et faites valider les fonds perdus, les polices et le BAT par l’imprimeur.
 </p>
 
 <?php if ($book['warnings'] !== []): ?>
