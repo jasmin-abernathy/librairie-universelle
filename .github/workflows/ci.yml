@@ -94,7 +94,7 @@ jobs:
           docker run --rm -v "$PWD:/app:ro" -w /app debian:trixie-slim sh -c '
             set -eu
             apt-get update -qq
-            apt-get install -y --no-install-recommends ghostscript php-cli
+            apt-get install -y --no-install-recommends ghostscript php-cli poppler-utils
             gs --version
             php tests/PdfXConversionTest.php
           '

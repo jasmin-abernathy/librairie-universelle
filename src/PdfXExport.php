@@ -103,7 +103,10 @@ final class PdfXExport
             '-sColorConversionStrategy=CMYK',
             '-sDEVICE=pdfwrite',
             '-sOutputFile='.$output,
-            $definition,$source
+            // Ghostscript excludes the PDF Base-14 fonts by default even with
+            // -dEmbedAllFonts=true. PDF/X needs every font embedded.
+            '-c','<</NeverEmbed []>> setdistillerparams',
+            '-f',$definition,$source
         ];
     }
 

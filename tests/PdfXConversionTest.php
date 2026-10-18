@@ -13,6 +13,41 @@ $cfg=[
  'pdfx_icc_profile'=>$icc,'pdfx_output_condition'=>'CI test CMYK (not for production)',
  'pdfx_max_bytes'=>26214400
 ];
+
+function assertEmbeddedFonts(string $path):void
+{
+    $proc=proc_open(['pdffonts',$path],
+        [0=>['file','/dev/null','r'],1=>['pipe','w'],2=>['file','/dev/null','w']],$pipes);
+    if (!is_resource($proc)) throw new RuntimeException('pdffonts unavailable in CI.');
+    $out=stream_get_contents($pipes[1]);
+    fclose($pipes[1]);
+    if (proc_close($proc)!==0 || !is_string($out)) throw new RuntimeException('pdffonts failed.');
+    $lines=preg_split('/\r?\n/',trim($out));
+    if (!is_array($lines))throw new RuntimeException('Font report unavailable.');
+    $count=0;
+    foreach(array_slice($lines,2) as $line){
+        if(trim($line)==='')continue;
+        if(!preg_match('/\s+(yes|no)\s+(yes|no)\s+(yes|no)\s+\d+\s+\d+\s*$/i',$line,$cols))
+            throw new RuntimeException('Unrecognized pdffonts line: '.$line);
+        $count++;
+        if(strtolower($cols[1])!=='yes')
+            throw new RuntimeException('Font not embedded in PDF/X output: '.$line);
+    }
+    if($count===0)throw new RuntimeException('Test fixture unexpectedly has no fonts.');
+}
+
+function assertPageGeometry(string $path):void
+{
+    $proc=proc_open(['pdfinfo','-box',$path],
+        [0=>['file','/dev/null','r'],1=>['pipe','w'],2=>['file','/dev/null','w']],$pipes);
+    if(!is_resource($proc))throw new RuntimeException('pdfinfo unavailable.');
+    $out=stream_get_contents($pipes[1]);fclose($pipes[1]);
+    if(proc_close($proc)!==0 || !is_string($out)
+       || !preg_match('/^Pages:\s+1\s*$/m',$out)
+       || !preg_match('/^Page size:\s+[\d.]+\s+x\s+[\d.]+\s+pts/m',$out))
+        throw new RuntimeException('Page count or geometry invalid in PDF/X output.');
+}
+
 $dir=sys_get_temp_dir().'/lu-pdfx-integ-'.bin2hex(random_bytes(6));mkdir($dir,0700);
 try {
  $ps=$dir.'/source.ps';$pdf=$dir.'/source.pdf';
@@ -31,6 +66,8 @@ try {
    if(!PdfXExport::validPdf($out,26214400))throw new RuntimeException($version.' output invalid');
    $bytes=file_get_contents($out);
    if(!str_contains($bytes,$claim)||!str_contains($bytes,'/OutputIntents'))throw new RuntimeException('Missing PDF/X metadata');
+   assertEmbeddedFonts($out);
+   assertPageGeometry($out);
    echo "Ghostscript ".$version." PDF/X output: ".filesize($out)." bytes\n";
    if (file_exists($dir.'/definition.ps') || file_exists($dir.'/ghostscript-errors.log'))
        throw new RuntimeException('Ghostscript working files leaked beside the PDF export.');
@@ -43,6 +80,8 @@ try {
        1=>['file',$dir.'/cli.out','w'],2=>['file',$dir.'/cli.err','w']],$pipes);
  if(!is_resource($proc)||proc_close($proc)!==0||!PdfXExport::validPdf($outCli,26214400))
      throw new RuntimeException('CLI test failed: '.(string)@file_get_contents($dir.'/cli.err'));
+ assertEmbeddedFonts($outCli);
+ assertPageGeometry($outCli);
  echo "Local CLI PDF/X export: ".filesize($outCli)." bytes\n";
 }finally{
  foreach(glob($dir.'/*')?:[] as $f)@unlink($f);
