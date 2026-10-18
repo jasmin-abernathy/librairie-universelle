@@ -1,0 +1,9 @@
+.paper-draft-toolbar{margin:1rem 0 1.2rem;padding:1rem 1.1rem;border:1px solid #bfd3c4;border-radius:1rem;background:#f7faf7}
+.paper-draft-toolbar h3{font-size:1.06rem;margin:0 0 .4rem}
+.paper-draft-toolbar p{font-size:.85rem;line-height:1.5;color:#375443;margin:.25rem 0 .7rem}
+.paper-draft-actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.paper-draft-actions button,.draft-file-label{border:1px solid #8bac97;border-radius:.55rem;background:#fff;color:#224a32;font:inherit;font-size:.82rem;font-weight:740;padding:.55rem .75rem;cursor:pointer}
+.paper-draft-actions button:hover,.draft-file-label:hover{background:#e6f2e8}
+.draft-file-label{display:inline-flex;align-items:center;gap:.35rem}
+.draft-file-label input{max-width:140px;font-size:.7rem}
+#draft-status{min-height:1.3rem;margin:.6rem 0 0}

@@ -60,6 +60,9 @@ jobs:
       - name: DOCX / ODT office manuscript parser
         run: php tests/OfficePrintSourceTest.php
 
+      - name: Local draft privacy test
+        run: node tests/AuthorDraftTest.cjs
+
       - name: EPUB print composition parser
         run: php tests/EpubPrintSourceTest.php
 

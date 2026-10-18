@@ -61,6 +61,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
     <link rel="stylesheet" href="/assets/css/printing-estimate.css?v=20261013-1">
     <link rel="stylesheet" href="/assets/css/autoedition-tabs.css?v=20261018-2">
+    <link rel="stylesheet" href="/assets/css/author-draft.css?v=20261018-1">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -133,6 +134,18 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
             </button>
         </nav>
         <p class="autoedition-tab-context" id="autoedition-tab-context" role="status" aria-live="polite">Livre papier · Composez votre manuscrit et préparez son impression.</p>
+        <section class="paper-draft-toolbar" aria-labelledby="draft-heading">
+            <div><h3 id="draft-heading">Votre brouillon, sans compte</h3>
+            <p>Enregistrez les champs sur cet appareil ou exportez-les en fichier JSON. Les manuscrits, couvertures et PDF <strong>ne sont jamais sauvegardés</strong> par cette fonction : vous devrez les sélectionner à nouveau. Évitez la sauvegarde locale sur un ordinateur partagé.</p></div>
+            <div class="paper-draft-actions">
+                <button type="button" id="draft-save">Enregistrer ici</button>
+                <button type="button" id="draft-restore">Reprendre</button>
+                <button type="button" id="draft-export">Exporter</button>
+                <label class="draft-file-label">Importer un brouillon <input type="file" id="draft-import" accept=".json,application/json"></label>
+                <button type="button" id="draft-clear">Effacer le brouillon</button>
+            </div>
+            <p id="draft-status" role="status" aria-live="polite">Aucune donnée envoyée au serveur lors de la sauvegarde d'un brouillon.</p>
+        </section>
         <form class="submission-form" method="post" enctype="multipart/form-data" id="autoedition-form">
             <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>">
             <input type="hidden" name="active_panel" value="<?= e((string) ($_POST['active_panel'] ?? 'paper')) ?>" id="active-panel">
@@ -405,6 +418,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 </footer>
 <script src="/assets/js/autoedition-print.js"></script>
 <script src="/assets/js/autoedition-tabs.js?v=20261018-2"></script>
+<script src="/assets/js/author-draft.js?v=20261018-1"></script>
 <script src="/assets/js/printing-estimate.js?v=20261013-1"></script>
 </body>
 </html>

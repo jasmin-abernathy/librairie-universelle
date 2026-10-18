@@ -49,3 +49,13 @@
  .paper-cover-back-copy>p{font-size:11pt!important}
  .paper-barcode-zone{font-size:9pt!important}
 }
+
+/* EAN-13 calculé depuis l'ISBN: blanc de contraste et taille physique stable. */
+.paper-barcode-zone { background:#fff !important;color:#111 !important;min-width:38mm;max-width:60%;padding:2mm; }
+.paper-barcode-zone img { width:37.3mm;max-width:100%;height:auto;max-height:none;object-fit:contain;image-rendering:auto; }
+.paper-barcode-zone span {display:block;white-space:normal;overflow-wrap:anywhere;}
+.paper-cover-sheet [hidden] {display:none!important}
+@media print {
+  .paper-barcode-zone { min-width:38mm!important; }
+  .paper-barcode-zone img { width:37.3mm!important; max-width:none!important; }
+}

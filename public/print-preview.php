@@ -110,6 +110,13 @@ $gutter = $settings['gutter_mode'] === 'custom'
     Notre générateur a recomposé votre manuscrit en pages de livre. Sélectionnez « Enregistrer au format PDF » dans le navigateur, avec les arrière-plans, à 100 %, sans en-têtes/pieds de page automatiques. Vérifiez soigneusement les pages et faites valider les fonds perdus, les polices et le BAT par l’imprimeur.
 </p>
 
+<section class="preview-checklist" aria-labelledby="preview-check-title">
+    <h2 id="preview-check-title">Contrôle de votre composition</h2>
+    <p>Ce contrôle couvre la <strong>pagination visible</strong>, pas la conformité industrielle du PDF. Le BAT définitif reste à vérifier avec l’imprimeur.</p>
+    <ul id="preview-audit" aria-live="polite"><li>Analyse des pages en cours…</li></ul>
+    <label class="preview-confirm"><input id="preview-reviewed" type="checkbox"> J’ai parcouru les pages et vérifié la position des chapitres, les images, le sommaire et les pages blanches.</label>
+    <p id="preview-review-status" role="status">L’export sera disponible après pagination et validation visuelle.</p>
+</section>
 <?php if ($book['warnings'] !== []): ?>
 <div class="preview-warnings" role="status">
     <strong>À vérifier dans l’aperçu</strong>

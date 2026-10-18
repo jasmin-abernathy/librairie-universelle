@@ -1,0 +1,14 @@
+'use strict';
+const assert = require('node:assert/strict');
+const barcode = require('../public/assets/js/paper-barcode.js');
+assert.equal(barcode.valid('9782072938245'),true);
+assert.equal(barcode.valid('9782072938244'),false);
+assert.equal(barcode.valid('978 2-07-293824-5'),true);
+assert.equal(barcode.valid('1234567890128'),false);
+assert.equal(barcode.bits('9782072938245').length,95);
+assert.equal(barcode.bits('9782072938245').slice(0,3),'101');
+assert.equal(barcode.bits('9782072938245').slice(45,50),'01010');
+assert.equal(barcode.bits('9782072938245').slice(-3),'101');
+assert.equal((barcode.svg('9782072938245').match(/<rect x=/g)||[]).length > 30,true);
+assert.throws(()=>barcode.bits('9782072938244'));
+console.log('EAN-13 ISBN validated: OK');
