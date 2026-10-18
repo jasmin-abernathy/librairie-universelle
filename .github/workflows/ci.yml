@@ -43,6 +43,7 @@ jobs:
         run: |
           bash -n scripts/server-update.sh
           bash -n scripts/verify-production.sh
+          grep -Fq 'curl --http1.1' scripts/verify-production.sh
           test -f public/deploy-version.php
           test -f src/GitRevision.php
 
