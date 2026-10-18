@@ -30,21 +30,28 @@
     const isbn = items['paper-isbn'].value.trim();
     const provided = el('paper-barcode-image').files?.[0];
     const check = el('paper-isbn-check');
-    if (provided) {
-      check.textContent = 'Image de code-barres fournie : vérifiez qu’elle correspond exactement à l’ISBN du livre.';
-    } else if (isbn && window.PaperBarcode?.valid(isbn)) {
+    const barcodePreview = el('paper-barcode-visual');
+    const previewMode = window.PaperBarcode?.previewMode(isbn, Boolean(provided)) || 'empty';
+    if (previewMode === 'uploaded') {
+      // Never replace an author-provided barcode with an auto-generated image.
+      // In particular, changing the ISBN or cover color must keep the uploaded file.
+      barcodePreview.hidden = !barcodePreview.getAttribute('src');
+      barcodePreview.alt = 'Image de code-barres fournie par l’auteur';
+      check.textContent = isbn && !window.PaperBarcode?.valid(isbn)
+        ? 'Image conservée, mais ISBN-13 invalide : corrigez le numéro avant l’export.'
+        : 'Image de code-barres fournie et conservée : vérifiez qu’elle correspond exactement à l’ISBN du livre.';
+    } else if (previewMode === 'generated') {
       const code = window.PaperBarcode.digits(isbn);
-      el('paper-barcode-visual').src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(window.PaperBarcode.svg(code));
-      el('paper-barcode-visual').hidden = false;
+      barcodePreview.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(window.PaperBarcode.svg(code));
+      barcodePreview.hidden = false;
+      barcodePreview.alt = 'EAN-13 calculé pour l’ISBN ' + code;
       check.textContent = 'ISBN-13 valide : EAN-13 calculé (chiffre de contrôle vérifié). Vérifiez sa lisibilité après export.';
-    } else if (isbn) {
-      el('paper-barcode-visual').removeAttribute('src');
-      el('paper-barcode-visual').hidden = true;
-      check.textContent = 'Attention : cet ISBN-13 n’est pas valide. Vérifiez les 13 chiffres et le chiffre de contrôle.';
     } else {
-      el('paper-barcode-visual').removeAttribute('src');
-      el('paper-barcode-visual').hidden = true;
-      check.textContent = 'ISBN absent : le code-barres n’est pas généré. Aucun numéro ne sera inventé.';
+      barcodePreview.removeAttribute('src');
+      barcodePreview.hidden = true;
+      check.textContent = previewMode === 'invalid'
+        ? 'Attention : cet ISBN-13 n’est pas valide. Vérifiez les 13 chiffres et le chiffre de contrôle.'
+        : 'ISBN absent : le code-barres n’est pas généré. Aucun numéro ne sera inventé.';
     }
     setText('paper-back-isbn',isbn ? 'ISBN : '+isbn : 'Emplacement réservé au code-barres');
     const price = Number(items['paper-price'].value);
@@ -77,6 +84,7 @@
       if (!['image/jpeg','image/png','image/webp'].includes(file.type) || file.size > maxBytes) {
         input.value = '';
         if (message) message.textContent = 'Format ou taille non accepté : JPEG, PNG ou WebP, 15 Mo maximum.';
+        update();
         return;
       }
       const url = URL.createObjectURL(file);

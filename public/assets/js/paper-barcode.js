@@ -40,5 +40,10 @@
            +'<text x="31" y="79" font-family="Arial,sans-serif" font-size="8" text-anchor="middle" fill="#111">'+value.slice(1,7)+'</text>'
            +'<text x="80" y="79" font-family="Arial,sans-serif" font-size="8" text-anchor="middle" fill="#111">'+value.slice(7)+'</text></svg>';
     }
-    return {digits,valid,bits,svg};
+    function previewMode(isbn, hasUploadedImage) {
+        if (hasUploadedImage) return 'uploaded';
+        if (!String(isbn || '').trim()) return 'empty';
+        return valid(isbn) ? 'generated' : 'invalid';
+    }
+    return {digits,valid,bits,svg,previewMode};
 });
