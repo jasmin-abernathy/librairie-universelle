@@ -358,6 +358,13 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 </div>
                 <p class="field-help"><strong>Conseil Corep :</strong> papier intérieur 80 g certifié FSC/PEFC ; 90 g possible sur devis spécifique. L’imprimeur valide les fichiers, la tranche, les éventuels fonds perdus et les choix particuliers avant le BAT.</p>
 
+                <div class="resource-card important-resource">
+                    <div>
+                        <h3>3. Constituer le dossier pour l'imprimeur</h3>
+                        <p>Une fois vos PDF prêts, vérifiez les trois fichiers et préparez une fiche récapitulative. Aucun document n'est transmis automatiquement à Corep ou à un autre prestataire.</p>
+                    </div>
+                    <a class="button-link secondary" href="/dossier-impression.php">Préparer le dossier d'impression ↗</a>
+                </div>
                 <section class="print-cost-panel" id="print-cost-estimator" aria-labelledby="print-cost-title" data-grids="<?= e((string) json_encode($publicPrintGrids, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP)) ?>">
                     <h3 id="print-cost-title">Simuler le coût d’impression</h3>
                     <p>Comparez un tirage A5 broché, avec intérieur noir et blanc de 80 g et couverture couleur. Les montants sont indicatifs, publiés avec l’accord de l’imprimeur ; ils doivent être reconfirmés pour la commande.</p>

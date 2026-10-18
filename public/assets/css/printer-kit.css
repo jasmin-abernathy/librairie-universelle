@@ -1,0 +1,32 @@
+/* Printer handoff — local-only, responsive, clear verification states. */
+.kit-intro{max-width:1150px;margin:1rem auto 2rem;padding:0 1rem;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.kit-intro>div{padding:1rem;border:1px solid #cfdad1;border-radius:1rem;background:#f5faf5}
+.kit-intro>div>span{display:inline-grid;place-items:center;width:2rem;height:2rem;background:#28533d;color:white;border-radius:50%;font-weight:800}
+.kit-intro strong{display:block;margin:.65rem 0 .3rem}
+.kit-intro p{margin:0;font-size:.88rem;line-height:1.55;color:#435b4b}
+.kit-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,.85fr);gap:1.25rem;max-width:1150px;margin:0 auto 4rem;padding:0 1rem;align-items:start}
+.kit-form,.kit-results{background:#fff;border:1px solid #d0ded2;border-radius:1rem;padding:clamp(1rem,2.5vw,1.6rem);min-width:0}
+.kit-form fieldset{border:0;padding:0;margin:0 0 1.6rem;min-width:0}
+.kit-form fieldset+fieldset{border-top:1px solid #e2e8e2;padding-top:1.35rem}
+.kit-form legend{font-weight:800;font-size:1.12rem;padding:0;margin-bottom:1rem}
+.kit-form label:not(.kit-check){display:flex;flex-direction:column;gap:.38rem;margin:0 0 .95rem;font-weight:650}
+.kit-form label small,.kit-note{font-size:.85rem;line-height:1.5;color:#52665a;font-weight:400}
+.kit-form input:not([type=checkbox]),.kit-form select{font:inherit;width:100%;max-width:100%;border:1px solid #8eaa97;border-radius:.55rem;padding:.7rem;background:#fff;color:#253a29}
+.kit-form input[type=file]{padding:.65rem;cursor:pointer}
+.kit-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:.9rem}
+.kit-required{font-size:.72rem;font-weight:700;color:#3e5a44}
+.kit-form .kit-check{display:flex;align-items:flex-start;gap:.7rem;margin:.85rem 0;line-height:1.5;cursor:pointer;font-weight:500}
+.kit-check input{flex:none;width:1.25rem;height:1.25rem;margin:.13rem 0 0}
+.kit-primary,.kit-actions button{background:#28533d;color:#fff;padding:.85rem 1rem;border:0;border-radius:.65rem;font:inherit;font-weight:750;cursor:pointer}
+.kit-primary{width:100%}
+.kit-actions{display:grid;gap:.6rem;margin:1.2rem 0}
+.kit-actions button:disabled{background:#c5cfc7;color:#34473b;cursor:not-allowed}
+.kit-results{background:#f7faf7}
+.kit-results h2{line-height:1.2}
+#kit-file-report{padding-left:1.1rem;overflow-wrap:anywhere;line-height:1.6}
+#kit-status{min-height:1.45rem;margin:.75rem 0;color:#245039;font-size:.91rem}
+.kit-warning{padding:1rem;border:1px solid #c9d5ca;border-radius:.7rem;background:#fff;font-size:.88rem;line-height:1.55}
+.kit-warning p{margin:.4rem 0 0}
+.kit-form :focus-visible,.kit-actions :focus-visible{outline:3px solid #245ea5;outline-offset:3px}
+@media(max-width:830px){.kit-grid{grid-template-columns:1fr}.kit-intro{gap:.55rem}.kit-results{order:-1}}
+@media(max-width:540px){.kit-intro{grid-template-columns:1fr}.kit-intro>div{padding:.8rem}.kit-fields{grid-template-columns:1fr}}
