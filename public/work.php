@@ -111,7 +111,7 @@ $localRows = localAvailabilityRows($localAvailability);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="theme-color" content="#f7f3ea">
     <title><?= $record ? e($record['work']['title']) . ' — ' : '' ?><?= e($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/work.css?v=20261009-2">
+    <link rel="stylesheet" href="/assets/css/work.css?v=20261018-1">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
