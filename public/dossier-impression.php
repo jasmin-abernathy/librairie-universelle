@@ -23,6 +23,7 @@ header('Referrer-Policy: no-referrer');
 <h1>Votre dossier pour l'imprimeur</h1>
 <p class="lede">Rassemblez trois PDF distincts : l'intérieur, la première et la quatrième de couverture. L'assistant contrôle leur présence et leur format puis prépare un récapitulatif à joindre à votre demande.</p>
 <p><a class="text-link" href="/autoedition.php?partie=paper">← Retour à la composition papier</a></p>
+<p class="kit-note"><strong>Besoin d'un PDF/X ?</strong> <a href="/export-pdfx.php">Convertir les PDF individuellement au format professionnel, si l'outil est activé</a>. Garde toujours tes originaux.</p>
 </section>
 <section class="kit-intro" aria-label="Fonctionnement du dossier">
   <div><span aria-hidden="true">1</span><strong>Composer</strong><p>Générez votre PDF intérieur et vos deux faces de couverture.</p></div>

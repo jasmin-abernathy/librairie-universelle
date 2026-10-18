@@ -30,3 +30,10 @@
 .kit-form :focus-visible,.kit-actions :focus-visible{outline:3px solid #245ea5;outline-offset:3px}
 @media(max-width:830px){.kit-grid{grid-template-columns:1fr}.kit-intro{gap:.55rem}.kit-results{order:-1}}
 @media(max-width:540px){.kit-intro{grid-template-columns:1fr}.kit-intro>div{padding:.8rem}.kit-fields{grid-template-columns:1fr}}
+
+.paper-pro-links{display:flex;flex-wrap:wrap;gap:.65rem;align-items:center}
+.paper-pro-links .button-link{display:inline-flex;align-items:center}
+.kit-form form{display:grid;gap:1.2rem}
+.kit-form form fieldset{border:0;border-bottom:1px solid #dee9df;padding:0 0 1rem;margin:0}
+.kit-form form label{display:grid;gap:.4rem;font-weight:700}
+.kit-form form input[type=file],.kit-form form select{max-width:100%;width:100%;padding:.65rem;border:1px solid #9dbda7;border-radius:.55rem;color:#203a2b;background:white}

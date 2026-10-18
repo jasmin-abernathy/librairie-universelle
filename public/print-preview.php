@@ -106,6 +106,7 @@ $gutter = $settings['gutter_mode'] === 'custom'
     <div class="actions">
         <a href="/autoedition.php">Retour aux réglages</a>
         <button id="print-button" type="button" disabled>Enregistrer l’intérieur en PDF</button>
+        <a href="/export-pdfx.php" title="Après avoir enregistré le PDF, le convertir en PDF/X">Puis convertir en PDF/X</a>
     </div>
 </div>
 
