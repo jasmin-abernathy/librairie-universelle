@@ -12,7 +12,7 @@ trap 'rm -rf "$TMP"' EXIT
 fetch() {
   local path="$1" dest="$2" sep='?'
   [[ "$path" == *'?'* ]] && sep='&'
-  curl --fail --silent --show-error --location --connect-timeout 8 --max-time 18 \
+  curl --http1.1 --fail --silent --show-error --location --connect-timeout 8 --max-time 18 \
     --header 'Cache-Control: no-cache' "$BASE$path${sep}verify=$EXPECTED" > "$dest"
 }
 assert_content() {
@@ -39,7 +39,7 @@ assert_content '/assets/js/author-draft.js' 'AuthorDraft'
 assert_content '/assets/js/paper-barcode.js' 'PaperBarcode'
 assert_content '/assets/vendor/pagedjs/paged.polyfill.js' '@license Paged.js v0.4.3'
 assert_content '/work.php?id=2' 'id="work-access-filters"'
-curl --fail --silent --show-error --head --connect-timeout 8 --max-time 18 \
+curl --http1.1 --fail --silent --show-error --head --connect-timeout 8 --max-time 18 \
   "$BASE/print-preview.php" > "$TMP/headers"
 if ! grep -qi 'Content-Security-Policy:' "$TMP/headers" ||
    ! grep -Fq "connect-src 'none'" "$TMP/headers"; then

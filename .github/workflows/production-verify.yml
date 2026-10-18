@@ -24,13 +24,13 @@ jobs:
       - name: Compare running o2switch commit and public pages
         shell: bash
         run: |
-          for attempt in {1..12}; do
-            echo "Public verification attempt $attempt/12"
+          for attempt in {1..6}; do
+            echo "Public verification attempt $attempt/6"
             if bash scripts/verify-production.sh "$GITHUB_SHA"; then
               echo "Production commit matches GitHub" >> "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
-            if [ "$attempt" -lt 12 ]; then sleep 20; fi
+            if [ "$attempt" -lt 6 ]; then sleep 18; fi
           done
           echo "Production deployment did not reach the expected version." >> "$GITHUB_STEP_SUMMARY"
           exit 1
