@@ -95,6 +95,7 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
             <fieldset>
                 <legend>4. Enregistrer les deux faces</legend>
                 <p>Chaque bouton ouvre la boîte d'impression : choisissez « Enregistrer au format PDF », à l'échelle 100 %, sans en-tête ni pied de page, avec les graphiques d'arrière-plan.</p>
+                <p class="paper-help" id="paper-export-format-help"><strong>Attention au format :</strong> dans la fenêtre d'impression, ouvrez « Plus de paramètres » si nécessaire, puis « Taille du papier » et choisissez <strong>A5 (148 × 210 mm)</strong>, et non A4 (souvent sélectionné par défaut). Choisissez aussi les <strong>marges « Aucune »</strong>. Si vous avez choisi un autre format à l'étape 1, utilisez ses dimensions exactes ou un format personnalisé. <strong>Avant d'enregistrer chaque PDF, vérifiez que l'aperçu montre une seule couverture à la bonne taille, sans marge blanche.</strong> Certains navigateurs ignorent le format demandé automatiquement par le site.</p>
                 <div class="paper-actions">
                     <button type="button" id="paper-export-front">PDF : première de couverture</button>
                     <button type="button" id="paper-export-back" class="secondary-action">PDF : quatrième de couverture</button>
