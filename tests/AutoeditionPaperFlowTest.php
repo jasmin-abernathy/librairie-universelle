@@ -20,4 +20,10 @@ $check(strpos($src,'id="paper-pdfx-step"')<strpos($src,'id="paper-covers-step"')
 $check(str_contains($src,'for="draft-import"')&&str_contains($src,'aria-describedby="draft-import-name"'),'Import de brouillon non accessible.');
 $check(str_contains($draft,'.draft-file-input:focus-visible + .draft-file-label'),'Sélection du fichier inaccessible au clavier.');
 $check(str_contains($css,'@media(max-width:600px)')&&str_contains($css,'.paper-step-actions .button-link'),'Rendu mobile des liens manquant.');
+$check(str_contains($src,'<legend>Publication papier : préparation et impression</legend>'),
+    'La légende sémantique du parcours papier ne doit pas être remplacée par un titre non associé.');
+$check(preg_match('/#panel-paper\s*>\s*fieldset\s*>\s*legend\s*\{[^}]*float\s*:\s*left\s*;[^}]*width\s*:\s*100%/s',$css)===1,
+    'Le titre papier doit être positionné dans le cadre sur mobile et ordinateur.');
+$check(preg_match('/#panel-paper\s*>\s*fieldset\s*>\s*\.paper-step-nav\s*\{[^}]*clear\s*:\s*both/s',$css)===1,
+    'Les raccourcis doivent passer sous la légende flottante, pas à côté.');
 echo "Parcours papier, liens et import brouillon : OK\n";
