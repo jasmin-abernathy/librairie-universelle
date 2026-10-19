@@ -385,7 +385,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 
                 <section class="print-cost-panel" id="print-cost-estimator" aria-labelledby="print-cost-title" data-grids="<?= e((string) json_encode($publicPrintGrids, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP)) ?>">
                     <h3 id="print-cost-title">4. Estimer le coût d’impression</h3>
-                    <p>Comparez un tirage A5 broché, avec intérieur noir et blanc de 80 g et couverture couleur. Les montants sont indicatifs, publiés avec l’accord de l’imprimeur ; ils doivent être reconfirmés pour la commande.</p>
+                    <p>Estimez un tirage A5 broché, avec intérieur noir et blanc de 80 g et couverture couleur. Nous avons reçu de <strong>Corep Metz</strong> les caractéristiques techniques et l’autorisation de présenter une grille TTC indicative. Si elle est disponible et encore publiable, ses montants sont affichés ci-dessous ; le devis réel reste à confirmer par l’imprimeur.</p>
                     <div class="print-cost-controls">
                         <label>Nombre de pages
                             <select id="print-estimate-pages">
@@ -404,7 +404,9 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                         <div><dt>Coût d’impression par exemplaire</dt><dd id="print-estimate-unit">—</dd></div>
                         <div style="grid-column: 1 / -1"><dt>Solde indicatif par exemplaire avec une hypothèse de remise libraire de 30 %</dt><dd id="print-estimate-balance">—</dd></div>
                     </dl>
-                    <p class="print-cost-note" id="print-estimate-source">Tarif indicatif à confirmer avant commande.</p><p class="print-cost-note">Le BAT papier est hors grille Corep : une épreuve papier est facturée à l’unité. Le BAT numérique est possible et la tranche est calculée par l’imprimeur.</p>
+                    <p class="print-cost-note" id="print-estimate-source">Tarif indicatif à confirmer avant commande.</p>
+                    <p class="print-cost-note"><strong>Corep Metz :</strong> un premier accord de publication des tarifs indicatifs et des échanges techniques, <strong>pas un partenariat commercial ou une commande intégrée</strong>. Si aucune grille n’est actuellement affichable, vous pouvez <a href="https://www.corep.fr/fr/agence/corep-metz/" target="_blank" rel="noopener noreferrer">demander un devis directement à l’agence</a>.</p>
+                    <p class="print-cost-note">Le BAT papier est hors grille Corep : une épreuve papier est facturée à l’unité. Le BAT numérique est possible et la tranche est calculée par l’imprimeur.</p>
                     <p class="print-cost-note">Le solde n’est pas un bénéfice : le prix public est fixé par l’autoéditeur, et les frais de livraison, la fiscalité, la rémunération de l’auteur, les invendus et les frais de plateforme ne sont pas encore déduits. Aucune commande n’est déclenchée ici.</p>
                 </section>
 
@@ -424,6 +426,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     <h3 id="printers-title">Besoin d’un imprimeur ou d’impression à la demande ?</h3>
                     <p>Ces liens sont fournis comme ressources pratiques, <strong>sans partenariat ni classement sponsorisé</strong>. Comparez les coûts, formats, conditions de distribution, propriété des ISBN et exemplaires tests avant de choisir.</p>
                     <div class="resource-grid">
+                        <a class="resource-card" href="https://www.corep.fr/fr/agence/corep-metz/" target="_blank" rel="noopener noreferrer"><strong>Corep Metz — référence locale</strong><span>Conseils techniques reçus et autorisation de publier une grille A5 indicative. Devis et BAT à confirmer directement ↗</span></a>
                         <a class="resource-card" href="https://www.bookelis.com/imprimer-un-livre/" target="_blank" rel="noopener noreferrer"><strong>Bookelis</strong><span>Impression à la demande et petites quantités ↗</span></a>
                         <a class="resource-card" href="https://www.coollibri.com/auto-edition-livre" target="_blank" rel="noopener noreferrer"><strong>CoolLibri</strong><span>Impression en France, dès de petites quantités ↗</span></a>
                         <a class="resource-card" href="https://www.bod.fr/livre/publier-un-livre" target="_blank" rel="noopener noreferrer"><strong>BoD — Books on Demand</strong><span>Impression à la demande et services de diffusion ↗</span></a>

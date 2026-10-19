@@ -17,3 +17,9 @@ Les 12 montants TTC du devis Corep et l'accord écrit de publication sont conser
 Un fichier de référence local daté existe ici seulement si MOSELLE_BASE_URL n'est **pas configuré**, pour permettre au parcours public d'afficher les tarifs pendant le pilote. Quand l'API est configurée, **sa réponse fait autorité** et une grille retirée ne réapparaît pas par repli local. La copie locale s'efface automatiquement après le 17 novembre 2026, date de **réexamen interne**, sans faire croire que Corep l'a garantie jusque-là.
 
 Les prix sont indicatifs, le BAT papier n'est pas inclus, la version 90 g demande un nouveau devis ; aucune commande, réservation ni paiement ne sont déclenchés.
+
+## Présence de Corep dans le parcours
+
+Corep Metz figure désormais en toutes circonstances comme **référence locale ayant fourni des recommandations techniques**, avec un lien direct vers l'agence. La carte n'est pas liée à la disponibilité technique des grilles de prix et ne prétend pas qu'un partenariat commercial est signé. L'autorisation écrite de publication de la grille TTC A5 est distincte d'une réservation, d'une commande ou d'un contrat logistique.
+
+Les **montants** ne sont affichés que quand une grille autorisée et datée est disponible : en cas d'API Moselle configurée mais vide/en panne, aucun prix n'est inventé ni restauré depuis la copie locale. Le message explique que le devis doit être confirmé auprès de Corep. La carte Corep reste visible pour éviter de donner l'impression que l'imprimeur a disparu du parcours.
