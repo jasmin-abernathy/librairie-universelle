@@ -11,7 +11,7 @@ $assert(str_contains($html,'https://www.corep.fr/fr/agence/corep-metz/'),'Adress
 $assert(str_contains($html,'autorisation de présenter une grille TTC indicative'),
   'L’accord limité de publication de la grille n’est pas expliqué.');
 $assert(str_contains($html,'pas un partenariat commercial'),'Partenariat Corep sur-vendu.');
-$assert(str_contains($html,'si ($publicPrintGrids === []'), 'Le repli conditionnel de la grille manque.');
+$assert(str_contains($html,'if ($publicPrintGrids === []'), 'Le repli conditionnel de la grille manque.');
 $assert(str_contains($html,'($config[\'moselle_base_url\'] ?? \'\') === \'\''),
   'La grille locale ne doit pas être imposée si un pilote Moselle est configuré.');
 $oct=ApprovedPrintPriceSnapshot::grids('2026-10-19');
