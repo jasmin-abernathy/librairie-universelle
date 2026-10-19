@@ -20,6 +20,17 @@ $check(strpos($src,'id="paper-pdfx-step"')<strpos($src,'id="paper-covers-step"')
 $check(str_contains($src,'for="draft-import"')&&str_contains($src,'aria-describedby="draft-import-name"'),'Import de brouillon non accessible.');
 $check(str_contains($draft,'.draft-file-input:focus-visible + .draft-file-label'),'Sélection du fichier inaccessible au clavier.');
 $check(str_contains($css,'@media(max-width:600px)')&&str_contains($css,'.paper-step-actions .button-link'),'Rendu mobile des liens manquant.');
+$coverPage=(string)file_get_contents(dirname(__DIR__).'/public/assistant-papier.php');
+$coverJS=(string)file_get_contents(dirname(__DIR__).'/public/assets/js/paper-assistant.js');
+$check(str_contains($coverPage,'id="paper-export-format-help"') &&
+    str_contains($coverPage,'A5 (148 × 210 mm)') &&
+    str_contains($coverPage,'et non A4') &&
+    str_contains($coverPage,'marges « Aucune »') &&
+    str_contains($coverPage,'Si vous avez choisi un autre format'),
+    'La boîte de dialogue doit rappeler A5, le risque A4, les marges et les autres formats.');
+$check(str_contains($coverJS,"el('paper-sheet-size').textContent") &&
+    str_contains($coverJS,"'@media print{@page{size:'"),
+    'Le format demandé au navigateur doit rester synchronisé avec le livre.');
 $check(str_contains($src,'<legend>Publication papier : préparation et impression</legend>'),
     'La légende sémantique du parcours papier ne doit pas être remplacée par un titre non associé.');
 $check(preg_match('/#panel-paper\s*>\s*fieldset\s*>\s*legend\s*\{[^}]*float\s*:\s*left\s*;[^}]*width\s*:\s*100%/s',$css)===1,
