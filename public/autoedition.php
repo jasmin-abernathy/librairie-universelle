@@ -248,6 +248,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     <a href="#paper-covers-step"><span>3</span> Couvertures</a>
                     <a href="#print-cost-estimator"><span>4</span> Coût estimé</a>
                     <a href="#paper-dossier-step"><span>5</span> Dossier imprimeur</a>
+                    <a href="#paper-corep-step"><span>6</span> Envoyer à l’imprimeur</a>
                 </nav>
 
                 <div class="resource-card important-resource">
@@ -421,6 +422,20 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     </div>
                 </div>
 
+
+
+                <div class="resource-card important-resource paper-step-card paper-corep-step" id="paper-corep-step">
+                    <div>
+                        <p class="paper-step-eyebrow">Après avoir préparé vos fichiers</p>
+                        <h3>6. Transmettre vos PDF à Corep Metz pour un devis</h3>
+                        <p>Vous avez votre PDF intérieur et vos deux couvertures ? Corep permet de <strong>joindre vos fichiers à une demande de devis</strong> sur son site officiel. Sélectionnez <strong>l’agence de Metz</strong>, indiquez le format et le tirage souhaités, puis ajoutez les <strong>trois PDF séparément</strong>.</p>
+                        <p class="field-help">Le formulaire s’ouvre chez Corep : <strong>aucun fichier n’est envoyé depuis la Librairie</strong>. Le devis, la conformité des PDF et le BAT sont à confirmer avec l’imprimeur. Ce lien ne constitue pas un partenariat commercial ni une commande intégrée.</p>
+                    </div>
+                    <div class="paper-step-actions">
+                        <a class="button-link" href="https://www.corep.fr/fr/devis-sur-mesure/" target="_blank" rel="noopener noreferrer">Déposer mes PDF pour un devis chez Corep <span aria-hidden="true">↗</span></a>
+                        <a class="button-link secondary" href="mailto:metz@corep.fr?subject=Demande%20de%20devis%20-%20impression%20de%20livre">Écrire à Corep Metz</a>
+                    </div>
+                </div>
 
                 <div class="resource-section" aria-labelledby="printers-title">
                     <h3 id="printers-title">Besoin d’un imprimeur ou d’impression à la demande ?</h3>

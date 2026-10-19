@@ -79,6 +79,17 @@ header('Referrer-Policy: no-referrer');
       <button type="button" id="kit-download" disabled>Télécharger la fiche seule (.json)</button>
       <button type="button" id="kit-copy" disabled>Copier le message pour l'imprimeur</button>
     </div>
+
+    <section class="kit-handoff" id="kit-corep-handoff" aria-labelledby="kit-corep-title">
+      <p class="eyebrow">Votre dossier est prêt ?</p>
+      <h3 id="kit-corep-title">Demander l’impression à Corep Metz</h3>
+      <p>Vous pouvez maintenant demander un devis directement à l’imprimerie. Sur le formulaire Corep, <strong>choisissez l’agence de Metz</strong>, joignez vos <strong>trois PDF séparément</strong> et précisez le tirage souhaité. Le bouton « Copier le message pour l’imprimeur » ci-dessus prépare le texte de votre demande.</p>
+      <div class="paper-pro-links">
+        <a class="button-link" href="https://www.corep.fr/fr/devis-sur-mesure/" target="_blank" rel="noopener noreferrer">Déposer mes PDF sur Corep <span aria-hidden="true">↗</span></a>
+        <a class="button-link secondary" href="mailto:metz@corep.fr?subject=Demande%20de%20devis%20-%20impression%20de%20livre">Contacter Corep Metz par e-mail</a>
+      </div>
+      <p class="kit-note">Le ZIP conserve vos fichiers et la fiche sur votre appareil : le formulaire de Corep peut demander les PDF individuellement. Aucun document n’est transmis automatiquement et aucune commande n’est passée depuis ce site. Corep reste libre de confirmer ses tarifs et la faisabilité de l’impression.</p>
+    </section>
     <div class="kit-warning">
       <strong>Ce que l'outil ne prétend pas vérifier</strong>
       <p>La conformité PDF/X, la structure complète des pages, l'incorporation des polices, la taille réelle des pages, la définition des images, les couleurs et le BAT. Le contrôle des fichiers reste à confirmer par l'imprimeur. Le dossier ne transmet aucun document automatiquement.</p>

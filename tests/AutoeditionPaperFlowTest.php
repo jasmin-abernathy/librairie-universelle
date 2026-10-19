@@ -5,7 +5,7 @@ $css=file_get_contents(dirname(__DIR__).'/public/assets/css/autoedition-paper.cs
 $draft=file_get_contents(dirname(__DIR__).'/public/assets/css/author-draft.css');
 if(!is_string($src)||!is_string($css)||!is_string($draft))exit(1);
 $check=static function(bool $ok,string $msg):void { if(!$ok){fwrite(STDERR,$msg."\n");exit(1);} };
-$ids=['paper-interior-step','paper-pdfx-step','paper-covers-step','print-cost-estimator','paper-dossier-step'];
+$ids=['paper-interior-step','paper-pdfx-step','paper-covers-step','print-cost-estimator','paper-dossier-step','paper-corep-step'];
 $offset=-1;
 foreach($ids as $id){
     $location=strpos($src,'id="'.$id.'"');

@@ -8,6 +8,18 @@ $assert=static function(bool $ok,string $msg):void{
 $html=(string)file_get_contents(dirname(__DIR__).'/public/autoedition.php');
 $assert(str_contains($html,'Corep Metz — référence locale'),'La carte Corep Metz manque du parcours papier.');
 $assert(str_contains($html,'https://www.corep.fr/fr/agence/corep-metz/'),'Adresse Corep manquante.');
+$kit=(string)file_get_contents(dirname(__DIR__).'/public/dossier-impression.php');
+$assert(str_contains($html,'id="paper-corep-step"') && str_contains($html,'href="#paper-corep-step"'),
+  'La remise du dossier à Corep doit être visible après les étapes papier.');
+$assert(str_contains($kit,'id="kit-corep-handoff"'),
+  'Lien vers l’imprimeur absent de la page qui prépare les PDF.');
+$assert(str_contains($html,'href="https://www.corep.fr/fr/devis-sur-mesure/"') &&
+  str_contains($kit,'href="https://www.corep.fr/fr/devis-sur-mesure/"'),
+  'Le formulaire officiel de devis et de dépôt de fichiers doit être accessible des deux pages.');
+$assert(str_contains($html,'mailto:metz@corep.fr') && str_contains($kit,'mailto:metz@corep.fr'),
+  'Contact de l’agence de Metz absent.');
+$assert(str_contains($kit,'Aucun document n’est transmis automatiquement'),
+  'La page doit expliciter l’absence de transfert automatique.');
 $assert(str_contains($html,'autorisation de présenter une grille TTC indicative'),
   'L’accord limité de publication de la grille n’est pas expliqué.');
 $assert(str_contains($html,'pas un partenariat commercial'),'Partenariat Corep sur-vendu.');

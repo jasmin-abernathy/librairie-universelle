@@ -1,6 +1,6 @@
 /* Le chemin papier suit l'ordre réel : intérieur, PDF/X éventuel, couvertures, devis, dossier. */
 /* La légende native chevauche la bordure du fieldset : la mettre en flux.
-   Le clear ci-dessous est indispensable pour ne pas superposer les cinq étapes. */
+   Le clear ci-dessous est indispensable pour ne pas superposer les six étapes. */
 #panel-paper > fieldset > legend{float:left;display:block;box-sizing:border-box;width:100%;max-width:100%;margin:0 0 1.1rem;padding:0;line-height:1.3;overflow-wrap:anywhere;text-wrap:balance}
 #panel-paper > fieldset > .paper-step-nav{clear:both}
 #panel-paper .paper-step-nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr));gap:.55rem;margin:0 0 1.4rem;padding:0}
