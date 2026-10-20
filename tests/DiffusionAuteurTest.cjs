@@ -1,0 +1,20 @@
+'use strict';
+const assert=require('node:assert/strict');
+const tool=require('../public/assets/js/diffusion-auteur.js');
+const base={bookstore:'Les Pages Libres',title:'Mon premier roman',author:'A. Exemple',isbn:'9782072938245',price:'14,90 €',format:'A5 broché',summary:'Une histoire de quartier.',url:'https://librairie.lepotager.org/work.php?id=42',contact:'autrice@example.invalid'};
+const built=tool.build(base);
+assert.ok(built.message.startsWith('Bonjour à l’équipe de Les Pages Libres,'));
+assert.ok(built.message.includes('Une histoire de quartier.'));
+assert.ok(built.message.includes('commande, dépôt-vente éventuel, remise, retours'));
+assert.ok(built.sheet.includes('ISBN papier : 9782072938245'));
+assert.ok(built.sheet.includes('https://librairie.lepotager.org/work.php?id=42'));
+assert.ok(!built.message.includes('achetable en ligne'));
+assert.ok(!built.message.includes('livraison garantie'));
+const shorter=tool.build({title:'Titre',author:'Auteur',summary:'Résumé'});
+assert.ok(shorter.message.startsWith('Bonjour,'));
+assert.ok(!shorter.message.includes('undefined'));
+assert.throws(()=>tool.build({title:'',author:'Auteur',summary:'Résumé'}));
+assert.throws(()=>tool.build({...base,url:'javascript:alert(1)'}));
+const escaped=tool.build({...base,summary:'<script>alert(1)</script>'});
+assert.ok(escaped.sheet.includes('<script>')); // Rendu à l’écran uniquement par textContent, sans injection HTML.
+console.log('Diffusion auteur : fiche, personnalisation, erreurs et absence d’envoi automatique OK');

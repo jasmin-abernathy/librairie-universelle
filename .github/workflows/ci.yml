@@ -80,6 +80,12 @@ jobs:
       - name: Local draft privacy test
         run: node tests/AuthorDraftTest.cjs
 
+      - name: Author local sales journey and truthful catalog promises
+        run: php tests/DiffusionAuteurFlowTest.php
+
+      - name: Bookshop outreach text generator
+        run: node tests/DiffusionAuteurTest.cjs
+
       - name: Verify locally hosted pagination engine matches upstream npm release
         run: |
           node --check public/assets/vendor/pagedjs/paged.polyfill.js

@@ -95,6 +95,7 @@ header('Referrer-Policy: no-referrer');
       <p>La conformité PDF/X, la structure complète des pages, l'incorporation des polices, la taille réelle des pages, la définition des images, les couleurs et le BAT. Le contrôle des fichiers reste à confirmer par l'imprimeur. Le dossier ne transmet aucun document automatiquement.</p>
     </div>
     <p><a href="/assistant-papier.php">Reprendre la création des couvertures →</a></p>
+    <p><a href="/diffuser-mon-livre.php">Mon livre est prêt : comment le proposer aux librairies ? →</a></p>
   </aside>
 </div>
 </main>
