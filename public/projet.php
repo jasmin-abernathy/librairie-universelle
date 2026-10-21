@@ -15,86 +15,120 @@ function e_project(?string $value): string
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <meta name="description" content="Comprendre le MVP : une recherche centrée sur l’œuvre, un storefront ebook gratuit et payant et une autoédition validée humainement.">
+    <meta name="description" content="Librairie universelle : relier les lecteurs aux librairies, auteurs et imprimeurs proches, avec une recherche de livres transparente, des outils d'autoédition gratuits et un premier pilote en Moselle.">
     <meta name="theme-color" content="#f7f3ea">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Le projet — <?= e_project($config['name']) ?>">
-    <meta property="og:description" content="Une recherche centrée sur l’œuvre, des sources identifiées, des ebooks gratuits et payants et aucun moteur de recommandation par IA.">
+    <meta property="og:description" content="Pour trouver, publier et faire circuler les livres plus efficacement en s'appuyant sur les librairies et imprimeurs locaux.">
     <title>Le projet — <?= e_project($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
+    <link rel="stylesheet" href="/assets/css/projet.css?v=20261021-1">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
 <?php $currentNav = 'projet'; require dirname(__DIR__) . '/src/views/site-header.php'; ?>
 
-<main id="main">
+<main id="main" class="project-page">
     <section class="page-hero" aria-labelledby="project-title">
-        <p class="eyebrow">MVP — prototype en construction</p>
-        <h1 id="project-title">Une recherche. Toutes les façons légales de lire.</h1>
-        <p class="lede">Le projet part de l’œuvre plutôt que d’une boutique ou d’un ISBN. Le MVP réunit déjà des ebooks gratuits et payants, plusieurs éditions réelles et un parcours d’autoédition avec validation humaine.</p>
+        <p class="eyebrow">Un prototype concret · première étape en Moselle</p>
+        <h1 id="project-title">Et si le livre le plus pratique à trouver était celui qui est près de chez vous ?</h1>
+        <p class="lede">Librairie universelle veut réunir lecteurs, librairies indépendantes, auteurs et imprimeurs locaux autour d'un parcours simple : trouver un livre, le commander ou le faire imprimer au plus près, sans imposer à chacun une nouvelle usine à gaz.</p>
+        <p>Notre ambition n'est pas d'opposer le commerce local à la simplicité des grandes plateformes. C'est de <strong>faire aussi simple et aussi efficace, voire mieux lorsque la proximité le permet</strong> : moins de détours pour les livres, davantage de choix visibles et des circuits plus directs.</p>
         <div class="cta-row">
-            <a class="button-link" href="/ebooks.php">Voir le storefront ebook</a>
-            <a class="text-link" href="/">Essayer la recherche</a>
-            <a class="text-link" href="#mvp">Voir le périmètre actuel</a>
+            <a class="button-link" href="/#librairies">Trouver une librairie proche</a>
+            <a class="button-link secondary" href="/autoedition.php">Préparer mon livre</a>
+            <a class="text-link" href="#etat-du-projet">Où en est le projet ?</a>
         </div>
     </section>
 
-    <section class="content-section" aria-labelledby="problem-title">
-        <div class="section-kicker">Le problème</div>
-        <h2 id="problem-title">Aujourd’hui, une même œuvre est éclatée entre plusieurs catalogues.</h2>
+    <section class="content-section" aria-labelledby="why-local">
+        <p class="section-kicker">L'idée derrière le projet</p>
+        <h2 id="why-local">Mettre la proximité au service de la rapidité, pas seulement des convictions.</h2>
         <div class="prose-grid">
-            <p>Une édition papier peut être chez un libraire, l’ebook ailleurs, l’occasion sur une autre plateforme, tandis qu’une version du domaine public existe peut-être gratuitement sur une source patrimoniale.</p>
-            <p>Le MVP teste une autre logique : commencer par « je veux lire ce livre », puis afficher les différentes voies d’accès de manière compréhensible, datée et sourcée.</p>
+            <p>Un livre peut être disponible chez un libraire voisin alors qu'un site national l'expédie depuis un entrepôt éloigné. Un autre peut être imprimé près de son lecteur plutôt que transporté inutilement. Encore faut-il savoir où il se trouve et comment l'obtenir.</p>
+            <p>Nous voulons rendre ces possibilités visibles dans une même recherche, avec des prix, délais, disponibilités et sources compréhensibles. <strong>Les gains de temps, de transport et de coût restent à mesurer</strong> sur des commandes réelles : ce sont des objectifs, pas des résultats déjà démontrés.</p>
         </div>
     </section>
 
-    <section id="mvp" class="content-section" aria-labelledby="mvp-title">
-        <div class="section-kicker">Déjà codé</div>
-        <h2 id="mvp-title">Un petit catalogue, mais les briques essentielles sont réelles.</h2>
+    <section class="content-section" aria-labelledby="who-title">
+        <p class="section-kicker">Pour qui ?</p>
+        <h2 id="who-title">Un même réseau, quatre façons d'en profiter.</h2>
         <div class="feature-grid">
-            <article><span aria-hidden="true">1</span><h3>Chercher</h3><p>Recherche simple par titre ou auteur, sans personnalisation comportementale.</p></article>
-            <article><span aria-hidden="true">2</span><h3>Comparer</h3><p>Œuvre, éditions, vendeurs, prix, formats et DRM restent séparés et compréhensibles.</p></article>
-            <article><span aria-hidden="true">3</span><h3>Lire gratuitement</h3><p>Les accès gratuits vérifiés apparaissent dans le même storefront que les offres payantes.</p></article>
-            <article><span aria-hidden="true">4</span><h3>Publier en indépendant</h3><p>EPUB, PDF imprimeur et couverture peuvent être soumis, puis examinés humainement avant publication.</p></article>
+            <article><span aria-hidden="true">1</span><h3>Lecteurs et lectrices</h3><p>Chercher une œuvre, découvrir ses éditions, accéder à des ebooks gratuits ou à des offres commerciales identifiées, et repérer les librairies proches.</p></article>
+            <article><span aria-hidden="true">2</span><h3>Librairies</h3><p>À terme, rendre leurs stocks visibles sans double saisie, puis recevoir des demandes de réservation ou de commande avec leur accord et dans le respect de leurs outils.</p></article>
+            <article><span aria-hidden="true">3</span><h3>Auteurs indépendants</h3><p>Préparer leur livre avec des outils gratuits, proposer un dépôt au catalogue, puis obtenir une fiche et un message pour approcher les librairies locales.</p></article>
+            <article><span aria-hidden="true">4</span><h3>Imprimeurs de proximité</h3><p>Recevoir des dossiers mieux préparés et, à terme, participer à un circuit d'impression locale adapté aux besoins des auteurs et des lecteurs.</p></article>
         </div>
     </section>
 
-    <section class="content-section" aria-labelledby="quality-title">
-        <div class="section-kicker">Autoédition</div>
-        <h2 id="quality-title">Ouvert aux indépendants ne veut pas dire publication automatique.</h2>
-        <div class="prose-grid">
-            <p>Le projet veut donner une vraie place aux auteurs autoédités, pas reproduire les catalogues saturés de contenus industriels et de variantes sans valeur.</p>
-            <p>Le parcours contrôle les fichiers, les ISBN et les déclarations de droits. Une personne choisit ensuite entre validation, demande de corrections et refus. Aucun modèle d’IA ne prend cette décision.</p>
+    <section class="content-section" aria-labelledby="authors-title">
+        <p class="section-kicker">Autoédition · déjà à essayer</p>
+        <h2 id="authors-title">Un livre ne s'arrête pas à la dernière page du manuscrit.</h2>
+        <p>Nous accompagnons les auteurs depuis la préparation de leurs fichiers jusqu'aux premières démarches de diffusion, sans rendre l'accompagnement payant obligatoire.</p>
+        <div class="project-journey">
+            <article><span>01</span><h3>Créer</h3><p>Composer l'intérieur du livre, préparer les couvertures, générer les PDF et les réunir dans un dossier destiné à l'imprimeur.</p><a href="/autoedition.php?partie=paper">Utiliser les outils gratuits →</a></article>
+            <article><span>02</span><h3>Faire imprimer</h3><p>Demander un devis à un imprimeur. Le prototype oriente notamment vers le formulaire officiel de Corep Metz, sans lui envoyer automatiquement de fichiers.</p><a href="/dossier-impression.php">Préparer le dossier →</a></article>
+            <article><span>03</span><h3>Faire référencer</h3><p>Déposer une candidature au catalogue : après acceptation humaine et publication par l'équipe, une fiche est créée. <strong>Les dépôts publics sont encore fermés pendant la pré-ouverture.</strong></p><a href="/autoedition.php?partie=submit">Découvrir le dépôt →</a></article>
+            <article><span>04</span><h3>Proposer aux librairies</h3><p>Créer une fiche de présentation et un message personnalisé, trouver des librairies proches et discuter avec elles des conditions de commande ou de dépôt-vente.</p><a href="/diffuser-mon-livre.php">Préparer ma diffusion →</a></article>
         </div>
-        <a class="text-link" href="/autoedition.php">Voir le formulaire et les ressources ISBN / impression →</a>
+        <p class="project-clarification">Être référencé au catalogue ne signifie pas encore pouvoir vendre directement sur la plateforme. L'impression, les commandes et les accords avec les librairies restent des démarches distinctes à ce stade.</p>
     </section>
 
-    <section class="content-section" aria-labelledby="not-yet-title">
-        <div class="section-kicker">Pas encore</div>
-        <h2 id="not-yet-title">Les dépendances externes restent volontairement hors du faux-semblant.</h2>
-        <ul class="check-list muted-list">
-            <li>Pas encore de paiement intégré pour nos propres ebooks payants autoédités.</li>
-            <li>Pas encore de panier multi-libraires.</li>
-            <li>Pas encore de flux partenaire ePagine / réseau de libraires indépendants contractualisé.</li>
-            <li>Pas encore de compte lecteur.</li>
-            <li>Pas de promesse de catalogue exhaustif ni de stock temps réel inventé.</li>
-        </ul>
-        <p class="note">Une fonction externe n’est annoncée comme disponible qu’une fois la source, ses droits de réutilisation et son comportement réel vérifiés.</p>
+    <section class="content-section" aria-labelledby="human-title">
+        <p class="section-kicker">Accompagnement facultatif</p>
+        <h2 id="human-title">Les outils restent gratuits. Le temps humain, lui, peut être rémunéré.</h2>
+        <p>Si un auteur préfère ne pas tout vérifier seul, Le Potager du Web propose deux prestations distinctes, sur devis :</p>
+        <div class="project-prices">
+            <article><h3>Vérification avant impression</h3><p class="project-price">79 € HT</p><p>Contrôle humain des fichiers et compte rendu des problèmes visibles : pagination, marges, couvertures, lisibilité.</p></article>
+            <article><h3>Correction accompagnée</h3><p class="project-price">Dès 179 € HT</p><p>Correction orthographique et grammaticale assistée par logiciel, avec vérification humaine dans un périmètre défini. Il ne s'agit pas d'une relecture intégrale garantie à ce prix.</p></article>
+        </div>
+        <p><a class="text-link" href="/prestations-auteurs.php">Voir les prestations et demander un devis →</a></p>
+    </section>
+
+    <section class="content-section" id="etat-du-projet" aria-labelledby="status-title">
+        <p class="section-kicker">Transparence · état actuel du prototype</p>
+        <h2 id="status-title">Ce qui fonctionne, ce que nous testons, ce qu'il reste à construire.</h2>
+        <div class="project-status-grid">
+            <article class="project-status">
+                <h3>À essayer aujourd'hui</h3>
+                <ul>
+                    <li>Recherche par œuvre et fiches regroupant éditions et offres identifiées</li>
+                    <li>Rayon d'ebooks gratuits et payants provenant de sources distinctes ; les offres payantes renvoient vers leur vendeur</li>
+                    <li>Annuaire de librairies locales à Metz et en Moselle, <strong>sans prétendre connaître leurs stocks en direct</strong></li>
+                    <li>Outils gratuits de préparation papier, PDF, couvertures et dossier d'impression</li>
+                    <li>Guide de diffusion et création locale d'un message à adresser aux librairies</li>
+                    <li>Demandes de devis pour un accompagnement humain facultatif</li>
+                </ul>
+            </article>
+            <article class="project-status">
+                <h3>Encore en préparation</h3>
+                <ul>
+                    <li>Ouverture du dépôt public des auteurs, avec contrôle éditorial humain avant mise au catalogue</li>
+                    <li>Premières impressions et commandes testées avec de vrais auteurs et imprimeurs</li>
+                    <li>Connexion autorisée aux logiciels et stocks des librairies volontaires</li>
+                    <li>Réservation, commande, règlement et retrait local coordonnés depuis la plateforme</li>
+                    <li>Vente intégrée des ebooks payants déposés par les auteurs</li>
+                    <li>Extension progressive à d'autres territoires, après validation du pilote mosellan</li>
+                </ul>
+            </article>
+        </div>
+        <p class="note"><strong>Nous n'annonçons ni stock en temps réel, ni vente intégrée, ni partenariat contractuel qui n'existent pas encore.</strong> Corep Metz est cité aujourd'hui comme option de demande de devis d'impression ; une intégration commerciale ou technique éventuelle sera présentée lorsqu'elle sera réellement conclue.</p>
     </section>
 
     <section class="content-section callout" aria-labelledby="trust-title">
         <div>
-            <div class="section-kicker">Confiance</div>
-            <h2 id="trust-title">Le moteur doit pouvoir expliquer ce qu’il montre.</h2>
-            <p>Les sources sont identifiées, les prix sont datés, les cas juridiques incertains restent signalés et la publication indépendante est validée humainement.</p>
+            <p class="section-kicker">Nos principes</p>
+            <h2 id="trust-title">Un service ouvert et compréhensible, sans vous observer.</h2>
+            <p>Le projet est développé en logiciel libre. Il distingue les œuvres, leurs éditions et les offres, identifie les sources et n'utilise ni profilage publicitaire ni classement opaque. La recherche, les recommandations et la sélection éditoriale ne sont pas déléguées à une IA. Les droits des auteurs sont respectés et les cas incertains restent signalés.</p>
+            <p>Le développement privilégie la sobriété, l'accessibilité et des interfaces utilisables sans compte lorsque c'est possible.</p>
         </div>
-        <a class="button-link secondary" href="/sans-ia.php">Pourquoi le projet est sans IA</a>
+        <a class="button-link secondary" href="/sans-ia.php">Comprendre notre démarche sans IA</a>
     </section>
 </main>
 
 <footer>
-    <div class="footer-links"><a href="/ebooks.php">Ebooks</a><a href="/autoedition.php">Autoédition</a><a href="/feedback.php">Donner un retour</a></div>
-    <p>Prototype en construction — le nom public définitif reste à choisir.</p>
+    <div class="footer-links"><a href="/">Chercher un livre</a><a href="/ebooks.php">Ebooks</a><a href="/autoedition.php">Autoédition</a><a href="/diffuser-mon-livre.php">Vendre mon livre</a><a href="/prestations-auteurs.php">Accompagnement</a></div>
+    <p>Prototype en construction — Librairie universelle est un nom de travail. Premier territoire d'expérimentation : la Moselle.</p>
 </footer>
 </body>
 </html>
