@@ -96,6 +96,7 @@ header('Referrer-Policy: no-referrer');
     </div>
     <p><a href="/assistant-papier.php">Reprendre la création des couvertures →</a></p>
     <p><a href="/diffuser-mon-livre.php">Mon livre est prêt : comment le proposer aux librairies ? →</a></p>
+<p><a href="/prestations-auteurs.php#verification">Avant impression : demander une vérification humaine de mes fichiers (facultatif) →</a></p>
   </aside>
 </div>
 </main>

@@ -115,6 +115,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 <h2 id="autoedition-entry-heading">Par où souhaitez-vous commencer ?</h2>
                 <p>Un livre papier, un EPUB ou les deux : choisissez votre parcours. Vous pourrez changer d’onglet à tout moment.</p>
                 <p><a class="text-link" href="/diffuser-mon-livre.php">Et après ? Découvrir le parcours pour faire connaître et vendre mon livre →</a></p>
+                <p><a class="text-link" href="/prestations-auteurs.php">Besoin de faire vérifier vos PDF (79 € HT) ou de corriger votre texte (dès 179 € HT) ? Découvrir nos prestations facultatives →</a></p>
             </div>
             <div class="autoedition-entry-promise">
                 <span aria-hidden="true" class="autoedition-entry-promise-icon">✓</span>
@@ -458,6 +459,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 <label class="check-row"><input type="checkbox" name="rights_confirmed" value="1" required<?= !empty($_POST['rights_confirmed']) ? ' checked' : '' ?>> <span>Je confirme disposer des droits nécessaires sur le texte, la couverture et les fichiers transmis, ou des autorisations correspondantes.</span></label>
                 <label class="check-row"><input type="checkbox" name="quality_confirmed" value="1" required<?= !empty($_POST['quality_confirmed']) ? ' checked' : '' ?>> <span>Je confirme qu’il s’agit d’un véritable projet éditorial et non d’un dépôt industriel ou automatisé, d’une série de variantes répétitives sans valeur, d’un contenu trompeur ou manifestement bâclé destiné à remplir artificiellement le catalogue.</span></label>
                 <p class="field-help"><strong>La publication reste une décision humaine.</strong> Un fichier techniquement valide peut être refusé pour des raisons éditoriales. Aucun score d’IA ne décide de l’acceptation.</p>
+                <p class="field-help"><strong>Un dernier regard avant publication ?</strong> <a href="/prestations-auteurs.php">Voir la vérification humaine des fichiers et la correction accompagnée, sur devis</a>. Le générateur reste gratuit.</p>
                 <p class="field-help"><strong>Et pour vendre ?</strong> Une fois le dépôt accepté et publié, le livre entre dans le catalogue. Vous pouvez dès maintenant <a href="/diffuser-mon-livre.php">préparer une fiche pour les librairies et un message de présentation local</a>. La vente et la réservation en ligne ne sont pas encore automatisées.</p>
             </fieldset>
 

@@ -15,4 +15,9 @@ $check(str_contains($page,"Rien n'est envoyé ni enregistré sur notre serveur")
 $check(str_contains($auto,'href="/diffuser-mon-livre.php"') && str_contains($kit,'href="/diffuser-mon-livre.php"') && str_contains($header,"'diffusion'"), 'Parcours de vente non accessible depuis les pages auteur.');
 $check(str_contains($service,"if ($". "submission['status'] !== 'approved')"), 'Modération avant publication manquante.');
 $check(str_contains($service,"$". "this->pdo->commit();"), 'Publication cataloguée non transactionnelle.');
+$paid=(string)file_get_contents($root.'/public/prestations-auteurs.php');
+$check(str_contains($paid,'79 €') && str_contains($paid,'179 €'), 'Les deux tarifs ne sont pas publiés.');
+$check(str_contains($paid,'mailto:contact@lepotager.org') && str_contains($paid,'https://www.lepotager.org/contact/'), 'Les demandes de devis ne sont pas accessibles.');
+$check(str_contains($paid,'avant votre accord') && str_contains($paid,'restent gratuits'), 'Les conditions de paiement ou la gratuité ne sont pas claires.');
+$check(str_contains($auto,'/prestations-auteurs.php') && str_contains($kit,'/prestations-auteurs.php') && str_contains($page,'/prestations-auteurs.php'), 'Offres non reliées aux parcours auteurs.');
 echo "Parcours vente locale, publication contrôlée et relais depuis l’autoédition : OK\n";

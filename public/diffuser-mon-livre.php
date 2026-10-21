@@ -116,12 +116,29 @@ header('Referrer-Policy: no-referrer');
         </div>
     </section>
 
+    <section class="sales-after" id="accompagnement" aria-labelledby="services-auteurs-title">
+        <h2 id="services-auteurs-title">Besoin d'un accompagnement avant la vente ?</h2>
+        <p>Le générateur et le démarchage des librairies restent gratuits. Vous pouvez aussi choisir une aide humaine pour éviter les erreurs les plus courantes avant d'imprimer.</p>
+        <div class="sales-step-grid">
+            <article class="sales-step">
+                <h3>Vérification de vos PDF</h3>
+                <p><strong>79 € HT</strong> — Contrôle de la mise en page, des couvertures et du dossier d'impression, avec compte rendu.</p>
+                <p><a class="text-link" href="/prestations-auteurs.php#verification">Découvrir cette prestation et demander un devis →</a></p>
+            </article>
+            <article class="sales-step">
+                <h3>Correction accompagnée</h3>
+                <p><strong>À partir de 179 € HT</strong> — Correction assistée avec contrôle humain et vérification technique. Pas de correction exhaustive d'un roman à prix fixe.</p>
+                <p><a class="text-link" href="/prestations-auteurs.php#correction">Voir les conditions et demander un devis →</a></p>
+            </article>
+        </div>
+    </section>
+
     <section class="sales-after" aria-labelledby="sales-after-title">
         <h2 id="sales-after-title">Et après le premier contact ?</h2>
         <div class="sales-after-grid">
             <div><h3>Si la librairie est intéressée</h3><p>Précisez avec elle le prix de vente, sa rémunération, qui fournit les livres, la quantité, les délais, la facturation, les retours et les invendus. Ne livrez pas d'exemplaires avant d'avoir convenu des conditions.</p></div>
             <div><h3>Si elle ne répond pas</h3><p>Une relance polie peut suffire. Vous pouvez aussi rencontrer un libraire local avec une fiche courte et, si demandé, un exemplaire. Évitez les envois identiques à grande échelle.</p></div>
-            <div><h3>Si vous souhaitez être accompagné</h3><p>La préparation et la diffusion autonomes restent gratuites. Une aide humaine à la correction ou à la préparation du dossier pourra être proposée séparément, uniquement sur devis accepté.</p></div>
+            <div><h3>Si vous souhaitez être accompagné</h3><p>La préparation et la diffusion autonomes restent gratuites. Consultez les <a href="/prestations-auteurs.php">prestations optionnelles de vérification ou de correction</a>, uniquement sur devis accepté.</p></div>
         </div>
         <div class="cta-row">
             <a class="button-link" href="/#librairies">Repérer des librairies proches</a>

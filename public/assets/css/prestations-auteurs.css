@@ -1,0 +1,12 @@
+.author-services .page-hero{padding-bottom:2rem}
+.author-services-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.author-service-card{border:1px solid var(--line);border-radius:1rem;background:var(--surface);padding:clamp(1rem,2.5vw,1.6rem);display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.author-service-card h2{font-size:clamp(1.4rem,2.7vw,1.9rem);line-height:1.2;margin:.3rem 0 .6rem}
+.author-service-card p{line-height:1.6}
+.author-service-price{font-size:2rem;font-weight:800;margin:.5rem 0}
+.author-service-price small{font-size:.88rem;color:var(--muted);display:block;font-weight:500}
+.author-service-card ul{padding-left:1.25rem;line-height:1.7}
+.author-service-limit,.author-services-note{color:var(--muted);font-size:.92rem;line-height:1.6}
+.author-service-card .button-link{margin-top:auto;white-space:normal}
+.author-services-note{margin:1rem 0 2rem}
+@media(max-width:720px){.author-services-grid{grid-template-columns:1fr}.author-service-card .button-link{width:100%}}
