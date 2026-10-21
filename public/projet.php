@@ -32,7 +32,7 @@ function e_project(?string $value): string
     <section class="page-hero" aria-labelledby="project-title">
         <p class="eyebrow">Un prototype concret · première étape en Moselle</p>
         <h1 id="project-title">Et si le livre le plus pratique à trouver était celui qui est près de chez vous ?</h1>
-        <p class="lede">Librairie universelle veut réunir lecteurs, librairies indépendantes, auteurs et imprimeurs locaux autour d'un parcours simple : trouver un livre, le commander ou le faire imprimer au plus près, sans imposer à chacun une nouvelle usine à gaz.</p>
+        <p class="lede">Librairie universelle veut relier toute la chaîne du livre : aider les auteurs indépendants à préparer leur ouvrage, faciliter sa rencontre avec les librairies et permettre aux lecteurs de le trouver ou de le faire imprimer près de chez eux, sans imposer à chacun une nouvelle usine à gaz.</p>
         <p>Face à Amazon, la proximité peut devenir un avantage très concret : <strong>faire aussi simple et aussi efficace, voire mieux lorsque la proximité le permet</strong>. Un livre déjà en rayon à deux rues peut être récupéré aujourd'hui, sans attendre un colis ni payer son expédition. Et si l'on s'y rend à pied, à vélo ou sur un trajet habituel, l'impact du transport peut aussi diminuer.</p>
         <div class="cta-row">
             <a class="button-link" href="/#librairies">Trouver une librairie proche</a>
@@ -69,12 +69,12 @@ function e_project(?string $value): string
 
     <section class="content-section" aria-labelledby="complementarity-title">
         <p class="section-kicker">Compléter l'existant, pas le remplacer</p>
-        <h2 id="complementarity-title">Les plateformes nationales ont leur place. Le lien local aussi.</h2>
+        <h2 id="complementarity-title">Des réseaux pour acheter les livres. Un projet qui aide aussi à les créer.</h2>
         <div class="prose-grid">
             <p>Des réseaux comme <a href="https://www.leslibraires.fr/" target="_blank" rel="noopener noreferrer">leslibraires.fr</a>, <a href="https://www.canalbd.net/" target="_blank" rel="noopener noreferrer">Canal BD</a> et d'autres portails permettent déjà de trouver, réserver et commander des livres, parfois en privilégiant une librairie proche. <strong>Nous ne cherchons ni à copier leurs services ni à détourner les libraires de leurs boutiques actuelles.</strong></p>
-            <p>Notre approche commence par une question plus locale : <strong>« Où puis-je obtenir ce livre près de chez moi, dans de bonnes conditions ? »</strong> Si la réponse se trouve sur le site d'un libraire ou d'un réseau existant, le bon service consiste à y orienter le lecteur. Pas à l'obliger à passer par une nouvelle caisse.</p>
+            <p><strong>Notre différence est aussi en amont de la vente :</strong> offrir aux auteurs indépendants des outils gratuits pour préparer leurs fichiers papier, leurs couvertures et leurs dossiers d'impression, puis faciliter leur prise de contact avec les librairies proches. Le lecteur peut ensuite chercher où obtenir un livre localement. Si une librairie vend déjà cet ouvrage via son propre site ou un réseau existant, nous voulons l'y orienter, pas l'obliger à passer par une nouvelle caisse.</p>
         </div>
-        <p>Le pilote démarre en Moselle : référencement utile, liens vers les boutiques existantes et, seulement avec l'accord des librairies, connexion progressive aux stocks. Aucune double saisie imposée, aucun partenariat ou flux de stock présenté comme acquis avant de l'être.</p>
+        <p>Le pilote démarre en Moselle : outils d'autoédition à essayer, préparation de la diffusion locale, référencement utile et liens vers les boutiques existantes. La connexion aux stocks ne se fera qu'avec l'accord des librairies. Aucun circuit automatique d'impression ou de vente, aucune double saisie imposée, aucun partenariat présenté comme acquis avant de l'être.</p>
     </section>
 
     <section class="content-section" aria-labelledby="who-title">
