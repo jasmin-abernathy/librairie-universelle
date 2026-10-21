@@ -15,11 +15,11 @@ function e_project(?string $value): string
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <meta name="description" content="Librairie universelle : relier les lecteurs aux librairies, auteurs et imprimeurs proches, avec une recherche de livres transparente, des outils d'autoédition gratuits et un premier pilote en Moselle.">
+    <meta name="description" content="Librairie universelle : trouver un livre près de chez soi, éviter des frais de livraison, favoriser les trajets sobres et compléter les plateformes de librairies indépendantes. Pilote en Moselle.">
     <meta name="theme-color" content="#f7f3ea">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Le projet — <?= e_project($config['name']) ?>">
-    <meta property="og:description" content="Pour trouver, publier et faire circuler les livres plus efficacement en s'appuyant sur les librairies et imprimeurs locaux.">
+    <meta property="og:description" content="Et si le livre le plus rapide à obtenir était déjà près de chez vous ? Un projet local, sobre et complémentaire des réseaux de libraires existants.">
     <title>Le projet — <?= e_project($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
     <link rel="stylesheet" href="/assets/css/projet.css?v=20261021-1">
@@ -33,7 +33,7 @@ function e_project(?string $value): string
         <p class="eyebrow">Un prototype concret · première étape en Moselle</p>
         <h1 id="project-title">Et si le livre le plus pratique à trouver était celui qui est près de chez vous ?</h1>
         <p class="lede">Librairie universelle veut réunir lecteurs, librairies indépendantes, auteurs et imprimeurs locaux autour d'un parcours simple : trouver un livre, le commander ou le faire imprimer au plus près, sans imposer à chacun une nouvelle usine à gaz.</p>
-        <p>Notre ambition n'est pas d'opposer le commerce local à la simplicité des grandes plateformes. C'est de <strong>faire aussi simple et aussi efficace, voire mieux lorsque la proximité le permet</strong> : moins de détours pour les livres, davantage de choix visibles et des circuits plus directs.</p>
+        <p>Face à Amazon, la proximité peut devenir un avantage très concret : <strong>faire aussi simple et aussi efficace, voire mieux lorsque la proximité le permet</strong>. Un livre déjà en rayon à deux rues peut être récupéré aujourd'hui, sans attendre un colis ni payer son expédition. Et si l'on s'y rend à pied, à vélo ou sur un trajet habituel, l'impact du transport peut aussi diminuer.</p>
         <div class="cta-row">
             <a class="button-link" href="/#librairies">Trouver une librairie proche</a>
             <a class="button-link secondary" href="/autoedition.php">Préparer mon livre</a>
@@ -42,12 +42,39 @@ function e_project(?string $value): string
     </section>
 
     <section class="content-section" aria-labelledby="why-local">
-        <p class="section-kicker">L'idée derrière le projet</p>
-        <h2 id="why-local">Mettre la proximité au service de la rapidité, pas seulement des convictions.</h2>
-        <div class="prose-grid">
-            <p>Un livre peut être disponible chez un libraire voisin alors qu'un site national l'expédie depuis un entrepôt éloigné. Un autre peut être imprimé près de son lecteur plutôt que transporté inutilement. Encore faut-il savoir où il se trouve et comment l'obtenir.</p>
-            <p>Nous voulons rendre ces possibilités visibles dans une même recherche, avec des prix, délais, disponibilités et sources compréhensibles. <strong>Les gains de temps, de transport et de coût restent à mesurer</strong> sur des commandes réelles : ce sont des objectifs, pas des résultats déjà démontrés.</p>
+        <p class="section-kicker">Pourquoi commencer près de chez soi ?</p>
+        <h2 id="why-local">La proximité peut battre la livraison sur son propre terrain.</h2>
+        <p>Amazon a popularisé deux arguments : aller vite et limiter les frais de livraison. Mais <strong>un livre déjà disponible chez un libraire voisin n'a pas besoin d'attendre un colis</strong>. Librairie universelle veut rendre cette option plus facile à trouver, sans demander aux libraires de changer leurs outils.</p>
+        <div class="feature-grid">
+            <article>
+                <span aria-hidden="true">1</span>
+                <h3>Rapide quand le livre est déjà là</h3>
+                <p>Si l'ouvrage est en rayon et que la librairie est ouverte, le retrait peut se faire dans la journée. Le but est d'afficher une disponibilité vérifiée et la date de sa dernière mise à jour, pas de promettre un stock que nous ne connaissons pas encore.</p>
+            </article>
+            <article>
+                <span aria-hidden="true">2</span>
+                <h3>Sans frais d'expédition à payer</h3>
+                <p>En France, le prix du livre neuf est encadré. Pour une commande expédiée de moins de 35 € en livres neufs, les frais de livraison sont d'au moins 3 €. <strong>Retirer un livre en librairie évite ces frais d'expédition</strong> — sans prétendre que le déplacement du lecteur ne coûte rien.</p>
+                <p><a class="text-link" href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000047419002" target="_blank" rel="noopener noreferrer">Comprendre les règles de livraison des livres →</a></p>
+            </article>
+            <article>
+                <span aria-hidden="true">3</span>
+                <h3>Moins de trajets inutiles, quand c'est possible</h3>
+                <p>Récupérer à pied, à vélo ou à l'occasion d'un trajet déjà prévu un exemplaire présent sur place peut éviter un colis supplémentaire, son emballage et sa livraison finale. Mais <strong>le local n'est pas automatiquement plus écologique</strong> : un aller-retour dédié en voiture peut annuler cet avantage.</p>
+                <p><a class="text-link" href="https://www.ademe.fr/presse/communique-national/e-commerce-un-outil-pour-evaluer-et-reduire-limpact-environnemental-de-la-logistique-des-transports-et-des-deplacements/" target="_blank" rel="noopener noreferrer">Ce que dit l'ADEME sur l'impact des livraisons →</a></p>
+            </article>
         </div>
+        <p>Nous voulons rendre visibles les <strong>prix, délais, disponibilités et moyens de retrait</strong> pour que chacun puisse choisir en connaissance de cause. Les gains réels de temps, de coût et d'émissions seront à mesurer avec des librairies volontaires, pas annoncés d'avance.</p>
+    </section>
+
+    <section class="content-section" aria-labelledby="complementarity-title">
+        <p class="section-kicker">Compléter l'existant, pas le remplacer</p>
+        <h2 id="complementarity-title">Les plateformes nationales ont leur place. Le lien local aussi.</h2>
+        <div class="prose-grid">
+            <p>Des réseaux comme <a href="https://www.leslibraires.fr/" target="_blank" rel="noopener noreferrer">leslibraires.fr</a>, <a href="https://www.canalbd.net/" target="_blank" rel="noopener noreferrer">Canal BD</a> et d'autres portails permettent déjà de trouver, réserver et commander des livres, parfois en privilégiant une librairie proche. <strong>Nous ne cherchons ni à copier leurs services ni à détourner les libraires de leurs boutiques actuelles.</strong></p>
+            <p>Notre approche commence par une question plus locale : <strong>« Où puis-je obtenir ce livre près de chez moi, dans de bonnes conditions ? »</strong> Si la réponse se trouve sur le site d'un libraire ou d'un réseau existant, le bon service consiste à y orienter le lecteur. Pas à l'obliger à passer par une nouvelle caisse.</p>
+        </div>
+        <p>Le pilote démarre en Moselle : référencement utile, liens vers les boutiques existantes et, seulement avec l'accord des librairies, connexion progressive aux stocks. Aucune double saisie imposée, aucun partenariat ou flux de stock présenté comme acquis avant de l'être.</p>
     </section>
 
     <section class="content-section" aria-labelledby="who-title">
