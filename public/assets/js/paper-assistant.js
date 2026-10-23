@@ -6,15 +6,14 @@
   const front = el('paper-front-preview');
   const back = el('paper-back-preview');
   if (!front || !back) return;
-  const formats = {
-    '148x210':[148,210], '140x210':[140,210],
-    '135x215':[135,215], '152x229':[152,229]
-  };
+  const formats = { '148x210':[148,210] };
   const fileUrls = new Map();
   const maxBytes = 15 * 1024 * 1024;
   const setText = (id, text) => { el(id).textContent = text; };
   const update = () => {
-    const dim = formats[items['paper-size'].value] || formats['148x210'];
+    // Un ancien brouillon enregistré dans un autre format ne doit pas le réintroduire.
+    items['paper-size'].value = '148x210';
+    const dim = formats['148x210'];
     for (const sheet of [front,back]) {
       sheet.style.setProperty('--cover-aspect',dim[0]+' / '+dim[1]);
       sheet.style.setProperty('--cover-width',dim[0]+'mm');
@@ -146,7 +145,7 @@
       items['paper-isbn'].focus();
       return;
     }
-    const [w,h] = formats[items['paper-size'].value] || formats['148x210'];
+    const [w,h] = formats['148x210'];
     el('paper-sheet-size').textContent = '@media print{@page{size:'+w+'mm '+h+'mm;margin:0}}';
     document.documentElement.dataset.paperPrint = side;
     window.print();
