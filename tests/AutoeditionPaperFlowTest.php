@@ -26,11 +26,31 @@ $check(str_contains($coverPage,'id="paper-export-format-help"') &&
     str_contains($coverPage,'A5 (148 × 210 mm)') &&
     str_contains($coverPage,'et non A4') &&
     str_contains($coverPage,'marges « Aucune »') &&
-    str_contains($coverPage,'Si vous avez choisi un autre format'),
+    str_contains($coverPage,'Le format A5 est imposé à cette étape'),
     'La boîte de dialogue doit rappeler A5, le risque A4, les marges et les autres formats.');
 $check(str_contains($coverJS,"el('paper-sheet-size').textContent") &&
     str_contains($coverJS,"'@media print{@page{size:'"),
     'Le format demandé au navigateur doit rester synchronisé avec le livre.');
+require_once dirname(__DIR__).'/src/PrintSettings.php';
+$settings=PrintSettings::normalize([]);
+$check($settings['trim_size']==='a5' && PrintSettings::trimDimensions($settings['trim_size'])===[148,210],
+    'Sans réglage explicite, le générateur doit composer en A5 (148 × 210 mm).');
+$check(str_contains($src,'<option value="a5" selected>') && !str_contains($src,'<option value="140x210"'),
+    'L’interface de composition ne doit proposer que A5.');
+$check(str_contains($coverPage,'<option value="148x210" selected>') && !str_contains($coverPage,'<option value="140x210"'),
+    'L’assistant de couverture ne doit proposer que A5.');
+$blocked=false;
+try { PrintSettings::normalize(['print_trim_size'=>'140x210']); }
+catch(InvalidArgumentException $e) { $blocked=true; }
+$check($blocked, 'Un format 14 × 21 cm soumis manuellement ne doit pas passer.');
+$blocked=false;
+try { PrintSettings::normalize(['print_trim_size'=>'a4']); }
+catch(InvalidArgumentException $e) { $blocked=true; }
+$check($blocked, 'Un A4 soumis manuellement ne doit pas passer.');
+$coverJs=(string)file_get_contents(dirname(__DIR__).'/public/assets/js/paper-assistant.js');
+$check(str_contains($coverJs,"items['paper-size'].value = '148x210'") &&
+       str_contains($coverJs,"const formats = { '148x210':[148,210] };"),
+       'Un ancien brouillon ne doit pas restaurer un format différent.');
 $check(str_contains($src,'<legend>Publication papier : préparation et impression</legend>'),
     'La légende sémantique du parcours papier ne doit pas être remplacée par un titre non associé.');
 $check(preg_match('/#panel-paper\s*>\s*fieldset\s*>\s*legend\s*\{[^}]*float\s*:\s*left\s*;[^}]*width\s*:\s*100%/s',$css)===1,
