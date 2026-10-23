@@ -258,7 +258,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     <div>
                         <strong>Notre générateur réalise la mise en page de votre manuscrit.</strong>
                         <p><strong>Ajoutez votre livre en DOCX ou ODT</strong> : la Librairie recomposera l'intérieur en pages de livre, avec sommaire, marges de reliure, pagination recto-verso et pages blanches nécessaires. Vous pourrez ensuite enregistrer le résultat en PDF pour l'imprimeur. Aucun EPUB n'est nécessaire.</p>
-                        <p>Le manuscrit source reste inchangé. La conversion n'est pas une reproduction exacte du document bureautique : relisez l'aperçu, en particulier les tableaux, les notes et les images, puis faites valider le PDF final par l'imprimeur.</p>
+                        <p>Le manuscrit source reste inchangé. La mise en page est toujours réalisée au format A5 (148 × 210 mm), même si le DOCX/ODT était en A4. Ce n'est pas une simple réduction de page. La conversion n'est pas une reproduction exacte du document bureautique : relisez l'aperçu, en particulier les tableaux, les notes, les images et la taille des caractères, puis faites valider le PDF final par l'imprimeur.</p>
                     </div>
                 </div>
 
@@ -280,13 +280,11 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 
                 <div id="print-layout-settings"<?= $printPreparationRequested ? '' : ' hidden' ?>>
                     <div class="form-grid two-columns">
-                        <label>Format du livre
-                            <select name="print_trim_size">
-                                <option value="140x210"<?= ($_POST['print_trim_size'] ?? '140x210') === '140x210' ? ' selected' : '' ?>>14 × 21 cm</option>
-                                <option value="a5"<?= ($_POST['print_trim_size'] ?? '') === 'a5' ? ' selected' : '' ?>>A5 — 14,8 × 21 cm</option>
-                                <option value="135x215"<?= ($_POST['print_trim_size'] ?? '') === '135x215' ? ' selected' : '' ?>>13,5 × 21,5 cm</option>
-                                <option value="152x229"<?= ($_POST['print_trim_size'] ?? '') === '152x229' ? ' selected' : '' ?>>15,2 × 22,9 cm / 6 × 9 pouces</option>
+                        <label>Format du livre — A5 obligatoire
+                            <select name="print_trim_size" aria-describedby="paper-a5-help">
+                                <option value="a5" selected>A5 — 14,8 × 21 cm (Corep Metz)</option>
                             </select>
+                            <span class="field-help" id="paper-a5-help">Le générateur compose directement en A5, même si votre DOCX ou ODT a été préparé en A4. Il ne réduit pas un PDF A4 : la pagination et les marges sont recalculées. Le nombre de pages peut augmenter : vérifiez la lisibilité et l’aperçu avant impression.</span>
                         </label>
                         <label>Reliure
                             <select name="print_binding">
