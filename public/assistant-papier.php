@@ -41,12 +41,10 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
             <fieldset>
                 <legend>1. Format et présentation</legend>
                 <label>Format du livre
-                    <select id="paper-size">
-                        <option value="148x210" selected>A5 — 14,8 × 21 cm (devis Corep)</option>
-                        <option value="140x210">14 × 21 cm</option>
-                        <option value="135x215">13,5 × 21,5 cm</option>
-                        <option value="152x229">15,2 × 22,9 cm</option>
+                    <select id="paper-size" aria-describedby="paper-cover-a5-help">
+                        <option value="148x210" selected>A5 — 14,8 × 21 cm (format imposé)</option>
                     </select>
+                    <span class="paper-help" id="paper-cover-a5-help">Les deux faces sont préparées en A5. Corep précisera les exigences éventuelles de fond perdu et de tranche pour le dos carré collé.</span>
                 </label>
                 <label>Titre du livre
                     <input id="paper-title" type="text" maxlength="180" placeholder="Le titre de votre livre" value="">
@@ -95,7 +93,7 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
             <fieldset>
                 <legend>4. Enregistrer les deux faces</legend>
                 <p>Chaque bouton ouvre la boîte d'impression : choisissez « Enregistrer au format PDF », à l'échelle 100 %, sans en-tête ni pied de page, avec les graphiques d'arrière-plan.</p>
-                <p class="paper-help" id="paper-export-format-help"><strong>Attention au format :</strong> dans la fenêtre d'impression, ouvrez « Plus de paramètres » si nécessaire, puis « Taille du papier » et choisissez <strong>A5 (148 × 210 mm)</strong>, et non A4 (souvent sélectionné par défaut). Choisissez aussi les <strong>marges « Aucune »</strong>. Si vous avez choisi un autre format à l'étape 1, utilisez ses dimensions exactes ou un format personnalisé. <strong>Avant d'enregistrer chaque PDF, vérifiez que l'aperçu montre une seule couverture à la bonne taille, sans marge blanche.</strong> Certains navigateurs ignorent le format demandé automatiquement par le site.</p>
+                <p class="paper-help" id="paper-export-format-help"><strong>Attention au format :</strong> dans la fenêtre d'impression, ouvrez « Plus de paramètres » si nécessaire, puis « Taille du papier » et choisissez <strong>A5 (148 × 210 mm)</strong>, et non A4 (souvent sélectionné par défaut). Choisissez aussi les <strong>marges « Aucune »</strong>. Le format A5 est imposé à cette étape. <strong>Avant d'enregistrer chaque PDF, vérifiez que l'aperçu montre une seule couverture à la bonne taille, sans marge blanche.</strong> Certains navigateurs ignorent le format demandé automatiquement par le site.</p>
                 <div class="paper-actions">
                     <button type="button" id="paper-export-front">PDF : première de couverture</button>
                     <button type="button" id="paper-export-back" class="secondary-action">PDF : quatrième de couverture</button>
