@@ -6,7 +6,7 @@ final class PrintSettings
 {
     public static function normalize(array $input): array
     {
-        $trimSize = trim((string) ($input['print_trim_size'] ?? '140x210'));
+        $trimSize = trim((string) ($input['print_trim_size'] ?? 'a5'));
         $binding = trim((string) ($input['print_binding'] ?? 'paperback'));
         $chapterStart = trim((string) ($input['print_chapter_start'] ?? 'right'));
         $pageNumberPosition = trim((string) ($input['print_page_number_position'] ?? 'outside'));
@@ -14,8 +14,8 @@ final class PrintSettings
         $bleedMm = (int) ($input['print_bleed_mm'] ?? 0);
         $gutterMode = trim((string) ($input['print_gutter_mode'] ?? 'auto'));
 
-        if (!in_array($trimSize, ['a5', '140x210', '135x215', '152x229'], true)) {
-            throw new InvalidArgumentException('Format papier invalide.');
+        if ($trimSize !== 'a5') {
+            throw new InvalidArgumentException('Ce générateur prépare uniquement des livres au format A5 (148 × 210 mm). Sélectionnez le format A5.');
         }
         if (!in_array($binding, ['paperback', 'hardcover'], true)) {
             throw new InvalidArgumentException('Type de reliure invalide.');
@@ -64,12 +64,10 @@ final class PrintSettings
 
     public static function trimDimensions(string $trimSize): array
     {
-        return match ($trimSize) {
-            'a5' => [148, 210],
-            '135x215' => [135, 215],
-            '152x229' => [152, 229],
-            default => [140, 210],
-        };
+        if ($trimSize !== 'a5') {
+            throw new InvalidArgumentException('Le générateur utilise exclusivement le format A5.');
+        }
+        return [148, 210];
     }
 
     public static function automaticGutter(int $pageCountEstimate, string $binding): float
