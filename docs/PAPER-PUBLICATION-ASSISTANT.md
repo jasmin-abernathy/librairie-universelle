@@ -3,7 +3,7 @@
 La composition papier est **indépendante d'Atelier EPUB**. L'EPUB peut être utilisé comme **source de lecture seule** du manuscrit pour composer un intérieur PDF : jamais de correction/réécriture d'EPUB par cet assistant.
 
 ## Parcours
-- Depuis l'étape 5 « Version papier et impression », choisir format, reliure, sommaire, débuts de chapitres sur page de droite, marges et numérotation.
+- Dans le parcours « Livre papier », le **format A5 (148 × 210 mm) est imposé** à l'intérieur et aux deux faces de couverture. L'auteur règle ensuite la reliure, le sommaire, les débuts de chapitres sur page de droite, les marges et la numérotation.
 - L'aperçu intérieur existant peut être enregistré en PDF ; il inclut les pages blanches nécessaires au recto verso. Ne pas imposer les pages : Corep s'en charge.
 - Cliquer sur « Ouvrir l'assistant de couvertures » pour composer **première et quatrième de couverture séparément**, avec titre, auteur, résumé, ISBN facultatif et images locales. L'outil prépare l'impression PDF par face sans demander de largeur de tranche.
 - Importer les deux PDF produits, ou des images déjà prêtes, dans les champs papier dédiés du formulaire.
