@@ -12,6 +12,11 @@ Il s'agit d'une recomposition éditoriale : tableaux, notes, objets flottants, s
 Le bouton de l'onglet Livre papier envoie le manuscrit uniquement à /print-preview.php (aperçu temporaire) qui applique PrintSettings et Paged.js. Le navigateur propose ensuite l'impression en PDF : échelle 100 %, sans en-têtes/pieds ajoutés, arrière-plans inclus. L'auteur doit revoir le document et le BAT, puis déposer le PDF résultant dans print_pdf.
 La compatibilité historique avec une entrée EPUB dans /print-preview.php est conservée, mais aucun EPUB original n'est modifié. Atelier EPUB n'est pas concerné.
 
+## Format du pilote Corep Metz
+L'intérieur des livres et les couvertures sont composés exclusivement en A5 (148 × 210 mm), quel que soit le format initial du DOCX ou de l'ODT. Le serveur refuse les anciens réglages d'un autre format et le parcours public n'en propose plus. Les anciens brouillons de couverture ne rétablissent pas de dimension alternative. Aucune conversion par réduction d'un PDF A4 n'est pratiquée ; le manuscrit est recomposé, les marges et les pages sont recalculées. Un ouvrage long peut donc gagner beaucoup de pages.
+
+Les débuts de chapitre sur page de droite sont proposés par défaut, avec insertion des pages blanches nécessaires par le moteur de pagination. Après export, le nombre de pages, la taille des caractères, la position des chapitres, les pages blanches, les images et les exigences propres à l'imprimeur doivent encore être contrôlés. L'outil prépare un PDF à faire valider, il ne garantit pas automatiquement un BAT conforme.
+
 ## À ne pas promettre
 Cette première version prend en charge DOCX et ODT, pas les anciens DOC ; il reste à faire valider en conditions réelles les polices, images, pagination, recto verso, fonds perdus et rendu navigateur. Pas de transfert automatique vers Corep.
 
