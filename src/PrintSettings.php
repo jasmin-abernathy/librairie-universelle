@@ -4,8 +4,19 @@ declare(strict_types=1);
 
 final class PrintSettings
 {
+    // Dimensions finies publiées par Bookelis (en mm). Corep garde A5 uniquement.
+    private const BOOKELIS_SIZES = [
+        '130x180' => [130, 180], '156x234' => [156, 234],
+        '170x244' => [170, 244], '170x170' => [170, 170],
+        '190x150' => [190, 150], 'a4' => [210, 297],
+    ];
+
     public static function normalize(array $input): array
     {
+        $provider = trim((string) ($input['print_provider'] ?? 'corep_metz'));
+        if (!in_array($provider, ['corep_metz', 'bookelis'], true)) {
+            throw new InvalidArgumentException('Imprimeur inconnu.');
+        }
         $trimSize = trim((string) ($input['print_trim_size'] ?? 'a5'));
         $binding = trim((string) ($input['print_binding'] ?? 'paperback'));
         $chapterStart = trim((string) ($input['print_chapter_start'] ?? 'right'));
@@ -14,8 +25,9 @@ final class PrintSettings
         $bleedMm = (int) ($input['print_bleed_mm'] ?? 0);
         $gutterMode = trim((string) ($input['print_gutter_mode'] ?? 'auto'));
 
-        if ($trimSize !== 'a5') {
-            throw new InvalidArgumentException('Ce générateur prépare uniquement des livres au format A5 (148 × 210 mm). Sélectionnez le format A5.');
+        $sizes = $provider === 'corep_metz' ? ['a5'] : array_keys(self::BOOKELIS_SIZES);
+        if (!in_array($trimSize, $sizes, true)) {
+            throw new InvalidArgumentException('Format indisponible pour cet imprimeur.');
         }
         if (!in_array($binding, ['paperback', 'hardcover'], true)) {
             throw new InvalidArgumentException('Type de reliure invalide.');
@@ -49,6 +61,7 @@ final class PrintSettings
         }
 
         return [
+            'provider' => $provider,
             'trim_size' => $trimSize,
             'binding' => $binding,
             'toc_enabled' => !empty($input['print_toc_enabled']) ? 1 : 0,
@@ -64,10 +77,11 @@ final class PrintSettings
 
     public static function trimDimensions(string $trimSize): array
     {
-        if ($trimSize !== 'a5') {
-            throw new InvalidArgumentException('Le générateur utilise exclusivement le format A5.');
+        if ($trimSize === 'a5') return [148, 210];
+        if (!isset(self::BOOKELIS_SIZES[$trimSize])) {
+            throw new InvalidArgumentException('Format de livre inconnu.');
         }
-        return [148, 210];
+        return self::BOOKELIS_SIZES[$trimSize];
     }
 
     public static function automaticGutter(int $pageCountEstimate, string $binding): float
