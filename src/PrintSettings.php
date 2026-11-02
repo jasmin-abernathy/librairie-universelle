@@ -6,6 +6,7 @@ final class PrintSettings
 {
     // Dimensions finies publiées par Bookelis (en mm). Corep garde A5 uniquement.
     private const BOOKELIS_SIZES = [
+        'a5' => [148, 210],
         '130x180' => [130, 180], '156x234' => [156, 234],
         '170x244' => [170, 244], '170x170' => [170, 170],
         '190x150' => [190, 150], 'a4' => [210, 297],
