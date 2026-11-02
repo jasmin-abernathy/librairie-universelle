@@ -65,6 +65,25 @@ $coverJs=(string)file_get_contents(dirname(__DIR__).'/public/assets/js/paper-ass
 $check(str_contains($coverJs,"items['paper-size'].value = '148x210'") &&
        str_contains($coverJs,"const formats = { '148x210':[148,210] };"),
        'Un ancien brouillon ne doit pas restaurer un format différent.');
+$preview=(string)file_get_contents(dirname(__DIR__).'/public/print-preview.php');
+$previewJS=(string)file_get_contents(dirname(__DIR__).'/public/assets/js/print-preview.js');
+$previewCSS=(string)file_get_contents(dirname(__DIR__).'/public/assets/css/print-preview.css');
+$check(str_contains($preview,"if (\$settings['provider'] === 'bookelis')") &&
+       str_contains($preview,'id="bookelis-cover-handoff"') &&
+       str_contains($preview,'id="bookelis-real-pages"') &&
+       str_contains($preview,'https://livres.bookelis.com/generation-couverture'),
+       'Le parcours Bookelis doit proposer le générateur officiel après la pagination.');
+$check(str_contains($preview,'quatrième, tranche et première') &&
+       str_contains($preview,'Aucun fichier n\'est envoyé automatiquement'),
+       'La couverture complète et la transmission manuelle doivent être expliquées.');
+$check(str_contains($previewJS,"bookelisHandoff.hidden=button.disabled") &&
+       str_contains($previewJS,"bookelisPages.textContent=String(pages)"),
+       'La suite Bookelis doit attendre la validation de l’aperçu et afficher le nombre réel de pages.');
+$check(str_contains($previewCSS,'.bookelis-cover-handoff[hidden]{display:none!important}') &&
+       str_contains($previewCSS,'@media print{.bookelis-cover-handoff{display:none!important}}'),
+       'Le guidage Bookelis doit être invisible dans le PDF intérieur.');
+$check(str_contains($preview,"if (\$settings['provider'] !== 'bookelis')"),
+       'L’export PDF/X optionnel doit rester dans le parcours Corep, pas être requis chez Bookelis.');
 $check(str_contains($src,'<legend>Publication papier : préparation et impression</legend>'),
     'La légende sémantique du parcours papier ne doit pas être remplacée par un titre non associé.');
 $check(preg_match('/#panel-paper\s*>\s*fieldset\s*>\s*legend\s*\{[^}]*float\s*:\s*left\s*;[^}]*width\s*:\s*100%/s',$css)===1,
