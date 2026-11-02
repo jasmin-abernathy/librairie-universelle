@@ -6,3 +6,16 @@
 .preview-confirm{display:flex;align-items:start;gap:.65rem;font-weight:720;line-height:1.5}
 .preview-confirm input{margin-top:.25rem;min-width:1.1rem;min-height:1.1rem}
 @media print{.preview-checklist{display:none!important}}
+
+/* Continuation guidée Bookelis après l'aperçu contrôlé. */
+.bookelis-cover-handoff{max-width:920px;margin:1rem auto 1.5rem;padding:1.15rem 1.3rem;background:#fff;border:2px solid #81ae90;border-radius:.85rem;line-height:1.55}
+.bookelis-cover-handoff[hidden]{display:none!important}
+.bookelis-cover-handoff h2{font-size:1.25rem;line-height:1.3;margin:.25rem 0 .7rem;color:#214b31}
+.bookelis-cover-handoff .bookelis-step-number{font-weight:750;font-size:.85rem;text-transform:uppercase;letter-spacing:.04em;color:#356548;margin:0}
+.bookelis-cover-handoff ol{padding-left:1.5rem;margin:.5rem 0 1rem}
+.bookelis-cover-handoff li{margin:.45rem 0}
+.bookelis-cover-warning{background:#f5f9f5;border-left:3px solid #71a081;padding:.65rem .85rem}
+.bookelis-cover-cta{display:inline-block;padding:.8rem 1rem;border-radius:.7rem;background:#285943;color:#fff;text-decoration:none;font-weight:800;line-height:1.35}
+.bookelis-cover-cta:focus-visible{outline:3px solid #6aa780;outline-offset:3px}
+@media(max-width:680px){.bookelis-cover-handoff{margin:1rem .75rem;padding:1rem}.bookelis-cover-cta{display:block;text-align:center}}
+@media print{.bookelis-cover-handoff{display:none!important}}
