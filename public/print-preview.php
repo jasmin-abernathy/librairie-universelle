@@ -107,7 +107,9 @@ $gutter = $settings['gutter_mode'] === 'custom'
     <div class="actions">
         <a href="/autoedition.php">Retour aux réglages</a>
         <button id="print-button" type="button" disabled>Enregistrer l’intérieur en PDF</button>
+        <?php if ($settings['provider'] !== 'bookelis'): ?>
         <a href="/export-pdfx.php" title="Après avoir enregistré le PDF, le convertir en PDF/X">Puis convertir en PDF/X</a>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -125,6 +127,21 @@ $gutter = $settings['gutter_mode'] === 'custom'
     <label class="preview-confirm"><input id="preview-reviewed" type="checkbox"> J’ai parcouru les pages et vérifié la position des chapitres, les images, le sommaire et les pages blanches.</label>
     <p id="preview-review-status" role="status">L’export sera disponible après pagination et validation visuelle.</p>
 </section>
+<?php if ($settings['provider'] === 'bookelis'): ?>
+<section class="bookelis-cover-handoff" id="bookelis-cover-handoff" aria-labelledby="bookelis-cover-heading" hidden>
+    <p class="bookelis-step-number">Étape suivante · Bookelis</p>
+    <h2 id="bookelis-cover-heading">Préparer votre couverture avec le gabarit officiel</h2>
+    <p>Votre intérieur est paginé : <strong><span id="bookelis-real-pages">—</span> pages</strong> au format <strong><?= (int)$pageWidth ?> × <?= (int)$pageHeight ?> mm</strong>. Après avoir enregistré votre PDF intérieur et vérifié son nombre de pages, ouvrez le générateur de gabarits Bookelis.</p>
+    <ol>
+        <li>Reportez le <strong>nombre de pages du PDF enregistré</strong> et le format choisi ici.</li>
+        <li>Indiquez chez Bookelis le papier, le type de couverture, le pelliculage et le mode de commercialisation souhaités.</li>
+        <li>Téléchargez leur gabarit, puis créez dessus <strong>un seul fichier de couverture à plat</strong> : quatrième, tranche et première.</li>
+        <li>Contrôlez les images, les fonds perdus et les polices, puis déposez l'intérieur et la couverture directement dans votre espace Bookelis.</li>
+    </ol>
+    <p class="bookelis-cover-warning">Le gabarit Bookelis ne réalise pas la couverture à votre place. La largeur de tranche dépend de la pagination et du papier : <strong>ne la calculez pas au hasard</strong>. Aucun fichier n'est envoyé automatiquement à Bookelis et leur contrôle final reste nécessaire.</p>
+    <a class="bookelis-cover-cta" href="https://livres.bookelis.com/generation-couverture" target="_blank" rel="noopener noreferrer">Ouvrir le générateur de gabarits Bookelis ↗</a>
+</section>
+<?php endif; ?>
 <?php if ($book['warnings'] !== []): ?>
 <div class="preview-warnings" role="status">
     <strong>À vérifier dans l’aperçu</strong>
