@@ -42,6 +42,9 @@ function checked(string $key, bool $default = false): string
     return $default ? ' checked' : '';
 }
 
+$selectedPrinter = ($_POST['print_provider'] ?? 'corep_metz') === 'bookelis' ? 'bookelis' : 'corep_metz';
+$selectedTrim = (string)($_POST['print_trim_size'] ?? 'a5');
+$bookelisFormats = ['130x180' => '13 × 18 cm — poche', '156x234' => '15,6 × 23,4 cm', '170x244' => '17 × 24,4 cm', '170x170' => '17 × 17 cm — carré', '190x150' => '19 × 15 cm — paysage', 'a4' => 'A4 — 21 × 29,7 cm'];
 $printPreparationRequested = $_SERVER['REQUEST_METHOD'] === 'POST'
     ? !empty($_POST['print_preparation_requested']) : true;
 require_once dirname(__DIR__) . '/src/MosellePrintGridClient.php';
@@ -66,6 +69,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <link rel="stylesheet" href="/assets/css/autoedition-tabs.css?v=20261018-2">
     <link rel="stylesheet" href="/assets/css/author-draft.css?v=20261018-3">
     <link rel="stylesheet" href="/assets/css/autoedition-paper.css?v=20261019-1">
+    <link rel="stylesheet" href="/assets/css/print-provider-flow.css?v=20261102-1">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -246,19 +250,20 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
             <fieldset>
                 <legend>Publication papier : préparation et impression</legend>
                 <nav class="paper-step-nav" aria-label="Accès aux étapes de préparation papier">
-                    <a href="#paper-interior-step"><span>1</span> Intérieur PDF</a>
-                    <a href="#paper-pdfx-step"><span>2</span> PDF/X <small>facultatif</small></a>
-                    <a href="#paper-covers-step"><span>3</span> Couvertures</a>
-                    <a href="#print-cost-estimator"><span>4</span> Coût estimé</a>
-                    <a href="#paper-dossier-step"><span>5</span> Dossier imprimeur</a>
-                    <a href="#paper-corep-step"><span>6</span> Envoyer à l’imprimeur</a>
+                    <a href="#paper-interior-step"><span>1</span> Manuscrit</a>
+                    <a href="#paper-printer-step"><span>2</span> Imprimeur et format</a>
+                    <a href="#paper-pdfx-step"><span>3</span> PDF/X <small>facultatif</small></a>
+                    <a href="#paper-covers-step"><span>4</span> Couverture</a>
+                    <a href="#print-cost-estimator"><span>5</span> Prix</a>
+                    <a href="#paper-dossier-step"><span>6</span> Préparer les fichiers</a>
+                    <a href="#paper-corep-step"><span>7</span> Transmettre</a>
                 </nav>
 
                 <div class="resource-card important-resource">
                     <div>
                         <strong>Notre générateur réalise la mise en page de votre manuscrit.</strong>
                         <p><strong>Ajoutez votre livre en DOCX ou ODT</strong> : la Librairie recomposera l'intérieur en pages de livre, avec sommaire, marges de reliure, pagination recto-verso et pages blanches nécessaires. Vous pourrez ensuite enregistrer le résultat en PDF pour l'imprimeur. Aucun EPUB n'est nécessaire.</p>
-                        <p>Le manuscrit source reste inchangé. La mise en page est toujours réalisée au format A5 (148 × 210 mm), même si le DOCX/ODT était en A4. Ce n'est pas une simple réduction de page. La conversion n'est pas une reproduction exacte du document bureautique : relisez l'aperçu, en particulier les tableaux, les notes, les images et la taille des caractères, puis faites valider le PDF final par l'imprimeur.</p>
+                        <p>Le manuscrit source reste inchangé. La mise en page est recalculée au format choisi pour l'imprimeur : A5 pour Corep, ou l'un des formats proposés par Bookelis. Ce n'est pas une simple réduction de page. La conversion n'est pas une reproduction exacte du document bureautique : relisez l'aperçu, en particulier les tableaux, les notes, les images et la taille des caractères, puis faites valider le PDF final par l'imprimeur.</p>
                     </div>
                 </div>
 
@@ -279,12 +284,34 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 </label>
 
                 <div id="print-layout-settings"<?= $printPreparationRequested ? '' : ' hidden' ?>>
+                    <fieldset class="paper-provider-fieldset" id="paper-printer-step">
+                        <legend>2. Choisir où imprimer votre livre</legend>
+                        <p>Choisissez votre imprimeur avant de générer l'intérieur : les dimensions modifient la pagination, donc le nombre de pages et le coût. Vous pourrez revenir sur ce choix sans réimporter votre manuscrit.</p>
+                        <div class="paper-provider-grid">
+                            <label class="paper-provider-card">
+                                <input type="radio" name="print_provider" value="corep_metz"<?= $selectedPrinter === 'corep_metz' ? ' checked' : '' ?>>
+                                <span class="paper-provider-title"><strong>Corep Metz</strong><small>Impression locale · A5 imposé</small></span>
+                                <span class="paper-provider-detail">Livre A5 broché, couverture recto et verso séparées ; prise en charge et devis avec l'agence de Metz.</span>
+                                <span class="paper-provider-price" id="printer-corep-quote">Tarif indicatif selon la grille autorisée, si disponible.</span>
+                            </label>
+                            <label class="paper-provider-card">
+                                <input type="radio" name="print_provider" value="bookelis"<?= $selectedPrinter === 'bookelis' ? ' checked' : '' ?>>
+                                <span class="paper-provider-title"><strong>Bookelis</strong><small>Impression à la demande · plusieurs formats</small></span>
+                                <span class="paper-provider-detail">Formats au choix, papier et couverture configurés chez Bookelis. La couverture finale doit suivre leur gabarit complet avec tranche.</span>
+                                <span class="paper-provider-price" id="printer-bookelis-quote">Devis dynamique dans le calculateur officiel (prix non récupérable ici).</span>
+                            </label>
+                        </div>
+                        <p class="field-help">Aucun tarif n'est garanti ni aucune commande envoyée depuis la Librairie. Corep et Bookelis restent deux prestataires indépendants.</p>
+                    </fieldset>
                     <div class="form-grid two-columns">
-                        <label>Format du livre — A5 obligatoire
-                            <select name="print_trim_size" aria-describedby="paper-a5-help">
-                                <option value="a5" selected>A5 — 14,8 × 21 cm (Corep Metz)</option>
+                        <label>Format fini du livre
+                            <select id="print-trim-size" name="print_trim_size" aria-describedby="paper-a5-help">
+                                <option value="a5"<?= $selectedTrim === 'a5' ? ' selected' : '' ?>>A5 — 14,8 × 21 cm (Corep ou Bookelis)</option>
+                                <?php foreach ($bookelisFormats as $size => $label): ?>
+                                    <option value="<?= e($size) ?>" data-bookelis-size="1"<?= $selectedTrim === $size ? ' selected' : '' ?><?= $selectedPrinter === 'bookelis' ? '' : ' disabled hidden' ?>><?= e($label) ?> (Bookelis)</option>
+                                <?php endforeach; ?>
                             </select>
-                            <span class="field-help" id="paper-a5-help">Le générateur compose directement en A5, même si votre DOCX ou ODT a été préparé en A4. Il ne réduit pas un PDF A4 : la pagination et les marges sont recalculées. Le nombre de pages peut augmenter : vérifiez la lisibilité et l’aperçu avant impression.</span>
+                            <span class="field-help" id="paper-a5-help">Corep : A5 uniquement. Bookelis : 7 formats possibles. Le manuscrit est recomposé à la bonne taille, jamais réduit depuis un A4 ; le nombre de pages peut changer.</span>
                         </label>
                         <label>Reliure
                             <select name="print_binding">
@@ -365,6 +392,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     </div>
                 </div>
 
+                <div data-printer-only="corep_metz" class="paper-provider-specific">
                 <div class="resource-card important-resource paper-step-card paper-covers-step" id="paper-covers-step" aria-labelledby="paper-covers-title">
                     <div>
                         <h3 id="paper-covers-title">3. Préparer la première et la quatrième de couverture</h3>
@@ -372,6 +400,14 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                         <p>Corep Metz accepte les faces séparées. L’intérieur est transmis en PDF simple dans l’ordre de lecture, sans imposition. Le BAT papier, s’il est demandé, est facturé séparément.</p>
                     </div>
                     <div class="paper-step-actions"><a class="button-link secondary" href="/assistant-papier.php">Ouvrir l’assistant de couvertures <span aria-hidden="true">↗</span></a></div>
+                </div>
+                </div>
+                <div data-printer-only="bookelis" class="paper-provider-specific resource-card paper-step-card" id="paper-bookelis-cover-step" hidden>
+                    <div><h3>4. Préparer une couverture Bookelis complète</h3>
+                        <p>Bookelis demande un fichier <strong>à plat : quatrième + tranche + première</strong>. Notre assistant de couverture Corep produit deux faces séparées et ne suffit donc pas pour leur dépôt.</p>
+                        <p>Après votre aperçu PDF, relevez le <strong>nombre réel de pages</strong>, puis renseignez chez Bookelis le format, le papier et la reliure pour obtenir le <strong>gabarit officiel</strong>. Assemblez ensuite la couverture sur ce gabarit. Ne calculez pas la largeur de tranche au hasard.</p>
+                        <a class="button-link secondary" href="https://livres.bookelis.com/generation-couverture" target="_blank" rel="noopener noreferrer">Obtenir le gabarit officiel Bookelis ↗</a>
+                    </div>
                 </div>
                 <div class="form-grid two-columns">
                     <label>Première de couverture papier <span class="optional">facultatif</span>
@@ -386,13 +422,12 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 <p class="field-help"><strong>Conseil Corep :</strong> papier intérieur 80 g certifié FSC/PEFC ; 90 g possible sur devis spécifique. L’imprimeur valide les fichiers, la tranche, les éventuels fonds perdus et les choix particuliers avant le BAT.</p>
 
                 <section class="print-cost-panel" id="print-cost-estimator" aria-labelledby="print-cost-title" data-grids="<?= e((string) json_encode($publicPrintGrids, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP)) ?>">
-                    <h3 id="print-cost-title">4. Estimer le coût d’impression</h3>
-                    <p>Estimez un tirage A5 broché, avec intérieur noir et blanc de 80 g et couverture couleur. Nous avons reçu de <strong>Corep Metz</strong> les caractéristiques techniques et l’autorisation de présenter une grille TTC indicative. Si elle est disponible et encore publiable, ses montants sont affichés ci-dessous ; le devis réel reste à confirmer par l’imprimeur.</p>
+                    <h3 id="print-cost-title">5. Comparer les coûts d'impression</h3>
+                    <p>Pour Corep, la grille concerne uniquement les tirages de <strong>120, 200 ou 300 pages</strong> et les quantités exactes affichées, en A5 broché N&B 80 g. Indiquez le nombre réel de pages relevé dans l’aperçu : en dehors des paliers autorisés, un devis est nécessaire. Nous avons reçu de <strong>Corep Metz</strong> les caractéristiques techniques et l’autorisation de présenter une grille TTC indicative. Si elle est disponible et encore publiable, ses montants sont affichés ci-dessous ; le devis réel reste à confirmer par l’imprimeur.</p>
                     <div class="print-cost-controls">
                         <label>Nombre de pages
-                            <select id="print-estimate-pages">
-                                <option value="120">120 pages</option><option value="200" selected>200 pages</option><option value="300">300 pages</option>
-                            </select>
+                            <input id="print-estimate-pages" type="number" min="1" max="5000" step="1" value="200" inputmode="numeric">
+                            <span class="field-help" id="print-pages-feedback">Après avoir ouvert l'aperçu, son nombre de pages sera repris ici automatiquement.</span>
                         </label>
                         <label>Tirage
                             <select id="print-estimate-quantity">
@@ -407,12 +442,16 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                         <div style="grid-column: 1 / -1"><dt>Solde indicatif par exemplaire avec une hypothèse de remise libraire de 30 %</dt><dd id="print-estimate-balance">—</dd></div>
                     </dl>
                     <p class="print-cost-note" id="print-estimate-source">Tarif indicatif à confirmer avant commande.</p>
+                    <div class="bookelis-quote-note">
+                        <strong>Et chez Bookelis ?</strong> Le calculateur officiel donne un devis à partir du nombre de pages, du format, du tirage, du papier, des couleurs et de la couverture. Nous ne pouvons pas en récupérer le tarif en direct : <a href="https://livres.bookelis.com/imprimer" target="_blank" rel="noopener noreferrer">calculer le tarif officiel ↗</a>.
+                        <span class="field-help">Pour comparaison uniquement : Bookelis cite un exemple public de livre de 200 pages en petit format, N&B et couverture souple à 7,80 € l'unité. Ce n'est ni un tarif universel ni une estimation pour votre configuration.</span>
+                    </div>
                     <p class="print-cost-note"><strong>Corep Metz :</strong> un premier accord de publication des tarifs indicatifs et des échanges techniques, <strong>pas un partenariat commercial ou une commande intégrée</strong>. Si aucune grille n’est actuellement affichable, vous pouvez <a href="https://www.corep.fr/fr/agence/corep-metz/" target="_blank" rel="noopener noreferrer">demander un devis directement à l’agence</a>.</p>
                     <p class="print-cost-note">Le BAT papier est hors grille Corep : une épreuve papier est facturée à l’unité. Le BAT numérique est possible et la tranche est calculée par l’imprimeur.</p>
                     <p class="print-cost-note">Le solde n’est pas un bénéfice : le prix public est fixé par l’autoéditeur, et les frais de livraison, la fiscalité, la rémunération de l’auteur, les invendus et les frais de plateforme ne sont pas encore déduits. Aucune commande n’est déclenchée ici.</p>
                 </section>
 
-                <div class="resource-card important-resource paper-step-card paper-dossier-step" id="paper-dossier-step">
+                <div class="resource-card important-resource paper-step-card paper-dossier-step" id="paper-dossier-step" data-printer-only="corep_metz">
                     <div>
                         <p class="paper-step-eyebrow">Dernière étape</p>
                         <h3>5. Constituer le dossier pour l'imprimeur</h3>
@@ -425,7 +464,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 
 
 
-                <div class="resource-card important-resource paper-step-card paper-corep-step" id="paper-corep-step">
+                <div class="resource-card important-resource paper-step-card paper-corep-step" id="paper-corep-step" data-printer-only="corep_metz">
                     <div>
                         <p class="paper-step-eyebrow">Après avoir préparé vos fichiers</p>
                         <h3>6. Transmettre vos PDF à Corep Metz pour un devis</h3>
@@ -438,6 +477,16 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     </div>
                 </div>
 
+                <div class="resource-card paper-step-card" data-printer-only="bookelis" hidden>
+                    <div><h3>6–7. Contrôler et transmettre les fichiers à Bookelis</h3>
+                        <p>Conservez le <strong>PDF intérieur</strong> au format choisi, puis le <strong>PDF de couverture à plat</strong> élaboré avec le gabarit Bookelis. Contrôlez le nombre de pages, les marges, les polices, les images, les fonds perdus et les pages blanches.</p>
+                        <p>Bookelis calcule son prix selon le nombre de pages <em>et</em> les caractéristiques de fabrication. Saisissez les mêmes choix dans son calculateur, puis déposez-y les PDF. <strong>Pas de transfert automatique, de prix garanti ni de partenariat technique.</strong></p>
+                        <div class="paper-step-actions">
+                            <a class="button-link" href="https://livres.bookelis.com/imprimer" target="_blank" rel="noopener noreferrer">Calculer le prix et commander chez Bookelis ↗</a>
+                            <a class="button-link secondary" href="https://www.bookelis.com/auto-edition/gabarits-livre/" target="_blank" rel="noopener noreferrer">Consulter les gabarits intérieurs ↗</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="resource-section" aria-labelledby="printers-title">
                     <h3 id="printers-title">Besoin d’un imprimeur ou d’impression à la demande ?</h3>
                     <p>Ces liens sont fournis comme ressources pratiques, <strong>sans partenariat ni classement sponsorisé</strong>. Comparez les coûts, formats, conditions de distribution, propriété des ISBN et exemplaires tests avant de choisir.</p>
@@ -477,6 +526,6 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 <script src="/assets/js/autoedition-print.js"></script>
 <script src="/assets/js/autoedition-tabs.js?v=20261018-2"></script>
 <script src="/assets/js/author-draft.js?v=20261018-3"></script>
-<script src="/assets/js/printing-estimate.js?v=20261013-1"></script>
+<script src="/assets/js/printing-estimate.js?v=20261102-1"></script>
 </body>
 </html>
