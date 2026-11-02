@@ -132,8 +132,18 @@ $gutter = $settings['gutter_mode'] === 'custom'
     <p class="bookelis-step-number">Étape suivante · Bookelis</p>
     <h2 id="bookelis-cover-heading">Préparer votre couverture avec le gabarit officiel</h2>
     <p>Votre intérieur est paginé : <strong><span id="bookelis-real-pages">—</span> pages</strong> au format <strong><?= (int)$pageWidth ?> × <?= (int)$pageHeight ?> mm</strong>. Après avoir enregistré votre PDF intérieur et vérifié son nombre de pages, ouvrez le générateur de gabarits Bookelis.</p>
+    <div class="bookelis-transfer" aria-labelledby="bookelis-transfer-heading">
+        <h3 id="bookelis-transfer-heading">Vos informations déjà préparées</h3>
+        <dl class="bookelis-transfer-data">
+            <div><dt>Nombre de pages</dt><dd><strong id="bookelis-transfer-page-count">—</strong> <button type="button" id="bookelis-copy-pages">Copier le nombre</button></dd></div>
+            <div><dt>Format à sélectionner chez Bookelis</dt><dd><strong id="bookelis-transfer-format"><?= (int)$pageWidth ?> × <?= (int)$pageHeight ?> mm</strong></dd></div>
+            <div><dt>Couverture souhaitée</dt><dd><strong id="bookelis-transfer-binding"><?= $settings['binding'] === 'hardcover' ? 'Cartonnée' : 'Souple' ?></strong> (à confirmer chez Bookelis)</dd></div>
+        </dl>
+        <button type="button" id="bookelis-copy-summary" class="bookelis-transfer-copy">Copier le récapitulatif</button>
+        <p id="bookelis-copy-feedback" role="status" aria-live="polite">Les autres caractéristiques (papier, couleurs, pelliculage, commercialisation) restent à choisir directement chez Bookelis.</p>
+    </div>
     <ol>
-        <li>Reportez le <strong>nombre de pages du PDF enregistré</strong> et le format choisi ici.</li>
+        <li>Copiez le <strong>nombre réel de pages du PDF enregistré</strong>, puis sélectionnez le format correspondant chez Bookelis.</li>
         <li>Indiquez chez Bookelis le papier, le type de couverture, le pelliculage et le mode de commercialisation souhaités.</li>
         <li>Téléchargez leur gabarit, puis créez dessus <strong>un seul fichier de couverture à plat</strong> : quatrième, tranche et première.</li>
         <li>Contrôlez les images, les fonds perdus et les polices, puis déposez l'intérieur et la couverture directement dans votre espace Bookelis.</li>
