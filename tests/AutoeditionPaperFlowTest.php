@@ -73,6 +73,18 @@ $check(str_contains($preview,"if (\$settings['provider'] === 'bookelis')") &&
        str_contains($preview,'id="bookelis-real-pages"') &&
        str_contains($preview,'https://livres.bookelis.com/generation-couverture'),
        'Le parcours Bookelis doit proposer le générateur officiel après la pagination.');
+$check(str_contains($preview,'id="bookelis-copy-pages"') &&
+       str_contains($preview,'id="bookelis-copy-summary"') &&
+       str_contains($preview,'id="bookelis-copy-feedback"') &&
+       str_contains($preview,'id="bookelis-transfer-format"'),
+       'Le transfert Bookelis doit proposer la copie des informations et afficher le format.');
+$check(str_contains($previewJS,"copyBookelisText(String(actualPages)") &&
+       str_contains($previewJS,"bookelisTransferPages.textContent=String(pages)") &&
+       str_contains($previewJS,"navigator.clipboard.writeText(value)"),
+       'La copie doit reprendre le nombre de pages paginées, non une estimation.');
+$check(str_contains($previewCSS,'.bookelis-transfer-data') &&
+       str_contains($previewCSS,'@media print{.bookelis-transfer{display:none!important}}'),
+       'Le panneau de transfert doit être accessible et exclu de l’impression.');
 $check(str_contains($preview,'quatrième, tranche et première') &&
        str_contains($preview,'Aucun fichier n\'est envoyé automatiquement'),
        'La couverture complète et la transmission manuelle doivent être expliquées.');
