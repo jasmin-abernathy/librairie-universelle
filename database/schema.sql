@@ -199,6 +199,16 @@ CREATE TABLE IF NOT EXISTS submission_print_settings (
 );
 
 
+-- Addition non destructive : conserve les anciens réglages Corep A5 et les anciens dépôts.
+-- Les formats Bookelis sont mémorisés séparément pour ne pas reconstruire la table legacy SQLite.
+CREATE TABLE IF NOT EXISTS submission_print_provider_options (
+    submission_id INTEGER PRIMARY KEY REFERENCES author_submissions(id) ON DELETE CASCADE,
+    provider TEXT NOT NULL CHECK (provider IN ('corep_metz', 'bookelis')),
+    trim_size TEXT NOT NULL,
+    settings_json TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS feedback (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     page_url TEXT,
