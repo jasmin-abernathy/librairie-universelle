@@ -409,7 +409,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                         <a class="button-link secondary" href="https://livres.bookelis.com/generation-couverture" target="_blank" rel="noopener noreferrer">Obtenir le gabarit officiel Bookelis ↗</a>
                     </div>
                 </div>
-                <div class="form-grid two-columns">
+                <div class="form-grid two-columns" data-printer-only="corep_metz">
                     <label>Première de couverture papier <span class="optional">facultatif</span>
                         <input type="file" name="paper_cover_front" accept=".pdf,application/pdf,.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
                         <span class="field-help">PDF individuel exporté depuis l’assistant ou image déjà prête. Distinct de la couverture de l’ebook.</span>
