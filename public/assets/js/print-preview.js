@@ -7,9 +7,12 @@
     const reviewed=document.getElementById('preview-reviewed');
     const audit=document.getElementById('preview-audit');
     const reviewStatus=document.getElementById('preview-review-status');
+    const bookelisHandoff=document.getElementById('bookelis-cover-handoff');
+    const bookelisPages=document.getElementById('bookelis-real-pages');
     let rendered=false,critical=false;
     const printReady=()=>{
         button.disabled=!rendered||critical||!reviewed.checked;
+        if(bookelisHandoff)bookelisHandoff.hidden=button.disabled;
         reviewStatus.textContent=critical
           ? 'Certaines images ou pages ne sont pas fiables. Corrigez le manuscrit avant de produire le PDF.'
           :!rendered?'Pagination en cours…'
@@ -38,6 +41,7 @@
                 }));
             } catch (_) { /* Le PDF reste exportable si le stockage est désactivé. */ }
         }
+        if(bookelisPages)bookelisPages.textContent=String(pages);
         const sheets=Math.ceil(pages/2);
         status.textContent=pages+' page'+(pages>1?'s':'')+' · '+sheets+
             ' feuille'+(sheets>1?'s':'')+' recto-verso';
