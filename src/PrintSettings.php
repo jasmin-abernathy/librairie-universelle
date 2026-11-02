@@ -42,8 +42,8 @@ final class PrintSettings
         if (!in_array($frontMatterNumbering, ['roman', 'hidden', 'arabic'], true)) {
             throw new InvalidArgumentException('Numérotation des pages liminaires invalide.');
         }
-        if (!in_array($bleedMm, [0, 3], true)) {
-            throw new InvalidArgumentException('Fond perdu invalide.');
+        if (!in_array($bleedMm, [0, 3], true) || ($provider === 'bookelis' && $bleedMm !== 0)) {
+            throw new InvalidArgumentException('Pour Bookelis, les éléments à fond perdu doivent être préparés avec le gabarit officiel. Ce générateur ne valide pas encore les fonds perdus Bookelis.');
         }
         if (!in_array($gutterMode, ['auto', 'custom'], true)) {
             throw new InvalidArgumentException('Réglage de marge intérieure invalide.');
