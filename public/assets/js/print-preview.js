@@ -9,6 +9,41 @@
     const reviewStatus=document.getElementById('preview-review-status');
     const bookelisHandoff=document.getElementById('bookelis-cover-handoff');
     const bookelisPages=document.getElementById('bookelis-real-pages');
+    const bookelisTransferPages=document.getElementById('bookelis-transfer-page-count');
+    const copyPages=document.getElementById('bookelis-copy-pages');
+    const copySummary=document.getElementById('bookelis-copy-summary');
+    const copyFeedback=document.getElementById('bookelis-copy-feedback');
+    const transferFormat=document.getElementById('bookelis-transfer-format');
+    const transferBinding=document.getElementById('bookelis-transfer-binding');
+    let actualPages=0;
+    const copyBookelisText=async (value,success)=>{
+        if(!value || !copyFeedback)return;
+        try {
+            if(!navigator.clipboard || !navigator.clipboard.writeText)throw Error('no clipboard');
+            await navigator.clipboard.writeText(value);
+            copyFeedback.textContent=success;
+        } catch (_) {
+            // Les navigateurs mobiles peuvent refuser l'accès au presse-papiers.
+            window.prompt('Copiez ces informations :',value);
+            copyFeedback.textContent='Sélectionnez puis copiez les informations dans la fenêtre.';
+        }
+    };
+    if(copyPages)copyPages.addEventListener('click',()=>{
+        if(!actualPages)return;
+        copyBookelisText(String(actualPages),'Nombre de pages copié. Collez-le dans le champ « Nombre de pages » chez Bookelis.');
+    });
+    if(copySummary)copySummary.addEventListener('click',()=>{
+        if(!actualPages)return;
+        const summary=[
+            'Informations pour le gabarit Bookelis',
+            'Nombre de pages : '+actualPages,
+            'Format du livre : '+(transferFormat?.textContent.trim()||'à vérifier'),
+            'Type de couverture envisagé : '+(transferBinding?.textContent.trim()||'à choisir'),
+            'Papier, couleur, pelliculage et commercialisation : à choisir chez Bookelis',
+            'Source : Librairie universelle (contrôlez le nombre de pages du PDF enregistré)'
+        ].join('\n');
+        copyBookelisText(summary,'Récapitulatif copié. Vérifiez ensuite chaque option dans le générateur Bookelis.');
+    });
     let rendered=false,critical=false;
     const printReady=()=>{
         button.disabled=!rendered||critical||!reviewed.checked;
@@ -42,6 +77,10 @@
             } catch (_) { /* Le PDF reste exportable si le stockage est désactivé. */ }
         }
         if(bookelisPages)bookelisPages.textContent=String(pages);
+        actualPages=critical?0:pages;
+        if(bookelisTransferPages)bookelisTransferPages.textContent=String(pages);
+        if(copyPages)copyPages.disabled=critical;
+        if(copySummary)copySummary.disabled=critical;
         const sheets=Math.ceil(pages/2);
         status.textContent=pages+' page'+(pages>1?'s':'')+' · '+sheets+
             ' feuille'+(sheets>1?'s':'')+' recto-verso';
