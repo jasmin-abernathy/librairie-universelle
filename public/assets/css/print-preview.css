@@ -19,3 +19,18 @@
 .bookelis-cover-cta:focus-visible{outline:3px solid #6aa780;outline-offset:3px}
 @media(max-width:680px){.bookelis-cover-handoff{margin:1rem .75rem;padding:1rem}.bookelis-cover-cta{display:block;text-align:center}}
 @media print{.bookelis-cover-handoff{display:none!important}}
+
+/* Transfert manuel des valeurs de l'intérieur vers Bookelis. */
+.bookelis-transfer{padding:1rem 1.15rem;margin:1.05rem 0;border:1px solid #b6cdbb;background:#f6faf6;border-radius:.8rem}
+.bookelis-transfer h3{font-size:1.05rem;margin:0 0 .7rem;color:#214b31}
+.bookelis-transfer-data{margin:0 0 .9rem}
+.bookelis-transfer-data>div{display:grid;grid-template-columns:minmax(120px,1fr) 2fr;gap:.4rem .7rem;align-items:center;padding:.48rem 0;border-bottom:1px solid #dbe7dd}
+.bookelis-transfer-data dt{font-weight:720}
+.bookelis-transfer-data dd{margin:0;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.bookelis-transfer button{padding:.55rem .8rem;border:1px solid #356648;border-radius:.6rem;background:#fff;color:#214b31;font:inherit;font-weight:720;cursor:pointer}
+.bookelis-transfer button.bookelis-transfer-copy{background:#285943;color:#fff}
+.bookelis-transfer button:focus-visible{outline:3px solid #82ae90;outline-offset:3px}
+.bookelis-transfer button:disabled{opacity:.55;cursor:not-allowed}
+#bookelis-copy-feedback{font-size:.91rem;margin:.8rem 0 0;color:#385445}
+@media(max-width:620px){.bookelis-transfer{padding:.8rem}.bookelis-transfer-data>div{grid-template-columns:1fr;gap:.2rem}}
+@media print{.bookelis-transfer{display:none!important}}
