@@ -71,6 +71,7 @@ endif;
 
 $estimatedPages = max(1, (int) ceil(((int) $book['word_count']) / 280));
 $styleQuery = http_build_query([
+    'print_provider' => $settings['provider'],
     'print_trim_size' => $settings['trim_size'],
     'print_binding' => $settings['binding'],
     'print_chapter_start' => $settings['chapter_start'],
@@ -97,7 +98,7 @@ $gutter = $settings['gutter_mode'] === 'custom'
     <link rel="stylesheet" href="/assets/css/print-preview.css">
     <link rel="stylesheet" href="/print-style.php?<?= e($styleQuery) ?>">
 </head>
-<body>
+<body data-print-provider="<?= e((string)$settings['provider']) ?>" data-print-trim="<?= e((string)$settings['trim_size']) ?>">
 <div class="print-toolbar">
     <div>
         <strong><?= e($book['title']) ?></strong>
@@ -114,7 +115,7 @@ $gutter = $settings['gutter_mode'] === 'custom'
     Format <?= (int) $pageWidth ?> × <?= (int) $pageHeight ?> mm ·
     <?= $settings['binding'] === 'hardcover' ? 'relié' : 'broché' ?> ·
     marge intérieure <?= number_format($gutter, 1, ',', ' ') ?> mm<?= $settings['gutter_mode'] === 'auto' ? ' (auto)' : '' ?>.
-    Notre générateur a recomposé votre manuscrit en pages de livre. Sélectionnez « Enregistrer au format PDF » dans le navigateur, avec les arrière-plans, à 100 %, sans en-têtes/pieds de page automatiques. Vérifiez soigneusement les pages et faites valider les fonds perdus, les polices et le BAT par l’imprimeur.
+    Profil <?= $settings['provider'] === 'bookelis' ? 'Bookelis' : 'Corep Metz' ?> · Notre générateur a recomposé votre manuscrit en pages de livre. Sélectionnez « Enregistrer au format PDF » dans le navigateur, avec les arrière-plans, à 100 %, sans en-têtes/pieds de page automatiques. Vérifiez soigneusement les pages et faites valider les fonds perdus, les polices et le BAT par l’imprimeur.
 </p>
 
 <section class="preview-checklist" aria-labelledby="preview-check-title">
