@@ -29,6 +29,15 @@
         const emptyPageCount=pageEls.filter(p=>!p.textContent.trim()&&!p.querySelector('img,svg,canvas')).length;
         critical=pages<1||pageEls.length!==pages||missingImages.length>0;
         rendered=true;
+        // Ne conserver que le nombre de pages et le profil, jamais le manuscrit.
+        if (!critical && pages > 0 && pages <= 5000) {
+            try {
+                localStorage.setItem('librairie:paper-preview-count:v1',JSON.stringify({
+                    pages, provider:document.body.dataset.printProvider||'corep_metz',
+                    trim:document.body.dataset.printTrim||'a5', at:Date.now()
+                }));
+            } catch (_) { /* Le PDF reste exportable si le stockage est désactivé. */ }
+        }
         const sheets=Math.ceil(pages/2);
         status.textContent=pages+' page'+(pages>1?'s':'')+' · '+sheets+
             ' feuille'+(sheets>1?'s':'')+' recto-verso';
