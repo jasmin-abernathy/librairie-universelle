@@ -84,7 +84,11 @@ SQL);
             $submissionId = (int) $this->pdo->lastInsertId();
 
             if ($printSettings !== null) {
-                $this->insertPrintSettings($submissionId, $printSettings);
+                $this->insertPrintProviderOptions($submissionId, $printSettings);
+                if ($printSettings['provider'] === 'corep_metz') {
+                    // Garder la compatibilité des dossiers Corep existants.
+                    $this->insertPrintSettings($submissionId, $printSettings);
+                }
             }
 
             foreach (['ebook', 'cover', 'print_pdf'] as $kind) {
@@ -163,6 +167,13 @@ SQL);
         $print->execute([':id' => $id]);
         $printSettings = $print->fetch();
         $submission['print_settings'] = $printSettings === false ? null : $printSettings;
+        $profile = $this->pdo->prepare('SELECT provider, trim_size, settings_json FROM submission_print_provider_options WHERE submission_id = :id');
+        $profile->execute([':id' => $id]);
+        $profileRow = $profile->fetch();
+        if ($profileRow !== false) {
+            $settings = json_decode((string)$profileRow['settings_json'], true);
+            if (is_array($settings)) $submission['print_settings'] = $settings;
+        }
         return $submission;
     }
 
@@ -332,6 +343,17 @@ SQL);
             ':submission' => $submissionId, ':side' => $side,
             ':original' => $stored['original_name'], ':stored' => $stored['stored_name'],
             ':mime' => $stored['mime_type'], ':size' => $stored['size_bytes'], ':sha' => $stored['sha256'],
+        ]);
+    }
+
+    private function insertPrintProviderOptions(int $submissionId, array $settings): void
+    {
+        $statement = $this->pdo->prepare('INSERT INTO submission_print_provider_options (submission_id, provider, trim_size, settings_json) VALUES (:id, :provider, :trim, :json)');
+        $statement->execute([
+            ':id' => $submissionId,
+            ':provider' => $settings['provider'],
+            ':trim' => $settings['trim_size'],
+            ':json' => json_encode($settings, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),
         ]);
     }
 
