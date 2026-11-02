@@ -35,8 +35,22 @@ require_once dirname(__DIR__).'/src/PrintSettings.php';
 $settings=PrintSettings::normalize([]);
 $check($settings['trim_size']==='a5' && PrintSettings::trimDimensions($settings['trim_size'])===[148,210],
     'Sans réglage explicite, le générateur doit composer en A5 (148 × 210 mm).');
-$check(str_contains($src,'<option value="a5" selected>') && !str_contains($src,'<option value="140x210"'),
-    'L’interface de composition ne doit proposer que A5.');
+$check(str_contains($src,'name="print_provider"') && str_contains($src,'data-bookelis-size="1"') &&
+    str_contains($src,'<option value="a5"'),
+    'Le choix Corep/Bookelis et les formats du profil doivent être disponibles.');
+$bookelis=PrintSettings::normalize(['print_provider'=>'bookelis','print_trim_size'=>'a4']);
+$check($bookelis['provider']==='bookelis' && PrintSettings::trimDimensions($bookelis['trim_size'])===[210,297],
+    'Le profil Bookelis doit accepter A4 sans assouplir Corep.');
+$check(PrintSettings::normalize(['print_provider'=>'bookelis'])['trim_size']==='a5',
+    'Le profil Bookelis doit démarrer en A5 pour la comparaison.');
+$rejected=false;
+try {PrintSettings::normalize(['print_provider'=>'bookelis','print_trim_size'=>'custom']); }
+catch(InvalidArgumentException $e){$rejected=true;}
+$check($rejected,'Aucun format arbitraire Bookelis ne doit être accepté.');
+$rejected=false;
+try {PrintSettings::normalize(['print_provider'=>'bookelis','print_bleed_mm'=>3]); }
+catch(InvalidArgumentException $e){$rejected=true;}
+$check($rejected,'Pas de faux fond perdu validé pour Bookelis.');
 $check(str_contains($coverPage,'<option value="148x210" selected>') && !str_contains($coverPage,'<option value="140x210"'),
     'L’assistant de couverture ne doit proposer que A5.');
 $blocked=false;
