@@ -18,6 +18,13 @@ $check(substr_count($src,'href="/export-pdfx.php"')===1,'PDF/X doit apparaître 
 $check(substr_count($src,'href="/dossier-impression.php"')===1,'Dossier imprimeur dupliqué.');
 $check(strpos($src,'id="paper-pdfx-step"')<strpos($src,'id="paper-covers-step"'),'Le PDF/X doit être placé après le manuscrit et avant les couvertures.');
 $check(str_contains($src,'for="draft-import"')&&str_contains($src,'aria-describedby="draft-import-name"'),'Import de brouillon non accessible.');
+$draftStart=strpos($src,'<section class="paper-draft-toolbar"');
+$formEnd=strrpos($src,'</form>');
+$check($draftStart!==false && $formEnd!==false && $draftStart>$formEnd,
+    'La sauvegarde du brouillon doit être située après le générateur et le formulaire.');
+$check(substr_count($src,'id="draft-save"')===1 && substr_count($src,'id="draft-status"')===1,
+    'Le bloc brouillon doit rester unique et conserver ses commandes.');
+
 $check(str_contains($draft,'.draft-file-input:focus-visible + .draft-file-label'),'Sélection du fichier inaccessible au clavier.');
 $check(str_contains($css,'@media(max-width:600px)')&&str_contains($css,'.paper-step-actions .button-link'),'Rendu mobile des liens manquant.');
 $coverPage=(string)file_get_contents(dirname(__DIR__).'/public/assistant-papier.php');
