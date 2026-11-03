@@ -98,7 +98,7 @@ $gutter = $settings['gutter_mode'] === 'custom'
     <link rel="stylesheet" href="/assets/css/print-preview.css">
     <link rel="stylesheet" href="/print-style.php?<?= e($styleQuery) ?>">
 </head>
-<body data-print-provider="<?= e((string)$settings['provider']) ?>" data-print-trim="<?= e((string)$settings['trim_size']) ?>">
+<body data-print-provider="<?= e((string)$settings['provider']) ?>" data-print-trim="<?= e((string)$settings['trim_size']) ?>" data-corep-max-pages="<?= PrintSettings::COREP_MAX_PAGES ?>">
 <div class="print-toolbar">
     <div>
         <strong><?= e($book['title']) ?></strong>
@@ -119,6 +119,14 @@ $gutter = $settings['gutter_mode'] === 'custom'
     marge intérieure <?= number_format($gutter, 1, ',', ' ') ?> mm<?= $settings['gutter_mode'] === 'auto' ? ' (auto)' : '' ?>.
     Profil <?= $settings['provider'] === 'bookelis' ? 'Bookelis' : 'Corep Metz' ?> · Notre générateur a recomposé votre manuscrit en pages de livre. Sélectionnez « Enregistrer au format PDF » dans le navigateur, avec les arrière-plans, à 100 %, sans en-têtes/pieds de page automatiques. Vérifiez soigneusement les pages et faites valider les fonds perdus, les polices et le BAT par l’imprimeur.
 </p>
+<?php if ($settings['provider'] === 'corep_metz'): ?>
+<p class="corep-preset-note" role="note">
+    <strong>Profil Corep Metz :</strong> texte courant composé en 10,5 pt ; éléments secondaires à partir de <?= number_format(PrintSettings::COREP_MIN_FONT_PT, 0, ',', ' ') ?> pt,
+    avec <?= number_format(PrintSettings::COREP_RECOMMENDED_FONT_PT, 0, ',', ' ') ?> pt conseillés pour le confort de lecture.
+    <strong>Limite : <?= PrintSettings::COREP_MAX_PAGES ?> pages A5 en recto-verso (340 feuilles sur papier 80 g).</strong>
+    Le nombre de pages sera vérifié après la pagination. Les deux couvertures sont à transmettre séparément, sans fonds perdus ni traits de coupe.
+</p>
+<?php endif; ?>
 
 <section class="preview-checklist" aria-labelledby="preview-check-title">
     <h2 id="preview-check-title">Contrôle de votre composition</h2>
