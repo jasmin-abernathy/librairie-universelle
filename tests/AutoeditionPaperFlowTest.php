@@ -40,6 +40,15 @@ $check(str_contains($coverJS,"el('paper-sheet-size').textContent") &&
     'Le format demandé au navigateur doit rester synchronisé avec le livre.');
 require_once dirname(__DIR__).'/src/PrintSettings.php';
 $settings=PrintSettings::normalize([]);
+$check(PrintSettings::COREP_MAX_PAGES===680 &&
+       PrintSettings::COREP_MIN_FONT_PT===9.0 &&
+       PrintSettings::COREP_RECOMMENDED_FONT_PT===10.0,
+       'Les recommandations Corep 9–10 pt et la limite de 680 pages doivent rester explicites.');
+$check(str_contains($src,'680 pages recto-verso') &&
+       str_contains($src,'10 pt de préférence') &&
+       str_contains($src,'9 pt au minimum') &&
+       str_contains($src,'sans traits de coupe ni fonds perdus'),
+       'Les contraintes Corep validées par Rachel doivent être visibles dans le parcours.');
 $check($settings['trim_size']==='a5' && PrintSettings::trimDimensions($settings['trim_size'])===[148,210],
     'Sans réglage explicite, le générateur doit composer en A5 (148 × 210 mm).');
 $check(str_contains($src,'name="print_provider"') && str_contains($src,'data-bookelis-size="1"') &&
@@ -75,6 +84,19 @@ $check(str_contains($coverJs,"items['paper-size'].value = '148x210'") &&
 $preview=(string)file_get_contents(dirname(__DIR__).'/public/print-preview.php');
 $previewJS=(string)file_get_contents(dirname(__DIR__).'/public/assets/js/print-preview.js');
 $previewCSS=(string)file_get_contents(dirname(__DIR__).'/public/assets/css/print-preview.css');
+$check(str_contains($preview,'data-corep-max-pages="<?= PrintSettings::COREP_MAX_PAGES ?>"') &&
+       str_contains($preview,"if (\$settings['provider'] === 'corep_metz')") &&
+       str_contains($preview,'Limite : <?= PrintSettings::COREP_MAX_PAGES ?> pages A5 en recto-verso'),
+       'La limite Corep doit être transmise à la pagination et affichée au bon profil.');
+$check(str_contains($previewJS,"corepOverLimit=isCorep && pages>corepMaxPages;") &&
+       str_contains($previewJS,'critical=pages<1||pageEls.length!==pages||missingImages.length>0||corepOverLimit;') &&
+       str_contains($previewJS,"const isCorep=document.body.dataset.printProvider==='corep_metz';") &&
+       str_contains($previewJS,"reviewStatus.textContent=corepOverLimit"),
+       'Le dépassement de 680 pages doit empêcher l’export Corep mais pas l’export Bookelis.');
+$check(str_contains($previewJS,'Corps du texte recomposé en 10,5 pt') &&
+       str_contains($previewCSS,'body[data-print-provider="corep_metz"] .print-book code{font-size:9pt}') &&
+       str_contains($previewCSS,'@media print{.corep-preset-note{display:none!important}}'),
+       'Les règles Corep de taille de police doivent être visibles et non imprimées en tant que notice.');
 $check(str_contains($preview,"if (\$settings['provider'] === 'bookelis')") &&
        str_contains($preview,'id="bookelis-cover-handoff"') &&
        str_contains($preview,'id="bookelis-real-pages"') &&
