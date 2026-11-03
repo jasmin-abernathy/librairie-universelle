@@ -34,3 +34,9 @@
 #bookelis-copy-feedback{font-size:.91rem;margin:.8rem 0 0;color:#385445}
 @media(max-width:620px){.bookelis-transfer{padding:.8rem}.bookelis-transfer-data>div{grid-template-columns:1fr;gap:.2rem}}
 @media print{.bookelis-transfer{display:none!important}}
+
+/* Corep Metz : texte courant 10,5 pt, annexes au moins 9 pt. */
+body[data-print-provider="corep_metz"] .print-book pre,
+body[data-print-provider="corep_metz"] .print-book code{font-size:9pt}
+.corep-preset-note{max-width:920px;margin:1rem auto;padding:.85rem 1rem;border:1px solid #afcdb7;background:#f4f9f4;border-radius:.8rem;line-height:1.55}
+@media print{.corep-preset-note{display:none!important}}
