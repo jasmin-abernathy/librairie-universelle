@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 final class PrintSettings
 {
+    // Recommandations communiquées par Corep Metz pour l'A5 recto-verso, papier 80 g.
+    public const COREP_MAX_PAGES = 680; // 340 feuilles imprimées des deux côtés.
+    public const COREP_RECOMMENDED_FONT_PT = 10.0;
+    public const COREP_MIN_FONT_PT = 9.0;
+
     // Dimensions finies publiées par Bookelis (en mm). Corep garde A5 uniquement.
     private const BOOKELIS_SIZES = [
         'a5' => [148, 210],
