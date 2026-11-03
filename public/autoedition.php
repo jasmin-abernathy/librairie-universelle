@@ -277,7 +277,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                             <label class="paper-provider-card">
                                 <input type="radio" name="print_provider" value="corep_metz"<?= $selectedPrinter === 'corep_metz' ? ' checked' : '' ?>>
                                 <span class="paper-provider-title"><strong>Corep Metz</strong><small>Impression locale · A5 imposé</small></span>
-                                <span class="paper-provider-detail">Livre A5 broché, couverture recto et verso séparées ; prise en charge et devis avec l'agence de Metz.</span>
+                                <span class="paper-provider-detail">Livre A5 broché, couverture recto et verso séparées. Au maximum 680 pages recto-verso sur papier 80 g (340 feuilles), selon Corep Metz.</span>
                                 <span class="paper-provider-price" id="printer-corep-quote">Tarif indicatif selon la grille autorisée, si disponible.</span>
                             </label>
                             <label class="paper-provider-card">
@@ -383,7 +383,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     <div>
                         <h3 id="paper-covers-title">3. Préparer la première et la quatrième de couverture</h3>
                         <p>Un assistant dédié permet de composer les deux faces, de les prévisualiser et de les enregistrer en PDF séparés. Renseignez le titre, l’auteur, le résumé, l’ISBN et ajoutez éventuellement vos images. <strong>La tranche n’est pas dessinée au hasard :</strong> l’imprimeur la dimensionnera après réception de l’intérieur.</p>
-                        <p>Corep Metz accepte les faces séparées. L’intérieur est transmis en PDF simple dans l’ordre de lecture, sans imposition. Le BAT papier, s’il est demandé, est facturé séparément.</p>
+                        <p><strong>Consignes confirmées par Rachel (Corep Metz) :</strong> première et quatrième de couverture en deux fichiers séparés, <strong>sans traits de coupe ni fonds perdus</strong>. Si elles figurent déjà dans le PDF intérieur, Corep peut également les en extraire ; les fichiers séparés restent plus simples à vérifier. L’intérieur est transmis dans l’ordre de lecture, sans imposition. Le BAT papier, s’il est demandé, est facturé séparément.</p>
                     </div>
                     <div class="paper-step-actions"><a class="button-link secondary" href="/assistant-papier.php">Ouvrir l’assistant de couvertures <span aria-hidden="true">↗</span></a></div>
                 </div>
@@ -405,7 +405,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                         <span class="field-help">PDF individuel ou image. Ne créez pas de tranche : Corep s’occupe de son épaisseur et de l’imposition.</span>
                     </label>
                 </div>
-                <p class="field-help"><strong>Conseil Corep :</strong> papier intérieur 80 g certifié FSC/PEFC ; 90 g possible sur devis spécifique. L’imprimeur valide les fichiers, la tranche, les éventuels fonds perdus et les choix particuliers avant le BAT.</p>
+                <p class="field-help" data-printer-only="corep_metz"><strong>Lisibilité et pagination Corep :</strong> en A5, prévoir des caractères de <strong>10 pt de préférence</strong> (9 pt au minimum pour les éléments secondaires). Le générateur utilise 10,5 pt pour le corps du texte et au moins 9 pt pour les éléments annexes. <strong>Limite communiquée : 680 pages en recto-verso sur papier 80 g (340 feuilles)</strong> ; le nombre de pages réel est contrôlé après pagination. Au-delà ou avec un papier particulier, demandez conseil à l’agence. Les couvertures séparées ne nécessitent pas de fonds perdus ni de traits de coupe.</p>
 
                 <section class="print-cost-panel" id="print-cost-estimator" aria-labelledby="print-cost-title" data-grids="<?= e((string) json_encode($publicPrintGrids, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP)) ?>">
                     <h3 id="print-cost-title">5. Comparer les coûts d'impression</h3>
