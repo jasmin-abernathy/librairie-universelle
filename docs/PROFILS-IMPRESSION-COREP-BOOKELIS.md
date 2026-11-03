@@ -8,7 +8,7 @@ Conserver **un moteur commun de recomposition** DOCX/ODT → modèle du livre �
 
 Ne pas dupliquer `OfficePrintSource`, Paged.js, le sommaire et les pages blanches pour chaque imprimeur. Les différences concernent les formats, la reliure, les marges/contraintes, les fonds perdus, les couvertures, les gabarits, les validations et le mode de commande.
 
-Le **verrouillage A5 demandé par Corep** doit demeurer **dans le profil Corep**, et non dans `PrintSettings` pour tous les imprimeurs. À la date du relevé, le code existant impose A5 globalement dans `src/PrintSettings.php`, dans la page `public/autoedition.php` et dans `public/assistant-papier.php`. Il faut les refactoriser ensemble avant de proposer un choix Bookelis.
+Le **verrouillage A5 demandé par Corep** est appliqué au seul profil `corep_metz` par `PrintSettings` ; le profil `bookelis` dispose de ses propres formats. L'assistant de couvertures séparées demeure un outil A5/Corep. Les règles de pagination et de typographie propres à Corep ne doivent pas bloquer Bookelis.
 
 ## Comparaison des spécifications
 
@@ -16,14 +16,16 @@ Le **verrouillage A5 demandé par Corep** doit demeurer **dans le profil Corep**
 | --- | --- | --- |
 | Intérieur | A5 148 × 210 mm imposé pour notre parcours local ; dos carré collé et N&B 80 g dans la grille indicative existante | 7 formats listés : 130 × 180, 148 × 210, 156 × 234, 170 × 244, 170 × 170, 210 × 297 et 190 × 150 mm (paysage) ; N&B ou couleur |
 | Papier | 80 g (90 g sur devis spécifique) | Offset blanc 80 g, crème 80 g, bouffant blanc 80 g, couché demi-mat 115 g ou 150 g selon le format |
-| Couverture | Première et quatrième séparées selon les précédentes indications de Corep ; la tranche reste à définir par Corep | Un document de couverture **complet à plat** (4e + tranche + 1re), dont le gabarit dépend du nombre de pages, du format, du papier et de la couverture |
+| Couverture | Première et quatrième séparées, sans traits de coupe ni fonds perdus ; elles peuvent aussi être incluses dans l'intérieur, Corep peut les extraire ; la tranche est gérée par Corep | Un document de couverture **complet à plat** (4e + tranche + 1re), dont le gabarit dépend du nombre de pages, du format, du papier et de la couverture |
 | Couverture/support | Dos carré collé dans le devis pilote | Souple (carte couchée 230 g ou Rives Tradition 250 g) ou cartonnée ; finitions conditionnelles |
-| Fond perdu | Demander validation au magasin pour les situations particulières | Documentation : 8 mm **couverture** ; 5 mm **intérieur** seulement si des éléments touchent le bord |
+| Fond perdu | Aucun fond perdu ni trait de coupe demandé pour les deux faces de couverture séparées ; confirmer les éventuels cas particuliers de l'intérieur avec Corep | Documentation : 8 mm **couverture** ; 5 mm **intérieur** seulement si des éléments touchent le bord |
 | Technique | BAT et contraintes d'impression à confirmer avec Corep | Couverture 300 dpi, CMJN ; code-barres noir 100 % sur blanc ; recul du texte de tranche ≥ 2 mm ; taux d'encrage max 240 %, selon FAQ |
 | Début des chapitres | Page de droite / pages blanches nécessaires demandées par Corep | Recto verso et pages impaires à droite |
-| Taille du livre | À confirmer avec Corep | FAQ Bookelis : acceptation à partir de 18 pages, ajout automatique de pages vierges pour atteindre 40 pages lorsque le fichier comporte 18–39 pages |
+| Taille du livre | Limite annoncée par Rachel : 340 feuilles recto seul ou 680 pages recto-verso sur papier 80 g classique, en A5 ; le générateur contrôle les **680 pages** sur la pagination réelle et bloque le bouton d'export Corep au-delà. Pour autre papier : devis/validation | FAQ Bookelis : acceptation à partir de 18 pages, ajout automatique de pages vierges pour atteindre 40 pages lorsque le fichier comporte 18–39 pages |
 | Handoff | Contact/impression directement avec l'agence ; aucun transfert automatique | Redirection manuelle vers Bookelis, téléchargement des PDF et paramétrage de la fabrication par l'auteur ; aucune API/préremplissage officiel annoncé dans leur réponse du 2 novembre |
 | Prix | Grille Corep autorisée, datée, limitée aux configurations exactes | Calculateur Bookelis accessible en ligne ; **ne pas reprendre des tarifs dynamiques sans accord/source adaptée** |
+
+**Lisibilité du pilote Corep :** Rachel a écrit « 9 ou 10 mm » pour les caractères ; à la demande du responsable du projet, ces valeurs sont **interprétées comme 9–10 points typographiques**, sans les présenter comme une transcription littérale de l'e-mail. Le générateur compose le texte courant en **10,5 pt**, garde **9 pt minimum** pour les blocs secondaires et recommande **10 pt** pour le texte courant. La lisibilité réelle doit être vérifiée sur le PDF exporté à 100 %.
 
 Bookelis limite **certaines combinaisons** selon sa collection, le papier, le format, le genre et la couverture. La simple présence de 7 formats n'implique donc pas que chaque option soit combinable avec toutes les autres.
 
