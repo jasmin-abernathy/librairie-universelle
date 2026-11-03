@@ -44,11 +44,15 @@
         ].join('\n');
         copyBookelisText(summary,'Récapitulatif copié. Vérifiez ensuite chaque option dans le générateur Bookelis.');
     });
-    let rendered=false,critical=false;
+    const corepMaxPages=Number(document.body.dataset.corepMaxPages||680);
+    const isCorep=document.body.dataset.printProvider==='corep_metz';
+    let rendered=false,critical=false,corepOverLimit=false;
     const printReady=()=>{
         button.disabled=!rendered||critical||!reviewed.checked;
         if(bookelisHandoff)bookelisHandoff.hidden=button.disabled;
-        reviewStatus.textContent=critical
+        reviewStatus.textContent=corepOverLimit
+          ? 'Limite Corep Metz dépassée : plus de '+corepMaxPages+' pages recto-verso en A5, sur papier 80 g. Le bouton d’export est désactivé pour ce profil ; demandez un devis particulier ou répartissez le texte en plusieurs volumes.'
+          :critical
           ? 'Certaines images ou pages ne sont pas fiables. Corrigez le manuscrit avant de produire le PDF.'
           :!rendered?'Pagination en cours…'
           :!reviewed.checked?'Examinez les pages puis cochez la confirmation pour exporter.'
@@ -65,7 +69,8 @@
         const missingImages=[...target.querySelectorAll('img')].filter(i=>!i.complete||i.naturalWidth===0);
         // Les débordements graphiques complexes nécessitent toujours une lecture humaine.
         const emptyPageCount=pageEls.filter(p=>!p.textContent.trim()&&!p.querySelector('img,svg,canvas')).length;
-        critical=pages<1||pageEls.length!==pages||missingImages.length>0;
+        corepOverLimit=isCorep && pages>corepMaxPages;
+        critical=pages<1||pageEls.length!==pages||missingImages.length>0||corepOverLimit;
         rendered=true;
         // Ne conserver que le nombre de pages et le profil, jamais le manuscrit.
         if (!critical && pages > 0 && pages <= 5000) {
@@ -86,6 +91,12 @@
             ' feuille'+(sheets>1?'s':'')+' recto-verso';
         const points=[
             pages+' pages paginées par le générateur.',
+            ...(isCorep ? [
+                pages<=corepMaxPages
+                  ? 'Corep Metz : '+pages+' pages sur '+corepMaxPages+' maximum en recto-verso A5, sur papier 80 g (340 feuilles au maximum).'
+                  : 'Corep Metz : limite de '+corepMaxPages+' pages dépassée de '+(pages-corepMaxPages)+' page(s). Ce format de fabrication ne peut pas être validé en l’état.',
+                'Corps du texte recomposé en 10,5 pt (conseillé : au moins 10 pt), avec 9 pt minimum pour les éléments secondaires. Vérifiez la lisibilité réelle à 100 % dans le PDF.'
+            ] : []),
             missingImages.length?missingImages.length+' image(s) manquante(s) ou non décodée(s).':'Images du manuscrit chargées.',
             emptyPageCount+' page(s) sans contenu détecté : vérifiez les sauts de chapitre et le recto verso.',
             'Vérifiez le sommaire, les dernières lignes des pages et les ruptures de chapitre.',
