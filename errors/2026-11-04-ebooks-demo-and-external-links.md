@@ -26,3 +26,10 @@
 
 ## Prévention
 Contrôler le parcours public à vide, avec recherche et après réimport, distinguer les fixtures isolées des données réellement diffusées, et auditer les ancres externes/JS sur toutes les surfaces lors de chaque ajout.
+
+## CI après intégration
+
+- L'intégration a révélé un échec du contrôle « SQLite schema and corpus smoke test », alors que les tests métier, d'ouverture externe et d'absence de démo étaient passés.
+- Cause : deux assertions historiques de la CI exigeaient encore les offres payantes de démonstration et leurs DRM distincts.
+- Correction : remplacer ces assertions par un contrôle explicite d'absence de toute offre préchargée dans une base SQLite neuve. Le modèle de données et les règles sur les DRM sont conservés.
+- Prévention : lorsqu'un seed change de rôle, mettre à jour aussi les smoke tests CI qui en présupposent le contenu.
