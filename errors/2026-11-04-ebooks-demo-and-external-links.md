@@ -33,3 +33,9 @@ Contrôler le parcours public à vide, avec recherche et après réimport, disti
 - Cause : deux assertions historiques de la CI exigeaient encore les offres payantes de démonstration et leurs DRM distincts.
 - Correction : remplacer ces assertions par un contrôle explicite d'absence de toute offre préchargée dans une base SQLite neuve. Le modèle de données et les règles sur les DRM sont conservés.
 - Prévention : lorsqu'un seed change de rôle, mettre à jour aussi les smoke tests CI qui en présupposent le contenu.
+
+### Deuxième reliquat dans le smoke HTTP
+
+- Après correction du contrôle SQLite, le smoke HTTP attendait encore « Adobe DRM » et « DRM : CARE » dans la fiche de 1984. Ces mentions provenaient exclusivement des offres initiales supprimées.
+- Huit assertions redondantes ont été retirées. Un contrôle HTTP vérifie maintenant que la page ebooks, ouverte sans recherche, ne présente aucune carte d'offre.
+- Règle : une suppression de données de démonstration exige une vérification exhaustive des tests SQL, HTTP et affichages, pas seulement du seed.
