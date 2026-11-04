@@ -51,4 +51,4 @@ $escapeNav = static fn (string $value): string => htmlspecialchars($value, ENT_Q
         </details>
     </nav>
 </header>
-<script src="/assets/js/site-nav.js?v=20261104-1" defer></script>
+<script src="/assets/js/site-nav.js?v=20261104-2" defer></script>

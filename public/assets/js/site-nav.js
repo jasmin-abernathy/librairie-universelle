@@ -34,10 +34,12 @@
     document.addEventListener('keydown', event => {
         if (event.key !== 'Escape') return;
         const wasOpen = nav.classList.contains('is-open');
-        const hadOpenGroup = groups.some(group => group.open);
-        if (wasOpen || hadOpenGroup) {
+        const expandedGroup = groups.find(group => group.open);
+        if (wasOpen || expandedGroup) {
+            // Le focus revient au contrôle qui a réellement ouvert le menu.
+            const focusTarget = wasOpen ? toggle : expandedGroup.querySelector('summary');
             closeMenu();
-            toggle.focus();
+            focusTarget?.focus();
         }
     });
 

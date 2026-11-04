@@ -30,7 +30,7 @@ $check(str_contains($html, 'aria-expanded="false"'), 'État initial du menu non 
 $check(str_contains($html, 'aria-label="Ouvrir le menu"'), 'Nom accessible du burger absent');
 $check(str_contains($html, '<svg') && str_contains($html, 'aria-hidden="true"'), 'Icône de menu absente');
 $check(str_contains($html, 'data-active-group="true"'), 'Groupe auteur actif non indiqué');
-$check(str_contains($html, '/assets/js/site-nav.js?v=20261104-1'), 'JS de navigation absent');
+$check(str_contains($html, '/assets/js/site-nav.js?v=20261104-2'), 'JS de navigation absent');
 $check(str_contains($html, 'Livres, librairies et auteurs'), 'Sous-titre non actualisé');
 $check(!str_contains($html, 'nom de travail'), 'Ancien texte de marque conservé');
 
