@@ -45,10 +45,25 @@ foreach ($mustBeExternal as $path => $tokens) {
         }
     }
 }
-foreach (['public/assets/js/bookstores.js','public/assets/js/discovery.js'] as $path) {
-    $s=(string)file_get_contents($root.'/'.$path);
-    $check(str_contains($s,"target = '_blank'"),$path.' : ouverture externe dans le même onglet');
-    $check(str_contains($s,'noopener noreferrer'),$path.' : rel externe incomplet');
+// Inspecter chaque ancre JS qui reçoit une URL externe, et non la présence
+// de simples attributs target/rel ailleurs dans le fichier.
+$javascriptExternalAnchors = [
+    'public/assets/js/bookstores.js' => ['link'],
+    'public/assets/js/discovery.js' => ['link', 'download'],
+];
+foreach ($javascriptExternalAnchors as $path => $names) {
+    $s = (string)file_get_contents($root.'/'.$path);
+    foreach ($names as $name) {
+        $pattern = '~\\bconst\\s+'.preg_quote($name, '~').'\\s*=\\s*document\\.createElement\\([\\'"]a[\\'"]\\)\\s*;(.*?)(?:\\b(?:row|container)\\.appendChild\\('.preg_quote($name, '~').'\\)|\\b'.preg_quote($name, '~').'\\.textContent\\s*=)~s';
+        $check((bool)preg_match($pattern, $s, $matches), $path.' : ancre externe '. $name .' introuvable');
+        $block = $matches[1];
+        $check((bool)preg_match('~\\b'.preg_quote($name, '~').'\\.href\\s*=~', $block),
+            $path.' : URL externe absente pour '.$name);
+        $check((bool)preg_match('~\\b'.preg_quote($name, '~').'\\.target\\s*=\\s*[\\'"]_blank[\\'"]~', $block),
+            $path.' : '.$name.' doit ouvrir un nouvel onglet');
+        $check((bool)preg_match('~\\b'.preg_quote($name, '~').'\\.rel\\s*=\\s*[\\'"]noopener noreferrer[\\'"]~', $block),
+            $path.' : '.$name.' doit protéger le nouvel onglet');
+    }
 }
 $ebook=(string)file_get_contents($root.'/public/ebooks.php');
 $check(str_contains($ebook,"$"."offers = $"."query !== '' ? EbookStorefront::browse("),
