@@ -324,7 +324,7 @@
         const link = document.createElement('a');
         link.href = safeUrl;
         link.target = '_blank';
-        link.rel = 'noreferrer';
+        link.rel = 'noopener noreferrer';
         link.className = className;
         link.textContent = label;
         container.appendChild(link);

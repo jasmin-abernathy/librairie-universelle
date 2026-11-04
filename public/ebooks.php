@@ -20,7 +20,7 @@ if ($languages === []) {
     $languages = ['fr', 'en'];
 }
 
-$offers = EbookStorefront::browse($pdo, $config, $mode, $query);
+$offers = $query !== '' ? EbookStorefront::browse($pdo, $config, $mode, $query) : [];
 $allEbookSources = !empty($config['federated_search_enabled'])
     ? array_filter(
         DiscoveryRegistry::definitions(),
@@ -131,11 +131,12 @@ function modeLabel(string $mode): string
         </form>
     </section>
 
+    <?php if ($query !== ''): ?>
     <section class="ebook-results-section" id="ebook-results" aria-labelledby="ebook-results-title">
         <div class="ebook-results-header">
             <div>
-                <p class="section-kicker"><?= $query !== '' ? 'Résultats' : 'Déjà indexé' ?></p>
-                <h2 id="ebook-results-title"><?= $query !== '' ? '« ' . e($query) . ' »' : 'Parcourir les premières offres' ?></h2>
+                <p class="section-kicker"><?= $query !== '' ? 'Résultats' : 'Recherche' ?></p>
+                <h2 id="ebook-results-title"><?= $query !== '' ? '« ' . e($query) . ' »' : 'Rechercher un ebook' ?></h2>
                 <p class="ebook-results-context"><?= e(modeLabel($mode)) ?> · <?= e(implode(' + ', array_map('strtoupper', $languages))) ?></p>
             </div>
             <div class="ebook-result-summary" aria-label="Résumé des résultats">
@@ -211,7 +212,7 @@ function modeLabel(string $mode): string
 
             <?php if ($offers === []): ?>
                 <div class="ebook-compact-empty">
-                    <strong>Aucune offre déjà indexée<?= $query !== '' ? ' pour cette recherche' : ' dans ce filtre' ?>.</strong>
+                    <strong><?= $query === '' ? 'Saisissez un titre pour afficher les offres correspondantes.' : 'Aucune offre vérifiée ne correspond à votre recherche.' ?></strong>
                     <span>
                         <?php if ($discoveryDefinitions !== []): ?>
                             Les résultats des catalogues externes restent visibles juste au-dessus.
@@ -243,13 +244,14 @@ function modeLabel(string $mode): string
                             <?php if (!empty($offer['checked_at'])): ?>
                                 <p class="freshness-note">Vérifié le <?= e(substr((string) $offer['checked_at'], 0, 10)) ?><?= $offer['is_stale'] ? ' — revérification recommandée' : '' ?>.</p>
                             <?php endif; ?>
-                            <a class="button-link" href="<?= e($offer['url']) ?>" rel="noopener noreferrer">Voir cette offre ↗</a>
+                            <a class="button-link" href="<?= e($offer['url']) ?>" target="_blank" rel="noopener noreferrer">Voir cette offre ↗</a>
                         </article>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
         </div>
     </section>
+    <?php endif; ?>
 
     <section class="ebook-bottom-callout">
         <div>

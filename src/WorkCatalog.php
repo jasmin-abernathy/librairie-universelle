@@ -19,7 +19,7 @@ SQL);
         $workStatement->execute([':id' => $id]);
         $work = $workStatement->fetch();
 
-        if ($work === false) {
+        if ($work === false || $work['title'] === 'Livre indépendant de test') {
             return null;
         }
 
@@ -82,7 +82,7 @@ SQL);
         return [
             'work' => $work,
             'editions' => $editionStatement->fetchAll(),
-            'offers' => $offerStatement->fetchAll(),
+            'offers' => CatalogOfferVisibility::filter($offerStatement->fetchAll()),
         ];
     }
 }

@@ -58,9 +58,9 @@ header('Referrer-Policy: no-referrer');
         <ol class="check-list">
             <li>Vous décrivez votre livre, sa longueur et vos besoins. Pas besoin de transmettre votre manuscrit complet dans le premier message.</li>
             <li>Nous précisons ce qui sera vérifié ou corrigé et vous transmettons un devis avec un prix et un délai.</li>
-            <li>Vous restez libre d'accepter ou de refuser. Une fois le devis accepté, vous pourrez régler votre facture via <a href="https://www.lepotager.org/paiement/" rel="noopener noreferrer">le paiement sécurisé du Potager</a>.</li>
+            <li>Vous restez libre d'accepter ou de refuser. Une fois le devis accepté, vous pourrez régler votre facture via <a href="https://www.lepotager.org/paiement/" target="_blank" rel="noopener noreferrer">le paiement sécurisé du Potager</a>.</li>
         </ol>
-        <p>Les boutons ouvrent votre application de messagerie. Si elle n'est pas configurée, utilisez le <a href="https://www.lepotager.org/contact/" rel="noopener noreferrer">formulaire de contact du Potager</a> en précisant « Librairie universelle » et l'offre souhaitée.</p>
+        <p>Les boutons ouvrent votre application de messagerie. Si elle n'est pas configurée, utilisez le <a href="https://www.lepotager.org/contact/" target="_blank" rel="noopener noreferrer">formulaire de contact du Potager</a> en précisant « Librairie universelle » et l'offre souhaitée.</p>
         <p><strong>Important :</strong> aucune de ces prestations n'est obligatoire pour utiliser le générateur gratuit ou déposer un livre pour validation au catalogue.</p>
         <p><a class="text-link" href="/diffuser-mon-livre.php">Et après ? Apprendre à proposer mon livre aux librairies →</a></p>
     </section>

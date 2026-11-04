@@ -92,18 +92,15 @@ Une offre commerciale doit contenir au minimum :
 - la date de vérification ;
 - le DRM au niveau de l’offre lorsque le vendeur le documente.
 
-### Exemple utile : ebook français de `1984`
+### Offres réelles et informations de fraîcheur
 
-L’édition Gallimard Folio SF du 13 mai 2021 a l’EAN EPUB `9782072938245`.
+Les six offres préchargées utilisées au début du prototype (Wikisource, BnF, Lavoisier et E-librairie Leclerc, relevées le 5 septembre 2026) ne sont plus injectées dans une base neuve. Elles restent exclues du catalogue public des bases anciennes tant qu'elles n'ont pas été réactualisées par une source fiable.
 
-Le MVP contient deux offres observées le 5 septembre 2026 :
+L'accueil de la rubrique ebooks n'affiche plus de cartes de démonstration : les offres apparaissent après une recherche explicite. Les livres bibliographiques et les véritables partenaires restent dans les données métier.
 
-- Lavoisier : 9,49 €, EPUB, Adobe DRM ;
-- E-librairie Leclerc : 9,49 €, EPUB, CARE.
+Une même édition peut être fournie avec des DRM différents selon le vendeur. Le DRM appartient donc à chaque offre, pas à la définition universelle de l'édition. Les prix et disponibilités sont datés ; l'interface signale les éléments dépassant `OFFER_MAX_AGE_DAYS`.
 
-Cela démontre qu’un même EAN/ISBN ne suffit pas à déduire le DRM reçu par l’acheteur. Le DRM appartient donc à `offers`, pas à la définition universelle de `editions`.
-
-Les prix et disponibilités sont marqués comme observés à une date précise et l’interface signale les données dépassant `OFFER_MAX_AGE_DAYS`.
+Toutes les destinations externes s'ouvrent dans un nouvel onglet (`target="_blank"`, `rel="noopener noreferrer"`). Les liens internes conservent leur comportement normal.
 
 ## Interface de futurs partenaires commerciaux
 

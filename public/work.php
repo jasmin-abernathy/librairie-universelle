@@ -191,7 +191,7 @@ $localRows = localAvailabilityRows($localAvailability);
                                 <p class="availability-warning">Donnée vérifiée le <?= e(substr((string) $offer['checked_at'], 0, 10)) ?><?= $stale ? ' — à revérifier avant achat.' : '.' ?></p>
                             <?php endif; ?>
                         </div>
-                        <a class="primary-link" href="<?= e($offer['url']) ?>" rel="noopener noreferrer">Voir sur la source <span aria-hidden="true">↗</span></a>
+                        <a class="primary-link" href="<?= e($offer['url']) ?>" target="_blank" rel="noopener noreferrer">Voir sur la source <span aria-hidden="true">↗</span></a>
                     </article>
                 <?php endforeach; ?>
                 </div>
@@ -221,7 +221,7 @@ $localRows = localAvailabilityRows($localAvailability);
                             <p><?= e(trim((string) ($location['address'] ?? '') . ' ' . (string) ($location['postcode'] ?? '') . ' ' . (string) ($location['city'] ?? ''))) ?></p>
                             <?php if (!empty($location['checked_at'])): ?><p class="availability-warning">Stock confirmé le <?= e(substr((string) $location['checked_at'], 0, 10)) ?>.</p><?php endif; ?>
                         </div>
-                        <a class="primary-link" href="<?= e(rtrim((string) $config['moselle_base_url'], '/') . '/bookstores.php?isbn=' . rawurlencode((string) ($location['isbn13'] ?? ''))) ?>">Voir le retrait local</a>
+                        <a class="primary-link" href="<?= e(rtrim((string) $config['moselle_base_url'], '/') . '/bookstores.php?isbn=' . rawurlencode((string) ($location['isbn13'] ?? ''))) ?>" target="_blank" rel="noopener noreferrer">Voir le retrait local</a>
                     </article>
                 <?php endforeach; ?>
                 </div>
@@ -249,7 +249,7 @@ $localRows = localAvailabilityRows($localAvailability);
                         <?php if (!empty($edition['file_format'])): ?><p>Format : <?= e($edition['file_format']) ?><?php if (!empty($edition['drm_type'])): ?> · DRM de l’édition : <?= e($edition['drm_type']) ?><?php endif; ?></p><?php endif; ?>
                         <?php if (!empty($edition['source_urls'])): ?>
                             <?php $sourceUrl = explode(',', $edition['source_urls'])[0]; ?>
-                            <p><a class="text-link" href="<?= e($sourceUrl) ?>" rel="noopener noreferrer">Notice source ↗</a></p>
+                            <p><a class="text-link" href="<?= e($sourceUrl) ?>" target="_blank" rel="noopener noreferrer">Notice source ↗</a></p>
                         <?php endif; ?>
                     </article>
                 <?php endforeach; ?>

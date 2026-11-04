@@ -66,7 +66,7 @@ SQL;
 
         $statement = $pdo->prepare($sql);
         $statement->execute($params);
-        $rows = $statement->fetchAll();
+        $rows = CatalogOfferVisibility::filter($statement->fetchAll());
 
         foreach ($rows as &$row) {
             $row['is_free'] = in_array($row['offer_type'], ['free_download', 'read_online'], true) || (int) $row['price_cents'] === 0;

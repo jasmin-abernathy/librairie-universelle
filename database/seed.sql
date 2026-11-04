@@ -94,13 +94,7 @@ INSERT OR IGNORE INTO edition_contributors (edition_id, contributor_id, role) VA
 (11, 12, 'translator'),
 (12, 12, 'translator');
 
-INSERT OR IGNORE INTO offers (id, source_id, work_id, edition_id, offer_type, price_cents, currency, availability, url, file_format, drm_type, checked_at) VALUES
-(1, 1, 1, 1, 'read_online', 0, 'EUR', 'available', 'https://fr.wikisource.org/wiki/Les_Mis%C3%A9rables', 'HTML', 'none', '2026-09-05'),
-(2, 1, 1, 1, 'free_download', 0, 'EUR', 'available_via_source_exports', 'https://fr.wikisource.org/wiki/Les_Mis%C3%A9rables', 'PDF / autres exports selon la source', 'none', '2026-09-05'),
-(3, 3, 2, NULL, 'borrow', 0, 'EUR', 'check_on_source', 'https://pret.bnf.fr/resources?author_keyword=George+Orwell', 'EPUB', NULL, '2026-09-05'),
-(4, 3, 3, NULL, 'borrow', 0, 'EUR', 'check_on_source', 'https://pret.bnf.fr/resources?author_keyword=George+Orwell', 'EPUB', NULL, '2026-09-05'),
-(5, 4, 2, 11, 'ebook', 949, 'EUR', 'available_when_checked', 'https://e.lavoisier.fr/produit/634185/9782072938269/1984', 'EPUB', 'Adobe DRM', '2026-09-05'),
-(6, 5, 2, 11, 'ebook', 949, 'EUR', 'available_when_checked', 'https://e-librairie.leclerc/product/9782072938245_9782072938245_10060/1984', 'EPUB', 'CARE', '2026-09-05');
+-- Les offres affichées proviennent des sources réelles, pas de préchargements de démonstration.
 
 INSERT OR IGNORE INTO source_records (source_id, external_id, entity_type, local_id, source_url) VALUES
 (2, 'ark:/12148/cb11907966z', 'contributor', 1, 'https://data.bnf.fr/ark:/12148/cb11907966z'),

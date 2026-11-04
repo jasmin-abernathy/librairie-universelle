@@ -21,6 +21,7 @@ require_once __DIR__ . '/EpubPrintSource.php';
 require_once __DIR__ . '/SelfPublishingService.php';
 require_once __DIR__ . '/OfficialSiretLookup.php';
 require_once __DIR__ . '/AuthorBookListings.php';
+require_once __DIR__ . '/CatalogOfferVisibility.php';
 require_once __DIR__ . '/EbookStorefront.php';
 require_once __DIR__ . '/FeedbackService.php';
 require_once __DIR__ . '/AdminAuth.php';

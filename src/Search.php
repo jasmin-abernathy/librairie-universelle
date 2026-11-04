@@ -69,6 +69,7 @@ WHERE (
     OR lower(COALESCE(w.original_title, '')) LIKE :needle ESCAPE '\\'
     OR lower(COALESCE(c.name, '')) LIKE :needle ESCAPE '\\'
 )
+AND w.title <> 'Livre indépendant de test'
 {$languageSql}
 GROUP BY w.id
 ORDER BY

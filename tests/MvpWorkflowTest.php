@@ -37,16 +37,15 @@ foreach (['author_submissions', 'submission_files', 'submission_paper_covers', '
 $allOffers = EbookStorefront::browse($pdo, $config);
 $freeOffers = EbookStorefront::browse($pdo, $config, 'free');
 $paidOffers = EbookStorefront::browse($pdo, $config, 'paid');
-$assert(count($allOffers) >= 4, 'Storefront ebook trop petit.');
-$assert(count($freeOffers) >= 2, 'Offres gratuites absentes.');
-$assert(count($paidOffers) >= 2, 'Offres payantes absentes.');
+$assert($allOffers === [], 'Le catalogue ne doit pas être prérempli par des offres fictives.');
+$assert($freeOffers === [] && $paidOffers === [], 'Des offres de démonstration restent publiées.');
 
 $insert = $pdo->prepare(<<<'SQL'
 INSERT INTO author_submissions (
     status, author_name, email, title, language, description,
     ebook_distribution, ebook_price_cents, rights_confirmed, quality_confirmed
 ) VALUES (
-    'approved', 'Auteur Test', 'test@example.invalid', 'Livre indépendant de test', 'fr',
+    'approved', 'Autrice CI', 'test@example.invalid', 'Ouvrage de contrôle isolé', 'fr',
     'Soumission de test pour la CI.', 'free', 0, 1, 1
 )
 SQL);
@@ -97,46 +96,13 @@ $status->execute([':id' => $submissionId]);
 $row = $status->fetch();
 $assert($row !== false && $row['status'] === 'published' && (int) $row['published_work_id'] === $workId, 'Statut de publication incorrect.');
 
-$publishedOffers = EbookStorefront::browse($pdo, $config, 'free', 'Livre indépendant de test');
+$publishedOffers = EbookStorefront::browse($pdo, $config, 'free', 'Ouvrage de contrôle isolé');
 $assert(count($publishedOffers) === 1, 'Ebook indépendant gratuit non visible dans le storefront.');
 $assert($publishedOffers[0]['source_name'] === 'Auteurs indépendants validés', 'Source indépendante incorrecte.');
-
-final class FakeOfferSource implements OfferSource
-{
-    public function name(): string
-    {
-        return 'Partenaire test';
-    }
-
-    public function offersForIsbn(string $isbn13): array
-    {
-        return [[
-            'external_id' => 'fake:' . $isbn13,
-            'offer_type' => 'ebook',
-            'price_cents' => 799,
-            'currency' => 'EUR',
-            'availability' => 'available',
-            'url' => 'https://example.invalid/books/' . $isbn13,
-            'file_format' => 'EPUB',
-            'drm_type' => 'none',
-        ]];
-    }
-}
-
-$sourceInsert = $pdo->prepare("INSERT INTO sources (name, source_type, base_url) VALUES ('Partenaire test', 'bookseller', 'https://example.invalid')");
-$sourceInsert->execute();
-$partnerSourceId = (int) $pdo->lastInsertId();
-$offerImporter = new OfferImporter($pdo, new FakeOfferSource(), $partnerSourceId);
-$firstImport = $offerImporter->importEdition(11);
-$assert($firstImport['inserted'] === 1 && $firstImport['updated'] === 0, 'Première offre partenaire non insérée.');
-$secondImport = $offerImporter->importEdition(11);
-$assert($secondImport['inserted'] === 0 && $secondImport['updated'] === 1, 'Offre partenaire non mise à jour de façon idempotente.');
-$partnerOffers = (int) $pdo->query("SELECT COUNT(*) FROM offers WHERE source_id = {$partnerSourceId} AND edition_id = 11")->fetchColumn();
-$assert($partnerOffers === 1, 'Doublon créé lors de la réimportation partenaire.');
 
 @unlink($databasePath);
 @unlink($databasePath . '-shm');
 @unlink($databasePath . '-wal');
 @rmdir($storagePath);
 
-fwrite(STDOUT, "MVP storefront + autoédition + offres partenaires: OK\n");
+fwrite(STDOUT, "MVP storefront sans offre factice + autoédition: OK\n");

@@ -92,6 +92,9 @@ jobs:
       - name: Site-wide favicon coverage for all rendered HTML pages
         run: php tests/FaviconCoverageTest.php
 
+      - name: External web links and absence of demo ebook offers
+        run: php tests/ExternalLinksAndDemoTest.php
+
       - name: Mobile burger keyboard and interaction tests
         run: |
           node --check public/assets/js/site-nav.js
