@@ -54,14 +54,14 @@ $javascriptExternalAnchors = [
 foreach ($javascriptExternalAnchors as $path => $names) {
     $s = (string)file_get_contents($root.'/'.$path);
     foreach ($names as $name) {
-        $pattern = '~\\bconst\\s+'.preg_quote($name, '~').'\\s*=\\s*document\\.createElement\\([\\'"]a[\\'"]\\)\\s*;(.*?)(?:\\b(?:row|container)\\.appendChild\\('.preg_quote($name, '~').'\\)|\\b'.preg_quote($name, '~').'\\.textContent\\s*=)~s';
+        $pattern = '~\\bconst\\s+'.preg_quote($name, '~').'\\s*=\\s*document\\.createElement\\([\'"]a[\'"]\\)\\s*;(.*?)(?:\\b(?:row|container)\\.appendChild\\('.preg_quote($name, '~').'\\)|\\b'.preg_quote($name, '~').'\\.textContent\\s*=)~s';
         $check((bool)preg_match($pattern, $s, $matches), $path.' : ancre externe '. $name .' introuvable');
         $block = $matches[1];
         $check((bool)preg_match('~\\b'.preg_quote($name, '~').'\\.href\\s*=~', $block),
             $path.' : URL externe absente pour '.$name);
-        $check((bool)preg_match('~\\b'.preg_quote($name, '~').'\\.target\\s*=\\s*[\\'"]_blank[\\'"]~', $block),
+        $check((bool)preg_match('~\\b'.preg_quote($name, '~').'\\.target\\s*=\\s*[\'"]_blank[\'"]~', $block),
             $path.' : '.$name.' doit ouvrir un nouvel onglet');
-        $check((bool)preg_match('~\\b'.preg_quote($name, '~').'\\.rel\\s*=\\s*[\\'"]noopener noreferrer[\\'"]~', $block),
+        $check((bool)preg_match('~\\b'.preg_quote($name, '~').'\\.rel\\s*=\\s*[\'"]noopener noreferrer[\'"]~', $block),
             $path.' : '.$name.' doit protéger le nouvel onglet');
     }
 }
