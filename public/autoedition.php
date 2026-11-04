@@ -81,7 +81,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
         <h1>Publier sans être noyé dans une décharge d’autoédition.</h1>
         <p class="lede">Le dépôt ne déclenche jamais une publication automatique. Les fichiers et métadonnées sont contrôlés, puis une personne valide ou demande des corrections avant l’entrée dans le catalogue.</p>
         <?php if ((string) $config['atelier_epub_url'] !== ''): ?>
-            <p><a class="button-link secondary" href="<?= e((string) $config['atelier_epub_url']) ?>" rel="noopener noreferrer">Créer ou corriger mon EPUB dans Atelier EPUB ↗</a></p>
+            <p><a class="button-link secondary" href="<?= e((string) $config['atelier_epub_url']) ?>" target="_blank" rel="noopener noreferrer">Créer ou corriger mon EPUB dans Atelier EPUB ↗</a></p>
         <?php endif; ?>
         <?php if ($fromAtelier): ?>
             <div class="resource-card important-resource">
