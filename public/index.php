@@ -259,7 +259,7 @@ function rightsLabel(string $status): string
             <h2 id="modes-title">Ce que cette fiche d’œuvre réunit progressivement</h2>
             <div class="mode-grid">
                 <article><span aria-hidden="true">⚡</span><h3>Ebooks</h3><p>Gratuits et payants dans le même storefront, avec format, DRM, prix, fraîcheur et source.</p></article>
-                <article><span aria-hidden="true">✍️</span><h3>Autoédition</h3><p>Des auteurs indépendants, mais après contrôle des fichiers et validation humaine — jamais par publication automatique de masse.</p></article>
+                <article><span aria-hidden="true">✍️</span><h3><a href="/livres-auteurs.php">Livres d’auteurs indépendants</a></h3><p>Fiches proposées par les auteurs, vérifiées avant publication. Les lecteurs contactent directement le vendeur ; ni manuscrit ni paiement collecté.</p></article>
                 <article><span aria-hidden="true">🏪</span><h3>Librairies</h3><p>Neuf, occasion, retrait local et disponibilité lorsque la donnée est réellement accessible.</p></article>
                 <article><span aria-hidden="true">🟢</span><h3>Domaine public</h3><p>Lire ou télécharger gratuitement depuis une source légitime et identifiable.</p></article>
             </div>
@@ -269,11 +269,11 @@ function rightsLabel(string $status): string
             <div>
                 <div class="section-kicker">Déjà testable</div>
                 <h2 id="scope-title">Le storefront numérique et le parcours auteur sont codés.</h2>
-                <p>Les Misérables, Orwell et les premières offres commerciales servent de cas réels. Les dépôts d’autoédition restent fermés par défaut jusqu’à l’activation de l’alpha.</p>
+                <p>Les auteurs peuvent préparer leurs fichiers et <a href="/proposer-livre.php">proposer une fiche de leur livre pour validation</a>, sans transmettre de manuscrit. Après publication, les lecteurs contactent directement le vendeur.</p>
             </div>
             <div class="cta-row">
                 <a class="button-link secondary" href="/ebooks.php">Voir les ebooks</a>
-                <a class="text-link" href="/autoedition.php">Voir l’autoédition</a>
+                <a class="text-link" href="/autoedition.php">Préparer mon livre</a><a class="text-link" href="/livres-auteurs.php">Livres d’auteurs</a>
             </div>
         </section>
 </main>

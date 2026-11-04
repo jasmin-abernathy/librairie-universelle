@@ -14,6 +14,7 @@ $submissionCounts = [];
 foreach ($pdo->query('SELECT status, COUNT(*) AS count FROM author_submissions GROUP BY status')->fetchAll() as $row) {
     $submissionCounts[$row['status']] = (int) $row['count'];
 }
+$listingCounts = (new AuthorBookListings($pdo))->counts();
 $feedbackCount = (int) $pdo->query("SELECT COUNT(*) FROM feedback WHERE status = 'new'")->fetchColumn();
 $worksCount = (int) $pdo->query('SELECT COUNT(*) FROM works')->fetchColumn();
 $editionsCount = (int) $pdo->query('SELECT COUNT(*) FROM editions')->fetchColumn();
@@ -32,7 +33,7 @@ $latestFeedback = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC, 
 <body>
 <header class="site-header">
     <a class="brand" href="/admin/">🛠️ <span>Administration <small>alpha</small></span></a>
-    <nav class="site-nav"><a href="/admin/submissions.php">Soumissions</a><a href="/" target="_blank" rel="noopener">Voir le site ↗</a></nav>
+    <nav class="site-nav"><a href="/admin/livres-auteurs.php">Fiches d’auteurs</a><a href="/admin/submissions.php">Archives de dépôts</a><a href="/" target="_blank" rel="noopener noreferrer">Voir le site ↗</a></nav>
 </header>
 <main>
     <section class="page-hero compact">
@@ -41,13 +42,13 @@ $latestFeedback = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC, 
         <div class="admin-stats">
             <article><strong><?= $worksCount ?></strong><span>œuvres</span></article>
             <article><strong><?= $editionsCount ?></strong><span>éditions</span></article>
-            <article><strong><?= (int) ($submissionCounts['pending'] ?? 0) ?></strong><span>soumissions à lire</span></article>
+            <article><strong><?= (int)$listingCounts['pending'] ?></strong><span>fiches d’auteurs à vérifier</span></article>
             <article><strong><?= $feedbackCount ?></strong><span>retours nouveaux</span></article>
         </div>
     </section>
 
     <section class="content-section">
-        <div class="section-heading"><h2>Autoédition</h2><a class="text-link" href="/admin/submissions.php">Tout voir →</a></div>
+        <div class="section-heading"><h2>Archives des anciens dépôts</h2><a class="text-link" href="/admin/submissions.php">Consulter →</a></div>
         <div class="proof-grid">
             <?php foreach (['pending' => 'À lire', 'needs_changes' => 'Corrections demandées', 'approved' => 'Validées', 'published' => 'Publiées', 'rejected' => 'Refusées'] as $status => $label): ?>
                 <article><strong><?= (int) ($submissionCounts[$status] ?? 0) ?></strong><span><?= e($label) ?></span></article>
@@ -55,6 +56,16 @@ $latestFeedback = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC, 
         </div>
     </section>
 
+    <section class="content-section">
+        <div class="section-heading"><h2>Fiches d’auteurs : vérification avant publication</h2><a class="text-link" href="/admin/livres-auteurs.php">Examiner →</a></div>
+        <div class="proof-grid">
+            <article><strong><?= (int)$listingCounts['pending'] ?></strong><span>En attente</span></article>
+            <article><strong><?= (int)$listingCounts['published'] ?></strong><span>Publiées</span></article>
+            <article><strong><?= (int)$listingCounts['rejected'] ?></strong><span>Refusées</span></article>
+            <article><strong><?= (int)$listingCounts['hidden'] ?></strong><span>Masquées</span></article>
+        </div>
+        <p>Les auteurs ne proposent que des fiches descriptives, sans manuscrit ni paiement.</p>
+    </section>
     <section class="content-section">
         <h2>Dernières synchronisations</h2>
         <?php if ($latestSyncs === []): ?><p>Aucune synchronisation journalisée pour l’instant.</p><?php else: ?>

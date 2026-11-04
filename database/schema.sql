@@ -272,4 +272,31 @@ CREATE INDEX IF NOT EXISTS idx_bookstores_directory_status
     ON bookstores(directory_status, city, name);
 CREATE INDEX IF NOT EXISTS idx_bookstores_postal_code
     ON bookstores(postal_code);
-
+ 
+-- Fiches proposées par les auteurs : uniquement métadonnées, aucun manuscrit.
+-- Circuit indépendant des anciennes soumissions de fichiers (fermées au public).
+CREATE TABLE IF NOT EXISTS author_book_listings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','published','rejected','hidden')),
+    title TEXT NOT NULL,
+    subtitle TEXT,
+    author_name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    book_format TEXT NOT NULL CHECK(book_format IN ('paper','ebook','both')),
+    isbn TEXT,
+    price_cents INTEGER NOT NULL CHECK(price_cents BETWEEN 0 AND 99999999),
+    seller_type TEXT NOT NULL CHECK(seller_type IN ('professional','individual')),
+    private_email TEXT NOT NULL,
+    public_email TEXT,
+    seller_url TEXT,
+    rights_confirmed INTEGER NOT NULL CHECK(rights_confirmed=1),
+    public_contact_confirmed INTEGER NOT NULL CHECK(public_contact_confirmed=1),
+    seller_responsibility_confirmed INTEGER NOT NULL CHECK(seller_responsibility_confirmed=1),
+    review_note TEXT,
+    submitted_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    reviewed_at TEXT,
+    CHECK(public_email IS NOT NULL OR seller_url IS NOT NULL)
+);
+CREATE INDEX IF NOT EXISTS idx_author_book_listings_status ON author_book_listings(status, submitted_at);
+CREATE INDEX IF NOT EXISTS idx_author_book_listings_title ON author_book_listings(title COLLATE NOCASE);
+CREATE INDEX IF NOT EXISTS idx_author_book_listings_private_email ON author_book_listings(private_email, submitted_at);

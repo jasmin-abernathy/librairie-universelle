@@ -7,6 +7,7 @@ $items = [
     'ebooks' => ['href' => '/ebooks.php', 'label' => 'Ebooks'],
     'autoedition' => ['href' => '/autoedition.php', 'label' => 'Autoédition'],
     'diffusion' => ['href' => '/diffuser-mon-livre.php', 'label' => 'Vendre mon livre'],
+    'authorbooks' => ['href' => '/livres-auteurs.php', 'label' => 'Livres d’auteurs'],
     'projet' => ['href' => '/projet.php', 'label' => 'Le projet'],
     'sans-ia' => ['href' => '/sans-ia.php', 'label' => 'Sans IA'],
 ];

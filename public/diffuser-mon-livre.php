@@ -25,7 +25,7 @@ header('Referrer-Policy: no-referrer');
         <p class="lede">Nous vous guidons pour présenter votre livre aux librairies, en commençant près de chez vous. Vous gardez la main sur les contacts, les conditions commerciales et les exemplaires.</p>
         <div class="cta-row">
             <a class="button-link" href="#fiche-libraire">Préparer ma présentation</a>
-            <a class="button-link secondary" href="/autoedition.php?partie=project">Déposer mon livre au catalogue</a>
+            <a class="button-link secondary" href="/proposer-livre.php">Proposer la fiche de mon livre</a>
         </div>
     </section>
 
@@ -34,9 +34,9 @@ header('Referrer-Policy: no-referrer');
         <div class="sales-step-grid">
             <article class="sales-step">
                 <span class="sales-step-number" aria-hidden="true">1</span>
-                <h3>Déposer mon livre</h3>
-                <p>Renseignez le titre, l'auteur, le résumé, le prix et les fichiers disponibles dans le <a href="/autoedition.php?partie=project">parcours d'autoédition</a>. Vous pouvez utiliser les outils de préparation gratuitement.</p>
-                <p class="sales-step-note"><strong>Catalogue :</strong> après acceptation de votre dépôt par une personne et publication par l'équipe, sa fiche est créée automatiquement dans le catalogue de Librairie universelle. Le dépôt seul ne la rend pas publique.</p>
+                <h3>Proposer la fiche de mon livre</h3>
+                <p>Décrivez votre livre, son format, son prix et comment contacter directement son vendeur dans le <a href="/proposer-livre.php">formulaire de référencement</a>. Aucun manuscrit ni fichier EPUB/PDF n'est transmis à la Librairie.</p>
+                <p class="sales-step-note"><strong>Catalogue :</strong> la fiche ne devient publique qu’après vérification et approbation humaine. Le lecteur contacte directement l’auteur ou le vendeur, sans commande ni paiement sur la Librairie.</p>
             </article>
             <article class="sales-step">
                 <span class="sales-step-number" aria-hidden="true">2</span>
@@ -56,7 +56,7 @@ header('Referrer-Policy: no-referrer');
                 <p>Voyez directement avec chaque librairie si elle préfère commander des exemplaires ou envisager un dépôt-vente, ainsi que la remise, les invendus, les retours et le règlement. Notez ses réponses et ne relancez pas une librairie qui refuse.</p>
             </article>
         </div>
-        <p class="sales-truth"><strong>À ce stade, une fiche au catalogue ne signifie pas que le livre est achetable en ligne.</strong> La prise de commande, le paiement, l'approvisionnement et la réservation locale ne sont pas encore automatisés pour les livres déposés. Vous convenez des ventes directement avec les librairies jusqu'à l'ouverture de ces fonctions.</p>
+        <p class="sales-truth"><strong>Une fiche publiée n’est pas une commande.</strong> La Librairie référence le livre après vérification, mais ne gère ni paiement, ni livraison, ni réservation. Les lecteurs s’adressent directement à l’auteur ou au vendeur ; les librairies négocient séparément leurs conditions avec lui.</p>
     </section>
 
     <section id="fiche-libraire" class="sales-tool" aria-labelledby="fiche-libraire-title">
@@ -142,7 +142,7 @@ header('Referrer-Policy: no-referrer');
         </div>
         <div class="cta-row">
             <a class="button-link" href="/#librairies">Repérer des librairies proches</a>
-            <a class="text-link" href="/autoedition.php?partie=project">Revenir à mon dépôt</a>
+            <a class="text-link" href="/proposer-livre.php">Proposer mon livre au catalogue</a>
         </div>
     </section>
 </main>

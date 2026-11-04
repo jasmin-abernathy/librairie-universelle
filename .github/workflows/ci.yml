@@ -83,6 +83,9 @@ jobs:
       - name: Author local sales journey and truthful catalog promises
         run: php tests/DiffusionAuteurFlowTest.php
 
+      - name: Author listings require manual approval and no manuscript uploads
+        run: php tests/AuthorListingsTest.php
+
       - name: Bookshop outreach text generator
         run: node tests/DiffusionAuteurTest.cjs
 

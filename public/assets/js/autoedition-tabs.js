@@ -5,7 +5,7 @@
     const form = document.getElementById('autoedition-form');
     const activeInput = document.getElementById('active-panel');
     if (!tabs.length || !panels.length || !form) return;
-    const panelNames = ['paper', 'project', 'digital', 'submit'];
+    const panelNames = ['paper', 'project', 'digital'];
     const display = (name, focus = false) => {
         if (!panelNames.includes(name)) name = 'paper';
         tabs.forEach(tab => {
@@ -19,8 +19,7 @@
         const contexts = {
             paper: 'Livre papier · Composez votre manuscrit et préparez son impression.',
             project: 'Mon livre · Renseignez les informations sur votre ouvrage.',
-            digital: 'Version numérique · Préparez votre EPUB, si vous en souhaitez un.',
-            submit: 'Déposer mon projet · Vérifiez les autorisations avant l’envoi.'
+            digital: 'Version numérique · Préparez votre EPUB, puis téléchargez-le depuis Atelier EPUB.'
         };
         const context = document.getElementById('autoedition-tab-context');
         if (context) context.textContent = contexts[name];

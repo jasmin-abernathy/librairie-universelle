@@ -10,18 +10,10 @@ $successId = null;
 $sourceTool = isset($_GET['source']) ? trim((string) $_GET['source']) : '';
 $fromAtelier = $sourceTool === 'atelier-epub';
 
+// L'ancien formulaire n'accepte plus de manuscrits, même si la variable legacy est active.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (UploadLimits::postExceeded((int) ($_SERVER['CONTENT_LENGTH'] ?? 0))) {
-        $errors[] = 'Fichiers trop volumineux pour cet envoi. Réduisez la taille totale ou transmettez les fichiers séparément.';
-    } elseif (!Csrf::validate($_POST['csrf_token'] ?? null)) {
-        $errors[] = 'La session du formulaire a expiré. Rechargez la page puis réessayez.';
-    } else {
-        try {
-            $successId = $service->submit($_POST, $_FILES);
-        } catch (Throwable $error) {
-            $errors[] = $error->getMessage();
-        }
-    }
+    http_response_code(410);
+    $errors[] = 'La Librairie ne reçoit plus de manuscrits. Pour référencer votre livre, proposez uniquement une fiche descriptive.';
 }
 
 function e(?string $value): string
@@ -62,7 +54,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <meta name="description" content="Déposer un livre indépendant pour validation humaine : EPUB, couverture, ISBN et version papier, sans publication automatique.">
+    <meta name="description" content="Créer son EPUB, préparer ses PDF d’impression et faire découvrir son livre grâce à une fiche vérifiée avant publication. Aucun dépôt de manuscrit.">
     <title>Autoédition — <?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
     <link rel="stylesheet" href="/assets/css/printing-estimate.css?v=20261013-1">
@@ -78,8 +70,9 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 <main id="main">
     <section class="page-hero compact">
         <p class="eyebrow">Auteurs et autrices indépendants</p>
-        <h1>Publier sans être noyé dans une décharge d’autoédition.</h1>
-        <p class="lede">Le dépôt ne déclenche jamais une publication automatique. Les fichiers et métadonnées sont contrôlés, puis une personne valide ou demande des corrections avant l’entrée dans le catalogue.</p>
+        <h1>Préparer mon livre et le faire découvrir.</h1>
+        <p class="lede">Préparez votre EPUB ou vos PDF pour l’impression, puis téléchargez-les librement. Pour être référencé, <strong>proposez uniquement une fiche descriptive</strong> : aucun manuscrit n’est transmis à la Librairie, et tu vérifies chaque fiche avant publication.</p>
+        <p><a class="button-link" href="/proposer-livre.php">Proposer la fiche de mon livre →</a></p>
         <?php if ((string) $config['atelier_epub_url'] !== ''): ?>
             <p><a class="button-link secondary" href="<?= e((string) $config['atelier_epub_url']) ?>" target="_blank" rel="noopener noreferrer">Créer ou corriger mon EPUB dans Atelier EPUB ↗</a></p>
         <?php endif; ?>
@@ -87,14 +80,12 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
             <div class="resource-card important-resource">
                 <div>
                     <strong>Vous arrivez d’Atelier EPUB.</strong>
-                    <p>Un EPUB techniquement valide n’est pas une promesse de publication. Chaque dossier est relu par une personne. La librairie assume une sélection éditoriale et peut refuser notamment les dépôts industriels ou automatisés, les variantes répétitives sans valeur, les contenus trompeurs ou illégaux, les ouvrages manifestement bâclés et, plus largement, ce qui ne présente pas de véritable travail éditorial.</p>
+                    <p>Vous pouvez télécharger votre EPUB depuis Atelier EPUB. Pour figurer au catalogue, <a href="/proposer-livre.php">proposez sa fiche descriptive</a>, sans transmettre votre manuscrit ni votre EPUB.</p>
                     <p><strong>Cette décision n’est pas déléguée à une IA.</strong></p>
                 </div>
             </div>
         <?php endif; ?>
-        <?php if (!$config['self_publishing_enabled']): ?>
-            <p class="note"><strong>Faire découvrir votre livre aux librairies :</strong> un <a href="/diffuser-mon-livre.php">parcours guidé</a> vous aide à préparer une fiche de présentation et un message personnalisé pour proposer votre manuscrit aux librairies de votre choix. <strong>Vous gardez la main sur les envois :</strong> aucune transmission automatique aux librairies ou aux imprimeurs. Vous pouvez télécharger vos fichiers (EPUB dans Atelier EPUB, PDF intérieur et couvertures, dossier ZIP d’impression), puis les transmettre vous-même.</p>
-        <?php endif; ?>
+        <p class="note"><strong>Deux parcours complémentaires :</strong> <a href="/proposer-livre.php">proposer la fiche de votre livre pour une vérification humaine</a> et <a href="/diffuser-mon-livre.php">préparer vos contacts avec des librairies</a>. Les EPUB, PDF et dossiers ZIP restent téléchargeables. Aucun fichier n’est transmis automatiquement à une librairie ou à un imprimeur.</p>
     </section>
 
     <?php if ($successId !== null): ?>
@@ -108,7 +99,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <?php else: ?>
         <?php if ($errors !== []): ?>
             <div class="error-box" role="alert">
-                <strong>Le dépôt n’a pas pu être enregistré.</strong>
+                <strong>Le dépôt de manuscrit est désactivé.</strong>
                 <ul><?php foreach ($errors as $error): ?><li><?= e($error) ?></li><?php endforeach; ?></ul>
             </div>
         <?php endif; ?>
@@ -117,7 +108,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
             <div class="autoedition-entry-main">
                 <p class="autoedition-entry-eyebrow">Votre livre, à votre rythme</p>
                 <h2 id="autoedition-entry-heading">Par où souhaitez-vous commencer ?</h2>
-                <p>Un livre papier, un EPUB ou les deux : choisissez votre parcours. Vous pourrez changer d’onglet à tout moment.</p>
+                <p>Un livre papier, un EPUB ou les deux : préparez vos fichiers et téléchargez-les. Les champs de préparation ne soumettent aucun manuscrit à la Librairie. Pour figurer au catalogue, <a href="/proposer-livre.php">proposez une fiche descriptive</a>.</p>
                 <p><a class="text-link" href="/diffuser-mon-livre.php">Et après ? Découvrir le parcours pour faire connaître et vendre mon livre →</a></p>
                 <p><a class="text-link" href="/prestations-auteurs.php">Besoin de faire vérifier vos PDF (79 € HT) ou de corriger votre texte (dès 179 € HT) ? Découvrir nos prestations facultatives →</a></p>
             </div>
@@ -139,10 +130,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 <span class="autoedition-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2"/><path d="M10 18h4"/></svg></span>
                 <span class="autoedition-tab-copy"><strong>Numérique</strong><small>Version EPUB</small></span>
             </button>
-            <button type="button" class="autoedition-tab" id="tab-submit" role="tab" aria-controls="panel-submit" aria-selected="false" tabindex="-1" data-panel="submit">
-                <span class="autoedition-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l3 3v15H5V6l3-3zm0 10 3 3 5-5"/></svg></span>
-                <span class="autoedition-tab-copy"><strong>Déposer</strong><small>Vérifier et envoyer</small></span>
-            </button>
+
         </nav>
         <p class="autoedition-tab-context" id="autoedition-tab-context" role="status" aria-live="polite">Livre papier · Composez votre manuscrit et préparez son impression.</p>
         <form class="submission-form" method="post" enctype="multipart/form-data" id="autoedition-form">
@@ -485,21 +473,6 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 </div>
             </fieldset>
 
-            </section>
-            <section class="autoedition-panel" id="panel-submit" role="tabpanel" aria-labelledby="tab-submit" data-panel-name="submit">
-            <fieldset>
-                <legend>Vérifications et envoi</legend>
-                <label class="check-row"><input type="checkbox" name="rights_confirmed" value="1" required<?= !empty($_POST['rights_confirmed']) ? ' checked' : '' ?>> <span>Je confirme disposer des droits nécessaires sur le texte, la couverture et les fichiers transmis, ou des autorisations correspondantes.</span></label>
-                <label class="check-row"><input type="checkbox" name="quality_confirmed" value="1" required<?= !empty($_POST['quality_confirmed']) ? ' checked' : '' ?>> <span>Je confirme qu’il s’agit d’un véritable projet éditorial et non d’un dépôt industriel ou automatisé, d’une série de variantes répétitives sans valeur, d’un contenu trompeur ou manifestement bâclé destiné à remplir artificiellement le catalogue.</span></label>
-                <p class="field-help"><strong>La publication reste une décision humaine.</strong> Un fichier techniquement valide peut être refusé pour des raisons éditoriales. Aucun score d’IA ne décide de l’acceptation.</p>
-                <p class="field-help"><strong>Un dernier regard avant publication ?</strong> <a href="/prestations-auteurs.php">Voir la vérification humaine des fichiers et la correction accompagnée, sur devis</a>. Le générateur reste gratuit.</p>
-                <p class="field-help"><strong>Et pour vendre ?</strong> Une fois le dépôt accepté et publié, le livre entre dans le catalogue. Vous pouvez dès maintenant <a href="/diffuser-mon-livre.php">préparer une fiche pour les librairies et un message de présentation local</a>. La vente et la réservation en ligne ne sont pas encore automatisées.</p>
-            </fieldset>
-
-            <div class="submit-row">
-                <button type="submit"<?= !$config['self_publishing_enabled'] ? ' disabled' : '' ?>>Envoyer pour validation humaine</button>
-                <span>Aucune publication automatique.</span>
-            </div>
             </section>
         </form>
         <section class="paper-draft-toolbar" aria-labelledby="draft-heading">
