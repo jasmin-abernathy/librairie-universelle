@@ -14,6 +14,7 @@ foreach ([
     'la proximité le permet',
     'Metz et en Moselle',
     '/autoedition.php',
+    '/proposer-livre.php',
     '/dossier-impression.php',
     '/diffuser-mon-livre.php',
     '/prestations-auteurs.php',
@@ -23,7 +24,7 @@ foreach ([
     '179 € HT',
     'stocks en direct',
     'sans prétendre connaître leurs stocks en direct',
-    'Les dépôts publics sont encore fermés',
+    'Les manuscrits ne sont jamais envoyés',
     'une fiche est créée',
     'vente intégrée',
 ] as $needle) {
@@ -31,7 +32,7 @@ foreach ([
     $check(str_contains($page, $needle), 'Mention attendue absente : ' . $needle);
 }
 $check(str_contains($page, 'n\'annonçons ni stock en temps réel, ni vente intégrée, ni partenariat contractuel'), 'Pas de limites explicites des promesses commerciales.');
-$check(str_contains($page, 'ne signifie pas encore pouvoir vendre directement'), 'Une fiche ne doit pas promettre la vente.');
+$check(str_contains($page, 'ne signifie pas vendre directement sur notre plateforme'), 'Une fiche ne doit pas promettre de paiement intégré.');
 $check(str_contains($page, "nom de travail"), 'Nom provisoire masqué.');
 $check(str_contains($css, '@media(max-width:640px)'), 'Mise en page mobile absente.');
 $check(!str_contains($page, '<script src="https://'), 'Ressource externe indésirable.');

@@ -83,7 +83,7 @@ function e_project(?string $value): string
         <div class="feature-grid">
             <article><span aria-hidden="true">1</span><h3>Lecteurs et lectrices</h3><p>Chercher une œuvre, découvrir ses éditions, accéder à des ebooks gratuits ou à des offres commerciales identifiées, et repérer les librairies proches.</p></article>
             <article><span aria-hidden="true">2</span><h3>Librairies</h3><p>À terme, rendre leurs stocks visibles sans double saisie, puis recevoir des demandes de réservation ou de commande avec leur accord et dans le respect de leurs outils.</p></article>
-            <article><span aria-hidden="true">3</span><h3>Auteurs indépendants</h3><p>Préparer leur livre avec des outils gratuits, proposer un dépôt au catalogue, puis obtenir une fiche et un message pour approcher les librairies locales.</p></article>
+            <article><span aria-hidden="true">3</span><h3>Auteurs indépendants</h3><p>Préparer leur livre avec des outils gratuits, proposer uniquement une fiche descriptive au catalogue après vérification humaine, puis préparer un message pour approcher les librairies locales.</p></article>
             <article><span aria-hidden="true">4</span><h3>Imprimeurs de proximité</h3><p>Recevoir des dossiers mieux préparés et, à terme, participer à un circuit d'impression locale adapté aux besoins des auteurs et des lecteurs.</p></article>
         </div>
     </section>
@@ -95,10 +95,10 @@ function e_project(?string $value): string
         <div class="project-journey">
             <article><span>01</span><h3>Créer</h3><p>Composer l'intérieur du livre, préparer les couvertures, générer les PDF et les réunir dans un dossier destiné à l'imprimeur.</p><a href="/autoedition.php?partie=paper">Utiliser les outils gratuits →</a></article>
             <article><span>02</span><h3>Faire imprimer</h3><p>Demander un devis à un imprimeur. Le prototype oriente notamment vers le formulaire officiel de Corep Metz, sans lui envoyer automatiquement de fichiers.</p><a href="/dossier-impression.php">Préparer le dossier →</a></article>
-            <article><span>03</span><h3>Faire référencer</h3><p>Déposer une candidature au catalogue : après acceptation humaine et publication par l'équipe, une fiche est créée. <strong>Les dépôts publics sont encore fermés pendant la pré-ouverture.</strong></p><a href="/autoedition.php?partie=submit">Découvrir le dépôt →</a></article>
+            <article><span>03</span><h3>Faire référencer</h3><p>Proposer une fiche descriptive de livre : après vérification humaine et publication par l’équipe, une fiche est créée. <strong>Les manuscrits ne sont jamais envoyés à la Librairie.</strong> Les ventes et contacts se font directement avec les auteurs.</p><a href="/proposer-livre.php">Proposer ma fiche →</a></article>
             <article><span>04</span><h3>Proposer aux librairies</h3><p>Créer une fiche de présentation et un message personnalisé, trouver des librairies proches et discuter avec elles des conditions de commande ou de dépôt-vente.</p><a href="/diffuser-mon-livre.php">Préparer ma diffusion →</a></article>
         </div>
-        <p class="project-clarification">Être référencé au catalogue ne signifie pas encore pouvoir vendre directement sur la plateforme. L'impression, les commandes et les accords avec les librairies restent des démarches distinctes à ce stade.</p>
+        <p class="project-clarification">Être référencé au catalogue ne signifie pas vendre directement sur notre plateforme : les lecteurs contactent le vendeur. Paiement, livraison et éventuels accords avec les librairies restent gérés directement par les parties.</p>
     </section>
 
     <section class="content-section" aria-labelledby="human-title">
@@ -130,11 +130,11 @@ function e_project(?string $value): string
             <article class="project-status">
                 <h3>Encore en préparation</h3>
                 <ul>
-                    <li>Ouverture du dépôt public des auteurs, avec contrôle éditorial humain avant mise au catalogue</li>
+                    <li>Tests en production de la soumission de fiches de livres, avec publication uniquement après validation humaine</li>
                     <li>Premières impressions et commandes testées avec de vrais auteurs et imprimeurs</li>
                     <li>Connexion autorisée aux logiciels et stocks des librairies volontaires</li>
-                    <li>Réservation, commande, règlement et retrait local coordonnés depuis la plateforme</li>
-                    <li>Vente intégrée des ebooks payants déposés par les auteurs</li>
+                    <li>Faciliter la prise de contact directe entre auteurs, libraires et lecteurs, sans encaissement par la plateforme</li>
+                    <li>Informations vendeur et conditions de vente directes mieux documentées sur chaque fiche</li>
                     <li>Extension progressive à d'autres territoires, après validation du pilote mosellan</li>
                 </ul>
             </article>
