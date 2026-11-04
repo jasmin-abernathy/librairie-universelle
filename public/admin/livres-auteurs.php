@@ -29,7 +29,8 @@ if(isset($_GET['saved']))$message='Décision enregistrée.';
 $counts=$service->counts();
 $items=$service->pendingReview($status);
 ?>
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html><html lang="fr"><head>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><title>Modérer les livres d’auteurs — Librairie universelle</title>
 <link rel="stylesheet" href="/assets/css/app.css"><link rel="stylesheet" href="/assets/css/author-listings.css?v=20261104-2"></head>
 <body><a class="skip-link" href="#main">Aller au contenu</a>

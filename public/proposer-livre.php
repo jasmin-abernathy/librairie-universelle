@@ -40,6 +40,7 @@ header('Referrer-Policy: no-referrer');
 ?>
 <!doctype html>
 <html lang="fr"><head>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,follow">
 <meta name="referrer" content="no-referrer">

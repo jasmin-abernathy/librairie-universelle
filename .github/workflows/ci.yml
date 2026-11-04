@@ -89,6 +89,9 @@ jobs:
       - name: Shared site navigation, ordering and mobile styles
         run: php tests/SiteNavigationTest.php
 
+      - name: Site-wide favicon coverage for all rendered HTML pages
+        run: php tests/FaviconCoverageTest.php
+
       - name: Mobile burger keyboard and interaction tests
         run: |
           node --check public/assets/js/site-nav.js

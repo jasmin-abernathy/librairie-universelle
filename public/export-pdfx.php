@@ -59,7 +59,8 @@ $limit=round(min((int)($config['pdfx_max_bytes']??26214400),UploadLimits::effect
     UploadLimits::iniBytes((string)ini_get('post_max_size'))
 ))/1048576,1);
 ?><!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="fr"><head>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <title>Export professionnel PDF/X — Librairie universelle</title>
 <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">

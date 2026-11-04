@@ -4,13 +4,14 @@ declare(strict_types=1);
 $service=new AuthorBookListings($pdo);
 $id=filter_var($_GET['id']??null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1]]);
 $item=$id?$service->visible((int)$id,'',1):[];
-if(!$item){http_response_code(404);header('X-Robots-Tag: noindex');header('Content-Type: text/html; charset=UTF-8');echo '<!doctype html><html lang="fr"><meta charset="utf-8"><title>Livre introuvable</title><main><h1>Fiche introuvable</h1><p>Ce livre n’est pas publié ou n’existe plus.</p><a href="/livres-auteurs.php">Retour aux livres d’auteurs</a></main></html>';exit;}
+if(!$item){http_response_code(404);header('X-Robots-Tag: noindex');header('Content-Type: text/html; charset=UTF-8');echo '<!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><title>Livre introuvable</title></head><main><h1>Fiche introuvable</h1><p>Ce livre n’est pas publié ou n’existe plus.</p><a href="/livres-auteurs.php">Retour aux livres d’auteurs</a></main></html>';exit;}
 $book=$item[0];
 $e=static fn(mixed $v):string=>htmlspecialchars((string)$v,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');
 $price=number_format((int)$book['price_cents']/100,2,',',' ').' €';
 $format=['paper'=>'Papier','ebook'=>'Numérique','both'=>'Papier et numérique'][$book['book_format']]??'Livre';
 ?>
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html><html lang="fr"><head>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title><?= $e($book['title']) ?> — <?= $e($book['author_name']) ?> — Librairie universelle</title>
 <meta name="description" content="<?= $e(mb_strimwidth($book['description'],0,155,'…','UTF-8')) ?>">
 <link rel="canonical" href="https://librairie.lepotager.org/livre-auteur.php?id=<?= (int)$book['id'] ?>">
