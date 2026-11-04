@@ -93,7 +93,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
             </div>
         <?php endif; ?>
         <?php if (!$config['self_publishing_enabled']): ?>
-            <p class="note"><strong>Pré-ouverture des dépôts auteur :</strong> l’envoi de manuscrits à la Librairie pour examen et éventuelle publication n’est pas encore ouvert. <strong>La création et le téléchargement des fichiers restent possibles :</strong> EPUB dans Atelier EPUB, PDF de l’intérieur et des couvertures, et dossier ZIP d’impression. <strong>Aucun fichier n’est envoyé automatiquement à un imprimeur :</strong> vous pouvez récupérer vos documents et les transmettre vous-même au prestataire de votre choix.</p>
+            <p class="note"><strong>Faire découvrir votre livre aux librairies :</strong> un <a href="/diffuser-mon-livre.php">parcours guidé</a> vous aide à préparer une fiche de présentation et un message personnalisé pour proposer votre manuscrit aux librairies de votre choix. <strong>Vous gardez la main sur les envois :</strong> aucune transmission automatique aux librairies ou aux imprimeurs. Vous pouvez télécharger vos fichiers (EPUB dans Atelier EPUB, PDF intérieur et couvertures, dossier ZIP d’impression), puis les transmettre vous-même.</p>
         <?php endif; ?>
     </section>
 
