@@ -47,7 +47,7 @@ header('Referrer-Policy: no-referrer');
 <meta name="description" content="Proposez une fiche de votre livre indépendant, sans envoyer de manuscrit. Chaque fiche est examinée avant publication.">
 <link rel="stylesheet" href="/assets/css/app.css">
 <link rel="stylesheet" href="/assets/css/author-listings.css?v=20261104-2">
-<script src="/assets/js/author-listing-form.js?v=20261104-2" defer></script>
+<script src="/assets/js/author-listing-form.js?v=20261104-3" defer></script>
 </head><body>
 <a class="skip-link" href="#main">Aller au contenu</a>
 <?php $currentNav='authorbooks'; require dirname(__DIR__).'/src/views/site-header.php'; ?>

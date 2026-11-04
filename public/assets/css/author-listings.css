@@ -37,3 +37,22 @@
   .author-book-form .button-link,
   .author-book-actions .button-link {transition:none}
 }
+
+/* Catalogue search and API-generated business selection use the shared CTA. */
+.author-book-search input {
+  border:1px solid #aaa79f;
+  border-radius:.7rem;
+  background:#fff;
+  color:var(--ink);
+  padding:.8rem .9rem;
+  min-height:2.85rem;
+}
+.siret-result-card .button-link {
+  max-width:100%;
+  white-space:normal;
+  text-align:center;
+}
+@media(max-width:620px){
+  .author-book-search .button-link,
+  .siret-result-card .button-link {width:100%}
+}

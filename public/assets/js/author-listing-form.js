@@ -57,6 +57,7 @@
         meta.textContent = 'SIRET : ' + company.siret + (company.city ? ' · ' + company.city : '');
         const choose = document.createElement('button');
         choose.type = 'button';
+        choose.className = 'button-link';
         choose.textContent = 'Sélectionner cette entreprise';
         choose.addEventListener('click', () => {
           hidden.value = company.siret;

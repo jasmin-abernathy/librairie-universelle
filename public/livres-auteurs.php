@@ -22,7 +22,7 @@ $price=static fn(int $cents):string=>number_format($cents/100,2,',',' ').' €';
 <section class="content-section">
 <form class="author-book-search" action="/livres-auteurs.php" method="get">
 <label>Rechercher par livre ou auteur <input type="search" name="q" maxlength="80" value="<?= $e($q) ?>" placeholder="Titre ou auteur"></label>
-<button type="submit">Rechercher</button>
+<button type="submit" class="button-link">Rechercher</button>
 </form>
 <?php if(!$items): ?><p class="note"><?= $q!==''?'Aucun livre publié ne correspond à cette recherche.':'Aucune fiche d’auteur n’est encore publiée. Les propositions attendent une vérification humaine.' ?></p>
 <?php else: ?><div class="author-book-grid">

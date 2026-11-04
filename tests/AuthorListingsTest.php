@@ -130,6 +130,7 @@ $assert(str_contains($form,'author-listing-form.js'),'Script de recherche absent
 $assert(str_contains($form,'class="button-link author-book-submit"'),'Bouton de validation sans le composant visuel du site');
 $assert(str_contains($form,'class="button-link secondary" type="button"'),'Bouton de recherche SIRET sans le style secondaire du site');
 $assert(str_contains($form,'author-listings.css?v=20261104-2'),'Version du CSS de la fiche non actualisée');
+$assert(str_contains($form,'author-listing-form.js?v=20261104-3'),'La dernière version JS n’est pas appelée');
 $assert(str_contains($admin,'class="button-link" name="action" value="publish"'),'Publication admin sans style partagé');
 $css=(string)file_get_contents($root.'/public/assets/css/author-listings.css');
 $assert(str_contains($css,'var(--accent)') && str_contains($css,'@media(max-width:620px)'),'Charte et largeur mobile du bouton absentes');
@@ -141,5 +142,8 @@ $assert(str_contains($legacy,'http_response_code(410)'),'Ancien dépôt non dés
 $assert(!str_contains($legacy,'$service->submit($_POST, $_FILES)'),'Ancienne réception de fichiers encore active');
 $assert(str_contains($index,'/livres-auteurs.php'),'Catalogue non relié à l’accueil');
 $assert(str_contains($listing,'$service->visible('),'Catalogue non limité aux publications');
+$assert(str_contains($listing,'class="button-link">Rechercher</button>'),'Recherche du catalogue sans style primaire');
+$js=(string)file_get_contents($root.'/public/assets/js/author-listing-form.js');
+$assert(str_contains($js,"choose.className = 'button-link'"),'Bouton de sélection du SIRET sans style du site');
 $assert(str_contains($detail,'$service->visible('),'Fiche non publiée accessible');
 echo "Fiches d’auteurs : dépôt sans fichiers, modération, confidentialité et accès public OK\n";
