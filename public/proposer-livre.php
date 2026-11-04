@@ -46,8 +46,8 @@ header('Referrer-Policy: no-referrer');
 <title>Proposer la fiche de mon livre — Librairie universelle</title>
 <meta name="description" content="Proposez une fiche de votre livre indépendant, sans envoyer de manuscrit. Chaque fiche est examinée avant publication.">
 <link rel="stylesheet" href="/assets/css/app.css">
-<link rel="stylesheet" href="/assets/css/author-listings.css">
-<script src="/assets/js/author-listing-form.js" defer></script>
+<link rel="stylesheet" href="/assets/css/author-listings.css?v=20261104-2">
+<script src="/assets/js/author-listing-form.js?v=20261104-2" defer></script>
 </head><body>
 <a class="skip-link" href="#main">Aller au contenu</a>
 <?php $currentNav='authorbooks'; require dirname(__DIR__).'/src/views/site-header.php'; ?>
@@ -94,7 +94,7 @@ header('Referrer-Policy: no-referrer');
 <input name="siret" id="listing-siret" type="text" inputmode="numeric" minlength="14" maxlength="14" pattern="[0-9]{14}" autocomplete="off" placeholder="14 chiffres" value="<?= $old('siret') ?>"<?= ($_POST['seller_type']??'individual')==='professional'?' required':' disabled' ?> aria-describedby="siret-help">
 </label>
 <p id="siret-help" class="field-help">Recherchez votre entreprise dans l’<a href="https://annuaire-entreprises.data.gouv.fr/" target="_blank" rel="noopener noreferrer">Annuaire officiel</a>, puis sélectionnez le résultat. Le SIRET et la dénomination seront affichés après validation. Cette recherche vérifie l’immatriculation publique, pas votre identité ni votre habilitation à représenter l’entreprise.</p>
-<button id="siret-search-button" type="button">Rechercher l’entreprise</button>
+<button id="siret-search-button" class="button-link secondary" type="button">Rechercher l’entreprise</button>
 <div id="siret-search-results" role="status" aria-live="polite"></div>
 <input type="hidden" id="selected-company-siret" name="selected_company_siret" value="">
 </div>
@@ -109,7 +109,7 @@ header('Referrer-Policy: no-referrer');
 <label class="check-row"><input type="checkbox" name="public_contact_confirmed" value="1" required<?= !empty($_POST['public_contact_confirmed'])?' checked':'' ?>> J’accepte la publication de la fiche, du moyen de contact choisi et, si je suis professionnel, du SIRET et de la dénomination officielle après validation humaine. Mon adresse de suivi reste privée.</label>
 <label class="check-row"><input type="checkbox" name="seller_responsibility_confirmed" value="1" required<?= !empty($_POST['seller_responsibility_confirmed'])?' checked':'' ?>> Je comprends que la Librairie met uniquement en relation et que je gère directement toute vente éventuelle avec le lecteur.</label>
 </fieldset>
-<button type="submit">Envoyer ma fiche pour vérification</button>
+<button type="submit" class="button-link author-book-submit">Envoyer ma fiche pour vérification</button>
 </form>
 </section>
 <?php endif; ?>

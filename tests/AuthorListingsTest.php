@@ -127,6 +127,12 @@ $assert(str_contains($form,'id="listing-siret"'),'Champ SIRET conditionnel absen
 $assert(str_contains($form,'id="siret-search-button"'),'Recherche officielle absente');
 $assert(str_contains($form,'name="selected_company_siret"'),'Choix explicite de la société absent');
 $assert(str_contains($form,'author-listing-form.js'),'Script de recherche absent');
+$assert(str_contains($form,'class="button-link author-book-submit"'),'Bouton de validation sans le composant visuel du site');
+$assert(str_contains($form,'class="button-link secondary" type="button"'),'Bouton de recherche SIRET sans le style secondaire du site');
+$assert(str_contains($form,'author-listings.css?v=20261104-2'),'Version du CSS de la fiche non actualisée');
+$assert(str_contains($admin,'class="button-link" name="action" value="publish"'),'Publication admin sans style partagé');
+$css=(string)file_get_contents($root.'/public/assets/css/author-listings.css');
+$assert(str_contains($css,'var(--accent)') && str_contains($css,'@media(max-width:620px)'),'Charte et largeur mobile du bouton absentes');
 $assert(!str_contains($form,'type="file"'),'Le formulaire reçoit encore des manuscrits');
 $assert(str_contains($admin,'AdminAuth::enforce('),'Administration non protégée');
 $assert(str_contains($admin,'value="publish"'),'Approbation manuelle absente');

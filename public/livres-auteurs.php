@@ -10,7 +10,7 @@ $price=static fn(int $cents):string=>number_format($cents/100,2,',',' ').' €';
 <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Découvrez les livres présentés par leurs auteurs indépendants et vérifiés par la Librairie. Vente directe : contactez chaque auteur.">
 <title>Livres d’auteurs indépendants — Librairie universelle</title>
-<link rel="stylesheet" href="/assets/css/app.css"><link rel="stylesheet" href="/assets/css/author-listings.css">
+<link rel="stylesheet" href="/assets/css/app.css"><link rel="stylesheet" href="/assets/css/author-listings.css?v=20261104-2">
 </head><body><a class="skip-link" href="#main">Aller au contenu</a>
 <?php $currentNav='authorbooks'; require dirname(__DIR__).'/src/views/site-header.php'; ?>
 <main id="main" class="author-books-page">

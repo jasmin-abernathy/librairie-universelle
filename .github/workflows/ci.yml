@@ -218,7 +218,20 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'CoolLibri'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Books on Demand'
           curl --fail --silent http://127.0.0.1:8080/feedback.php | grep 'Qu’est-ce qui coince ?'
-          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/admin/)" = "503"
+          admin_code="$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/admin/)"
+          echo "Anonymous admin response: HTTP ${admin_code}"
+          if [[ "$admin_code" != "503" && "$admin_code" != "401" ]]; then
+            echo "::error::Protected admin unexpectedly returned HTTP $admin_code"
+            tail -n 70 /tmp/librairie-universelle-php.log || true
+            exit 1
+          fi
+          listing_admin_code="$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/admin/livres-auteurs.php)"
+          echo "Anonymous listings moderation response: HTTP ${listing_admin_code}"
+          if [[ "$listing_admin_code" != "503" && "$listing_admin_code" != "401" ]]; then
+            echo "::error::Protected listings moderation unexpectedly returned HTTP $listing_admin_code"
+            tail -n 70 /tmp/librairie-universelle-php.log || true
+            exit 1
+          fi
           curl --fail --silent http://127.0.0.1:8080/projet.php | grep 'Toutes les façons légales de lire.'
           curl --fail --silent http://127.0.0.1:8080/sans-ia.php | grep 'Pas d’IA pour décider ce que vous devriez lire.'
 

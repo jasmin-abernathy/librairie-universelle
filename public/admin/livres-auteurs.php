@@ -31,7 +31,7 @@ $items=$service->pendingReview($status);
 ?>
 <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><title>Modérer les livres d’auteurs — Librairie universelle</title>
-<link rel="stylesheet" href="/assets/css/app.css"><link rel="stylesheet" href="/assets/css/author-listings.css"></head>
+<link rel="stylesheet" href="/assets/css/app.css"><link rel="stylesheet" href="/assets/css/author-listings.css?v=20261104-2"></head>
 <body><a class="skip-link" href="#main">Aller au contenu</a>
 <header class="site-header"><a class="brand" href="/admin/">Administration</a><nav class="site-nav"><a href="/admin/">Tableau de bord</a><a href="/admin/submissions.php">Anciens dépôts</a><a href="/livres-auteurs.php" target="_blank" rel="noopener noreferrer">Voir le catalogue ↗</a></nav></header>
 <main id="main" class="author-books-page">
@@ -69,9 +69,9 @@ $items=$service->pendingReview($status);
 <input type="hidden" name="id" value="<?= (int)$item['id'] ?>">
 <label>Note de vérification (privée)<textarea name="review_note" maxlength="1000" rows="2"><?= $e($item['review_note']??'') ?></textarea></label>
 <div class="author-book-actions">
-<?php if($item['status']!=='published'): ?><button type="submit" name="action" value="publish">Publier après vérification</button><?php endif; ?>
-<?php if($item['status']!=='rejected'): ?><button type="submit" name="action" value="reject" class="secondary-action">Refuser</button><?php endif; ?>
-<?php if($item['status']==='published'): ?><button type="submit" name="action" value="hide" class="secondary-action">Masquer</button><?php endif; ?>
+<?php if($item['status']!=='published'): ?><button type="submit" class="button-link" name="action" value="publish">Publier après vérification</button><?php endif; ?>
+<?php if($item['status']!=='rejected'): ?><button type="submit" name="action" value="reject" class="button-link secondary">Refuser</button><?php endif; ?>
+<?php if($item['status']==='published'): ?><button type="submit" name="action" value="hide" class="button-link secondary">Masquer</button><?php endif; ?>
 </div></form>
 </article>
 <?php endforeach; ?></div><?php endif; ?>
