@@ -56,7 +56,7 @@ foreach ($pages as $file=>$nav) {
 $work = (string)file_get_contents($root.'/public/assets/css/work.css');
 $check(str_contains($work,'/assets/css/app.css?v=20261104-nav2'),'La fiche livre ne reprend pas le nouveau CSS');
 $style = (string)file_get_contents($root.'/public/assets/css/app.css');
-$check(str_contains($style,'@media (max-width: 1040px)'), 'Rupture responsive manquante');
+$check(str_contains($style,'@media (max-width: 1120px)'), 'Rupture responsive manquante');
 $check(str_contains($style,'.site-nav-ready .site-header[data-site-navigation] .site-nav.is-open'), 'Ouverture mobile manquante');
 $check(str_contains($style,'min-height: 44px'), 'Taille des cibles tactiles insuffisante');
 $check(str_contains($style,'max-height: min(78dvh, 39rem)'), 'Défilement du menu mobile absent');

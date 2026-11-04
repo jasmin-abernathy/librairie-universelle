@@ -17,3 +17,10 @@ Le composant commun `src/views/site-header.php` rendait une liste plane. La feui
 
 ## Prévention
 Appliquer la section « UI/UX sweep » de repo-factory avant l'ajout de toute entrée. Une navigation doit être réévaluée au niveau du composant commun et testée sur écran compact et écran large. N'annoncer le déploiement qu'après concordance SHA et marqueur HTML dans le live.
+
+## Non-régression CI
+
+- Symptôme : CI au SHA 336b7fa a échoué sur « Rupture responsive manquante » alors que le CSS portait bien le breakpoint 1120 px.
+- Cause : l'assertion PHP était restée fixée à 1040 px après l'ajustement du breakpoint et l'invalidation des caches.
+- Correctif : faire correspondre le test au breakpoint réellement retenu (1120 px), puis rejouer la CI sur le SHA final.
+- Règle : après un ajustement de valeur partagée par CSS/JS/tests, vérifier toutes les occurrences fonctionnelles avant le commit.
