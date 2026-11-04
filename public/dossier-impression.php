@@ -11,7 +11,7 @@ header('Referrer-Policy: no-referrer');
 <title>Préparer le dossier d'impression — Librairie universelle</title>
 <meta name="description" content="Vérifier et réunir votre PDF intérieur et les deux couvertures pour demander une impression sans envoyer vos fichiers à un tiers.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
+<link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav1">
 <link rel="stylesheet" href="/assets/css/printer-kit.css?v=20261018-1">
 </head>
 <body>

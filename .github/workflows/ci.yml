@@ -86,6 +86,14 @@ jobs:
       - name: Author listings require manual approval and no manuscript uploads
         run: php tests/AuthorListingsTest.php
 
+      - name: Shared site navigation, ordering and mobile styles
+        run: php tests/SiteNavigationTest.php
+
+      - name: Mobile burger keyboard and interaction tests
+        run: |
+          node --check public/assets/js/site-nav.js
+          node tests/SiteNavigationTest.cjs
+
       - name: Bookshop outreach text generator
         run: node tests/DiffusionAuteurTest.cjs
 
@@ -233,6 +241,9 @@ jobs:
             exit 1
           fi
           curl --fail --silent http://127.0.0.1:8080/projet.php | grep 'id="project-title"'
+          curl --fail --silent http://127.0.0.1:8080/ | grep 'id="site-primary-navigation"'
+          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep 'site-nav-toggle'
+          curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Pour les auteurs'
           curl --fail --silent http://127.0.0.1:8080/sans-ia.php | grep 'Pas d’IA pour décider ce que vous devriez lire.'
 
           curl --fail --silent http://127.0.0.1:8080/ | grep 'Trouver une librairie près de chez vous.'

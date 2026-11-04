@@ -14,7 +14,7 @@ $format=['paper'=>'Papier','ebook'=>'Numérique','both'=>'Papier et numérique']
 <title><?= $e($book['title']) ?> — <?= $e($book['author_name']) ?> — Librairie universelle</title>
 <meta name="description" content="<?= $e(mb_strimwidth($book['description'],0,155,'…','UTF-8')) ?>">
 <link rel="canonical" href="https://librairie.lepotager.org/livre-auteur.php?id=<?= (int)$book['id'] ?>">
-<link rel="stylesheet" href="/assets/css/app.css"><link rel="stylesheet" href="/assets/css/author-listings.css?v=20261104-2">
+<link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav1"><link rel="stylesheet" href="/assets/css/author-listings.css?v=20261104-2">
 </head><body><a class="skip-link" href="#main">Aller au contenu</a>
 <?php $currentNav='authorbooks'; require dirname(__DIR__).'/src/views/site-header.php'; ?>
 <main id="main" class="author-books-page">

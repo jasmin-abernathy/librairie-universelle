@@ -74,7 +74,7 @@ function modeLabel(string $mode): string
     <meta name="description" content="Chercher un ebook gratuit ou payant dans Librairie universelle et plusieurs catalogues externes identifiés.">
     <meta name="theme-color" content="#f7f3ea">
     <title>Ebooks — <?= e($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav1">
     <link rel="stylesheet" href="/assets/css/discovery.css?v=20261009-3">
     <link rel="stylesheet" href="/assets/css/ebooks.css?v=20261009-2">
     <script src="/assets/js/discovery.js?v=20261009-4" defer></script>

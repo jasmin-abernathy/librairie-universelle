@@ -11,7 +11,7 @@ header('Referrer-Policy: no-referrer');
     <meta name="description" content="Parcours simple pour vendre son livre autoédité : référencement après validation, fiche de présentation, librairies proches et message personnalisé prêt à envoyer.">
     <title>Faire connaître et vendre mon livre — Librairie universelle</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav1">
     <link rel="stylesheet" href="/assets/css/diffusion-auteur.css?v=20261020-1">
     <script src="/assets/js/diffusion-auteur.js?v=20261020-1" defer></script>
 </head>

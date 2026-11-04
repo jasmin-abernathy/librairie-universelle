@@ -32,7 +32,7 @@ function e(?string $value): string
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <title>Donner un retour — <?= e($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav1">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>

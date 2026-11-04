@@ -11,7 +11,7 @@ header('Referrer-Policy: no-referrer');
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="description" content="Accompagnement facultatif des auteurs indépendants : vérification des fichiers pour l'impression et correction assistée avec contrôle humain.">
     <title>Prestations pour auteurs — Librairie universelle</title>
-    <link rel="stylesheet" href="/assets/css/app.css?v=20261009-2">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav1">
     <link rel="stylesheet" href="/assets/css/prestations-auteurs.css?v=20261021-1">
 </head>
 <body>
