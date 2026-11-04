@@ -45,7 +45,7 @@ header('Referrer-Policy: no-referrer');
 <meta name="referrer" content="no-referrer">
 <title>Proposer la fiche de mon livre — Librairie universelle</title>
 <meta name="description" content="Proposez une fiche de votre livre indépendant, sans envoyer de manuscrit. Chaque fiche est examinée avant publication.">
-<link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav1">
+<link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
 <link rel="stylesheet" href="/assets/css/author-listings.css?v=20261104-2">
 <script src="/assets/js/author-listing-form.js?v=20261104-3" defer></script>
 </head><body>

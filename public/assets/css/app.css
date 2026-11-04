@@ -218,7 +218,7 @@ footer { max-width: 1120px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 2rem)
 }
 
 /* Recherche de librairies locales */
-.bookstore-hero { max-width: 1040px; }
+.bookstore-hero { max-width: 1120px; }
 .bookstore-locator {
     margin-top: 2rem;
     padding: clamp(1rem, 3vw, 1.5rem);
@@ -557,7 +557,7 @@ footer { max-width: 1120px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 2rem)
     outline: 3px solid var(--focus);
     outline-offset: 3px;
 }
-@media (max-width: 1040px) {
+@media (max-width: 1120px) {
     .site-header[data-site-navigation] { padding: .8rem clamp(1rem, 3vw, 1.5rem); gap: 1rem; }
     .site-header[data-site-navigation] .brand-name { font-size: 1.18rem; }
     .site-header[data-site-navigation] .brand-mark { font-size: 1.55rem; }
@@ -638,7 +638,7 @@ footer { max-width: 1120px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 2rem)
 }
 
 /* L'accès au menu ne doit pas dépendre de JavaScript. */
-@media (max-width: 1040px) {
+@media (max-width: 1120px) {
     html:not(.site-nav-ready) .site-header[data-site-navigation] { flex-wrap: wrap; }
     html:not(.site-nav-ready) .site-header[data-site-navigation] .site-nav {
         position: static;

@@ -30,7 +30,7 @@ $check(str_contains($html, 'aria-expanded="false"'), 'État initial du menu non 
 $check(str_contains($html, 'aria-label="Ouvrir le menu"'), 'Nom accessible du burger absent');
 $check(str_contains($html, '<svg') && str_contains($html, 'aria-hidden="true"'), 'Icône de menu absente');
 $check(str_contains($html, 'data-active-group="true"'), 'Groupe auteur actif non indiqué');
-$check(str_contains($html, '/assets/js/site-nav.js?v=20261104-2'), 'JS de navigation absent');
+$check(str_contains($html, '/assets/js/site-nav.js?v=20261104-3'), 'JS de navigation absent');
 $check(str_contains($html, 'Livres, librairies et auteurs'), 'Sous-titre non actualisé');
 $check(!str_contains($html, 'nom de travail'), 'Ancien texte de marque conservé');
 
@@ -50,11 +50,11 @@ foreach ($pages as $file=>$nav) {
         $check(str_contains($s, "'".$nav."'"), 'Repère de navigation absent de '.$file);
     }
     if($file!=='work.php') {
-        $check(str_contains($s, '/assets/css/app.css?v=20261104-nav1'), 'Cache CSS non mis à jour dans '.$file);
+        $check(str_contains($s, '/assets/css/app.css?v=20261104-nav2'), 'Cache CSS non mis à jour dans '.$file);
     }
 }
 $work = (string)file_get_contents($root.'/public/assets/css/work.css');
-$check(str_contains($work,'/assets/css/app.css?v=20261104-nav1'),'La fiche livre ne reprend pas le nouveau CSS');
+$check(str_contains($work,'/assets/css/app.css?v=20261104-nav2'),'La fiche livre ne reprend pas le nouveau CSS');
 $style = (string)file_get_contents($root.'/public/assets/css/app.css');
 $check(str_contains($style,'@media (max-width: 1040px)'), 'Rupture responsive manquante');
 $check(str_contains($style,'.site-nav-ready .site-header[data-site-navigation] .site-nav.is-open'), 'Ouverture mobile manquante');

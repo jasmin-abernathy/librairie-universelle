@@ -49,7 +49,7 @@
     });
 
     // Ne pas conserver un menu mobile ouvert au passage vers le mode bureau.
-    const breakpoint = window.matchMedia('(max-width: 1040px)');
+    const breakpoint = window.matchMedia('(max-width: 1120px)');
     if (typeof breakpoint.addEventListener === 'function') {
         breakpoint.addEventListener('change', closeMenu);
     } else if (typeof breakpoint.addListener === 'function') {

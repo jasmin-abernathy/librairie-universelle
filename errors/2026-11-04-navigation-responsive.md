@@ -9,7 +9,7 @@ Le composant commun `src/views/site-header.php` rendait une liste plane. La feui
 ## Correctif
 - Regrouper la navigation en quatre destinations lecteurs puis « Pour les auteurs » (préparation, référencement vérifié, contact de librairies) et « À propos » (projet, politique sans IA).
 - Remplacer le libellé provisoire « nom de travail » par la description factuelle « Livres, librairies et auteurs ».
-- Barre bureau compacte sur une seule ligne, menus secondaires natifs `details/summary`, et menu burger en dessous de 1040 px.
+- Barre bureau compacte sur une seule ligne, menus secondaires natifs `details/summary`, et menu burger en dessous de 1120 px.
 - Garder l'accès sans JavaScript (liste déroulée), permettre l'ouverture/fermeture via un bouton `aria-expanded`, Escape, clic extérieur, clic sur un lien et changement de largeur ; focus clavier restauré.
 - Styles cohérents avec les variables du site, au moins 44 px pour les cibles tactiles, défilement si le menu dépasse la hauteur de l'écran.
 - Invalider les anciennes URLs des CSS sur toutes les pages utilisant l'en-tête partagé, y compris l'import de work.css.

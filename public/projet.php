@@ -21,7 +21,7 @@ function e_project(?string $value): string
     <meta property="og:title" content="Le projet — <?= e_project($config['name']) ?>">
     <meta property="og:description" content="Et si le livre le plus rapide à obtenir était déjà près de chez vous ? Un projet local, sobre et complémentaire des réseaux de libraires existants.">
     <title>Le projet — <?= e_project($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav1">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
     <link rel="stylesheet" href="/assets/css/projet.css?v=20261021-1">
 </head>
 <body>

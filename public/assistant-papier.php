@@ -10,7 +10,7 @@ $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <title>Assistant de publication papier — <?= htmlspecialchars((string) $config['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></title>
     <meta name="description" content="Composer séparément la première et la quatrième de couverture d'un livre papier, sans modifier votre manuscrit ni votre EPUB.">
-    <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav1">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
     <link rel="stylesheet" href="/assets/css/paper-assistant.css?v=20261018-2">
     <style id="paper-sheet-size"></style>
 </head>

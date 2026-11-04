@@ -21,7 +21,7 @@ function e_no_ai(?string $value): string
     <meta property="og:title" content="Sans IA — <?= e_no_ai($config['name']) ?>">
     <meta property="og:description" content="Recherche déterministe, validation humaine des autoéditions, sources identifiées et aucune recommandation opaque.">
     <title>Sans IA — <?= e_no_ai($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav1">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>

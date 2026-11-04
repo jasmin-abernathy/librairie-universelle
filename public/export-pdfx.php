@@ -62,7 +62,7 @@ $limit=round(min((int)($config['pdfx_max_bytes']??26214400),UploadLimits::effect
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <title>Export professionnel PDF/X — Librairie universelle</title>
-<link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav1">
+<link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
 <link rel="stylesheet" href="/assets/css/printer-kit.css?v=20261018-1">
 </head><body><a class="skip-link" href="#main">Aller au contenu</a>
 <?php $currentNav='autoedition';require dirname(__DIR__).'/src/views/site-header.php';?>

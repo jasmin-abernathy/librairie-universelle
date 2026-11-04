@@ -56,7 +56,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="description" content="Créer son EPUB, préparer ses PDF d’impression et faire découvrir son livre grâce à une fiche vérifiée avant publication. Aucun dépôt de manuscrit.">
     <title>Autoédition — <?= e($config['name']) ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav1">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
     <link rel="stylesheet" href="/assets/css/printing-estimate.css?v=20261013-1">
     <link rel="stylesheet" href="/assets/css/autoedition-tabs.css?v=20261018-2">
     <link rel="stylesheet" href="/assets/css/author-draft.css?v=20261018-3">
