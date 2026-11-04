@@ -26,7 +26,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             $listingService->submit($_POST);
             $_SESSION['author_listing_last_sent'] = time();
             $accepted = true;
-        } catch (InvalidArgumentException | RuntimeException $e) {
+        } catch (InvalidArgumentException | DomainException | RuntimeException $e) {
             $errors[] = $e->getMessage();
         } catch (PDOException $e) {
             error_log('author_listings_submission: '.$e->getCode());
@@ -47,6 +47,7 @@ header('Referrer-Policy: no-referrer');
 <meta name="description" content="Proposez une fiche de votre livre indépendant, sans envoyer de manuscrit. Chaque fiche est examinée avant publication.">
 <link rel="stylesheet" href="/assets/css/app.css">
 <link rel="stylesheet" href="/assets/css/author-listings.css">
+<script src="/assets/js/author-listing-form.js" defer></script>
 </head><body>
 <a class="skip-link" href="#main">Aller au contenu</a>
 <?php $currentNav='authorbooks'; require dirname(__DIR__).'/src/views/site-header.php'; ?>
@@ -87,12 +88,21 @@ header('Referrer-Policy: no-referrer');
 <fieldset><legend>Le vendeur et la prise de contact</legend>
 <div class="form-grid two-columns">
 <label>Je vends en tant que
-<select name="seller_type" required><option value="individual"<?= ($_POST['seller_type']??'individual')==='individual'?' selected':'' ?>>Particulier</option><option value="professional"<?= ($_POST['seller_type']??'')==='professional'?' selected':'' ?>>Professionnel</option></select></label>
+<select name="seller_type" id="listing-seller-type" required><option value="individual"<?= ($_POST['seller_type']??'individual')==='individual'?' selected':'' ?>>Particulier</option><option value="professional"<?= ($_POST['seller_type']??'')==='professional'?' selected':'' ?>>Professionnel</option></select></label>
+<div id="professional-siret-field"<?= ($_POST['seller_type']??'individual')==='professional'?'':' hidden' ?>>
+<label for="listing-siret">SIRET (obligatoire pour les professionnels)
+<input name="siret" id="listing-siret" type="text" inputmode="numeric" minlength="14" maxlength="14" pattern="[0-9]{14}" autocomplete="off" placeholder="14 chiffres" value="<?= $old('siret') ?>"<?= ($_POST['seller_type']??'individual')==='professional'?' required':' disabled' ?> aria-describedby="siret-help">
+</label>
+<p id="siret-help" class="field-help">Recherchez votre entreprise dans l’<a href="https://annuaire-entreprises.data.gouv.fr/" target="_blank" rel="noopener noreferrer">Annuaire officiel</a>, puis sélectionnez le résultat. Le SIRET et la dénomination seront affichés après ta validation de la fiche.</p>
+<button id="siret-search-button" type="button">Rechercher l’entreprise</button>
+<div id="siret-search-results" role="status" aria-live="polite"></div>
+<input type="hidden" id="selected-company-siret" name="selected_company_siret" value="">
+</div>
 <label>E-mail de suivi (jamais affiché publiquement) <input type="email" required maxlength="254" name="private_email" autocomplete="email" value="<?= $old('private_email') ?>"></label>
 <label>Adresse e-mail publique pour les lecteurs (facultatif) <input type="email" maxlength="254" name="public_email" value="<?= $old('public_email') ?>"></label>
 <label>Lien HTTPS vers votre boutique ou page de contact (facultatif) <input type="url" maxlength="500" name="seller_url" placeholder="https://…" value="<?= $old('seller_url') ?>"></label>
 </div>
-<p class="field-help">Indiquez au moins une adresse publique ou un lien HTTPS. La Librairie ne fournit pas de formulaire de commande, de paiement ni de livraison.</p>
+<p class="field-help">Indiquez au moins une adresse publique ou un lien HTTPS. Pour les professionnels, la consultation du registre officiel est obligatoire avant l’envoi. La Librairie ne fournit pas de commande, de paiement ni de livraison.</p>
 </fieldset>
 <fieldset><legend>Confirmation avant modération</legend>
 <label class="check-row"><input type="checkbox" name="rights_confirmed" value="1" required<?= !empty($_POST['rights_confirmed'])?' checked':'' ?>> Je confirme être habilité à présenter ce livre et ses informations.</label>

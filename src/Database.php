@@ -24,12 +24,38 @@ final class Database
         // chaque connexion afin qu'une base existante reçoive aussi les nouvelles
         // tables du MVP sans devoir être supprimée manuellement.
         self::execFile($pdo, $config['schema_path'], 'schéma SQL');
+        self::ensureOfficialSiretColumns($pdo);
 
         if (!empty($config['seed_path']) && is_file($config['seed_path'])) {
             self::execFile($pdo, $config['seed_path'], 'corpus initial');
         }
 
         return $pdo;
+    }
+
+    /**
+     * Les bases déjà déployées ne récupèrent pas les colonnes ajoutées
+     * par CREATE TABLE IF NOT EXISTS. Migration non destructive.
+     */
+    private static function ensureOfficialSiretColumns(PDO $pdo): void
+    {
+        $existing = array_column($pdo->query('PRAGMA table_info(author_book_listings)')->fetchAll(), 'name');
+        if ($existing === []) {
+            return;
+        }
+        foreach (['siret', 'registered_company_name', 'siret_verified_at'] as $column) {
+            if (in_array($column, $existing, true)) {
+                continue;
+            }
+            try {
+                $pdo->exec('ALTER TABLE author_book_listings ADD COLUMN ' . $column . ' TEXT');
+            } catch (PDOException $error) {
+                $check = array_column($pdo->query('PRAGMA table_info(author_book_listings)')->fetchAll(), 'name');
+                if (!in_array($column, $check, true)) {
+                    throw $error;
+                }
+            }
+        }
     }
 
     private static function execFile(PDO $pdo, string $path, string $label): void

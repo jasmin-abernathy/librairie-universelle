@@ -11,6 +11,8 @@ Deux parcours indépendants :
 ## Données et contrôle de publication
 
 - Les propositions ne contiennent aucune pièce jointe : titre, auteur public, résumé, format, prix, ISBN facultatif, statut vendeur déclaré, lien HTTPS vers la boutique et/ou e-mail public, plus e-mail de suivi privé.
+- Pour un vendeur professionnel, le SIRET de 14 chiffres est obligatoire. Il doit cliquer sur « Rechercher l’entreprise », choisir la fiche trouvée dans l’API Recherche d’entreprises de l’État, puis confirmer sa proposition. Le serveur consulte à nouveau l’API lors de l’enregistrement, ne fait jamais confiance au JavaScript et mémorise le nom légal et la date de vérification. L’administrateur voit ces données et peut ouvrir la fiche de l’Annuaire officiel. L’absence d’une API disponible empêche temporairement le dépôt professionnel, sans permettre le contournement. Une immatriculation retrouvée n’authentifie pas le lien entre le vendeur et l’entreprise.
+- Migration SQLite idempotente : colonnes siret, registered_company_name, siret_verified_at ajoutées aux bases anciennes. La publication d’une fiche pro historique sans SIRET vérifié est refusée.
 - Statut initial : pending ; seul l'administrateur authentifié peut publier, rejeter, masquer ou republier. L'administration vérifie chaque fiche.
 - Les pages publiques interrogent uniquement le statut published et ne sélectionnent jamais l'e-mail de suivi ni les notes privées.
 - Validation serveur, requêtes PDO paramétrées, CSRF, honeypot, délai de saisie, limitation par session et au maximum trois soumissions par adresse en 24 heures.

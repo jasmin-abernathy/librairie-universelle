@@ -19,6 +19,7 @@ require_once __DIR__ . '/UploadValidator.php';
 require_once __DIR__ . '/PrintSettings.php';
 require_once __DIR__ . '/EpubPrintSource.php';
 require_once __DIR__ . '/SelfPublishingService.php';
+require_once __DIR__ . '/OfficialSiretLookup.php';
 require_once __DIR__ . '/AuthorBookListings.php';
 require_once __DIR__ . '/EbookStorefront.php';
 require_once __DIR__ . '/FeedbackService.php';

@@ -29,6 +29,10 @@ $format=['paper'=>'Papier','ebook'=>'Numérique','both'=>'Papier et numérique']
 <h2>Contacter l’auteur ou le vendeur</h2>
 <dl><dt>Format</dt><dd><?= $e($format) ?></dd><dt>Prix annoncé par le vendeur</dt><dd><?= $e($price) ?></dd>
 <dt>Statut déclaré</dt><dd><?= $book['seller_type']==='professional'?'Professionnel':'Particulier' ?></dd>
+<?php if($book['seller_type']==='professional' && !empty($book['siret'])): ?>
+<dt>SIRET (registre public)</dt><dd><?= $e($book['siret']) ?></dd>
+<dt>Dénomination officielle</dt><dd><?= $e($book['registered_company_name']??'') ?></dd>
+<?php endif; ?>
 <?php if($book['isbn']): ?><dt>ISBN déclaré</dt><dd><?= $e($book['isbn']) ?></dd><?php endif; ?></dl>
 <?php if($book['seller_url']): ?><p><a class="button-link" href="<?= $e($book['seller_url']) ?>" target="_blank" rel="noopener noreferrer nofollow">Ouvrir la page du vendeur ↗</a></p><?php endif; ?>
 <?php if($book['public_email']): ?><p><a href="mailto:<?= $e($book['public_email']) ?>">Écrire à l’auteur ou au vendeur</a></p><?php endif; ?>

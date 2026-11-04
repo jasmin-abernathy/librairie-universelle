@@ -54,6 +54,12 @@ $items=$service->pendingReview($status);
 <dl><dt>Prix</dt><dd><?= $e(number_format((int)$item['price_cents']/100,2,',',' ')) ?> €</dd>
 <dt>Format</dt><dd><?= $e($item['book_format']) ?></dd>
 <dt>Statut du vendeur (déclaré)</dt><dd><?= $e($item['seller_type']) ?></dd>
+<?php if($item['seller_type']==='professional'): ?>
+<dt>SIRET confirmé via le registre</dt><dd><?= $e($item['siret']??'Non vérifié') ?></dd>
+<dt>Dénomination officielle</dt><dd><?= $e($item['registered_company_name']??'Inconnue') ?></dd>
+<dt>Consulté le</dt><dd><?= $e($item['siret_verified_at']??'—') ?></dd>
+<?php if(!empty($item['siret'])): ?><dt>Annuaire officiel</dt><dd><a href="https://annuaire-entreprises.data.gouv.fr/entreprise/<?= $e(substr($item['siret'],0,9)) ?>" target="_blank" rel="noopener noreferrer">Vérifier l’immatriculation ↗</a></dd><?php endif; ?>
+<?php endif; ?>
 <dt>E-mail privé de suivi</dt><dd><?= $e($item['private_email']) ?></dd>
 <dt>E-mail public</dt><dd><?= $e($item['public_email']??'—') ?></dd>
 <dt>ISBN</dt><dd><?= $e($item['isbn']??'—') ?></dd>

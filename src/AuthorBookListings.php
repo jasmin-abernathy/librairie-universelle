@@ -8,7 +8,7 @@ declare(strict_types=1);
  */
 final class AuthorBookListings
 {
-    public function __construct(private PDO $pdo) {}
+    public function __construct(private PDO $pdo, private ?OfficialSiretLookup $officialLookup = null) {}
 
     public static function normalize(array $input): array
     {
@@ -38,6 +38,17 @@ final class AuthorBookListings
         $sellerType = $get('seller_type', 20);
         if (!in_array($sellerType, ['individual', 'professional'], true)) {
             throw new InvalidArgumentException('Indiquez si vous vendez comme particulier ou professionnel.');
+        }
+        $siret = null;
+        if ($sellerType === 'professional') {
+            $siret = preg_replace('/[\\s.-]+/', '', $get('siret', 32)) ?? '';
+            if (!preg_match('/^[0-9]{14}$/D', $siret)) {
+                throw new InvalidArgumentException('Le SIRET à 14 chiffres est obligatoire pour les professionnels.');
+            }
+            $selected = preg_replace('/[\\s.-]+/', '', $get('selected_company_siret', 32)) ?? '';
+            if ($selected !== $siret) {
+                throw new InvalidArgumentException('Recherchez puis sélectionnez votre entreprise dans le registre officiel avant de continuer.');
+            }
         }
         $email = $get('private_email', 254);
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -80,7 +91,7 @@ final class AuthorBookListings
         return [
             'title' => $title, 'subtitle' => $subtitle, 'author_name' => $author,
             'description' => $desc, 'book_format' => $format, 'isbn' => $isbn,
-            'price_cents' => $priceCents, 'seller_type' => $sellerType,
+            'price_cents' => $priceCents, 'seller_type' => $sellerType, 'siret' => $siret,
             'private_email' => $email, 'public_email' => $publicEmail,
             'seller_url' => $url,
         ];
@@ -89,6 +100,17 @@ final class AuthorBookListings
     public function submit(array $input): int
     {
         $item = self::normalize($input);
+        $registeredCompanyName = null;
+        $siretVerifiedAt = null;
+        if ($item['seller_type'] === 'professional') {
+            // Re-vérification côté serveur : aucune valeur JS ni champ caché ne fait foi.
+            $official = ($this->officialLookup ?? new OfficialSiretLookup())->search((string)$item['siret']);
+            if ($official['siret'] !== $item['siret']) {
+                throw new RuntimeException('Le SIRET sélectionné ne correspond pas au registre officiel.');
+            }
+            $registeredCompanyName = $official['name'];
+            $siretVerifiedAt = gmdate('Y-m-d H:i:s');
+        }
         // Limite conservatrice sans collecte d'IP : 3 demandes / adresse / 24 heures.
         $rate = $this->pdo->prepare(
             "SELECT COUNT(*) FROM author_book_listings WHERE private_email = :email AND submitted_at > datetime('now','-1 day')"
@@ -99,10 +121,10 @@ final class AuthorBookListings
         }
         $stmt = $this->pdo->prepare(
             'INSERT INTO author_book_listings
-            (status,title,subtitle,author_name,description,book_format,isbn,price_cents,seller_type,
+            (status,title,subtitle,author_name,description,book_format,isbn,price_cents,seller_type,siret,registered_company_name,siret_verified_at,
              private_email,public_email,seller_url,rights_confirmed,public_contact_confirmed,seller_responsibility_confirmed)
              VALUES
-            (\'pending\',:title,:subtitle,:author_name,:description,:book_format,:isbn,:price_cents,:seller_type,
+            (\'pending\',:title,:subtitle,:author_name,:description,:book_format,:isbn,:price_cents,:seller_type,:siret,:registered_company_name,:siret_verified_at,
              :private_email,:public_email,:seller_url,1,1,1)'
         );
         $stmt->execute([
@@ -110,6 +132,8 @@ final class AuthorBookListings
             ':author_name'=>$item['author_name'], ':description'=>$item['description'],
             ':book_format'=>$item['book_format'], ':isbn'=>$item['isbn'] ?: null,
             ':price_cents'=>$item['price_cents'], ':seller_type'=>$item['seller_type'],
+            ':siret'=>$item['siret'], ':registered_company_name'=>$registeredCompanyName,
+            ':siret_verified_at'=>$siretVerifiedAt,
             ':private_email'=>$item['private_email'],
             ':public_email'=>$item['public_email'] ?: null,
             ':seller_url'=>$item['seller_url'] ?: null,
@@ -133,7 +157,7 @@ final class AuthorBookListings
         }
         $stmt = $this->pdo->prepare(
             'SELECT id,title,subtitle,author_name,description,book_format,isbn,price_cents,
-               seller_type,public_email,seller_url,reviewed_at
+               seller_type,siret,registered_company_name,siret_verified_at,public_email,seller_url,reviewed_at
              FROM author_book_listings WHERE ' . $where .
             ' ORDER BY reviewed_at DESC,id DESC LIMIT ' . max(1, min(100, $limit))
         );
@@ -166,6 +190,20 @@ final class AuthorBookListings
         $states = ['publish'=>'published','reject'=>'rejected','hide'=>'hidden'];
         if ($id < 1 || !isset($states[$action])) {
             throw new InvalidArgumentException('Action de modération inconnue.');
+        }
+        if ($action === 'publish') {
+            // Interdit de publier d'anciennes fiches pro sans vérification officielle.
+            $verify = $this->pdo->prepare('SELECT seller_type,siret,registered_company_name,siret_verified_at FROM author_book_listings WHERE id=:id');
+            $verify->execute([':id'=>$id]);
+            $record = $verify->fetch();
+            if (!$record) {
+                return false;
+            }
+            if ($record['seller_type'] === 'professional'
+                && (!preg_match('/^[0-9]{14}$/D', (string)($record['siret'] ?? ''))
+                    || empty($record['registered_company_name']) || empty($record['siret_verified_at']))) {
+                throw new InvalidArgumentException('SIRET non vérifié : la fiche professionnelle ne peut pas être publiée.');
+            }
         }
         $note = mb_substr(trim($note), 0, 1000);
         $stmt = $this->pdo->prepare(
