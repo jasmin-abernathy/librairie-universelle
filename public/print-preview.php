@@ -30,14 +30,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 } else {
     try {
         $settings = PrintSettings::normalize($_POST);
-        $office = $_FILES['office_manuscript'] ?? [];
-        if (($office['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
-            $book = OfficePrintSource::fromUpload($office, UploadLimits::office($config));
+        $manuscript = $_FILES['office_manuscript'] ?? [];
+        if (($manuscript['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+            // Le même champ papier accepte DOCX/ODT et EPUB. Chaque parseur
+            // contrôle la structure du fichier ; la source n'est jamais modifiée.
+            $extension = strtolower(pathinfo((string)($manuscript['name'] ?? ''), PATHINFO_EXTENSION));
+            $maxBytes = UploadLimits::office($config);
+            $book = $extension === 'epub'
+                ? EpubPrintSource::fromUpload($manuscript, $maxBytes)
+                : OfficePrintSource::fromUpload($manuscript, $maxBytes);
         } elseif (($_FILES['ebook']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
-            // Compatibilité des anciennes compositions utilisant un EPUB existant.
+            // Compatibilité des anciennes compositions utilisant l'EPUB numérique.
             $book = EpubPrintSource::fromUpload($_FILES['ebook'], (int) $config['max_epub_bytes']);
         } else {
-            throw new RuntimeException('Ajoutez votre manuscrit DOCX ou ODT dans l’onglet « Livre papier » avant de générer le PDF.');
+            throw new RuntimeException('Ajoutez votre manuscrit DOCX, ODT ou EPUB dans l’onglet « Livre papier » avant de générer le PDF.');
         }
     } catch (Throwable $exception) {
         $error = $exception->getMessage();

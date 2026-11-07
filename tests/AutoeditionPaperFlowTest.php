@@ -5,6 +5,19 @@ $css=file_get_contents(dirname(__DIR__).'/public/assets/css/autoedition-paper.cs
 $draft=file_get_contents(dirname(__DIR__).'/public/assets/css/author-draft.css');
 if(!is_string($src)||!is_string($css)||!is_string($draft))exit(1);
 $check=static function(bool $ok,string $msg):void { if(!$ok){fwrite(STDERR,$msg."\n");exit(1);} };
+$check(str_contains($src, 'name="office_manuscript" accept=".docx,.odt,.epub,')
+    && str_contains($src, 'Formats acceptés : <strong>.docx, .odt, .epub</strong>')
+    && str_contains($src, 'Les fichiers TXT et les EPUB protégés ne sont pas pris en charge.'),
+    'Le champ papier doit proposer DOCX, ODT et EPUB sans DRM.');
+$previewForInput=(string)file_get_contents(dirname(__DIR__) . '/public/print-preview.php');
+$check(str_contains($previewForInput, 'EpubPrintSource::fromUpload($manuscript, $maxBytes)')
+    && str_contains($previewForInput, 'OfficePrintSource::fromUpload($manuscript, $maxBytes)')
+    && str_contains($previewForInput, "EpubPrintSource::fromUpload(\$_FILES['ebook'],")
+    && str_contains($previewForInput, "strtolower(pathinfo("),
+    'Le formulaire doit router les EPUB vers leur parseur sans casser les anciens EPUB.');
+$check(str_contains($src, 'réglages Corep ou Bookelis')
+    && str_contains($src, "sans modifier votre fichier d'origine"),
+    'Le générateur EPUB doit conserver le choix Corep/Bookelis et la source originale.');
 $ids=['paper-interior-step','paper-pdfx-step','paper-covers-step','print-cost-estimator','paper-dossier-step','paper-corep-step'];
 $offset=-1;
 foreach($ids as $id){

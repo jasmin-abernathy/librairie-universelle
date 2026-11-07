@@ -114,7 +114,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
             </div>
             <div class="autoedition-entry-promise">
                 <span aria-hidden="true" class="autoedition-entry-promise-icon">✓</span>
-                <span><strong>Mise en page papier incluse</strong><small>Importez un DOCX ou ODT. Notre générateur compose les pages avant votre export PDF.</small></span>
+                <span><strong>Mise en page papier incluse</strong><small>Importez un DOCX, un ODT ou un EPUB. Notre générateur compose les pages avant votre export PDF.</small></span>
             </div>
         </section>
         <nav class="autoedition-tabs" role="tablist" aria-label="Parties du parcours d’autoédition">
@@ -236,7 +236,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 <div class="resource-card important-resource">
                     <div>
                         <strong>Notre générateur réalise la mise en page de votre manuscrit.</strong>
-                        <p><strong>Ajoutez votre livre en DOCX ou ODT</strong> : la Librairie recomposera l'intérieur en pages de livre, avec sommaire, marges de reliure, pagination recto-verso et pages blanches nécessaires. Vous pourrez ensuite enregistrer le résultat en PDF pour l'imprimeur. Aucun EPUB n'est nécessaire.</p>
+                        <p><strong>Ajoutez votre livre en DOCX, ODT ou EPUB</strong> : la Librairie recomposera l'intérieur en pages de livre, avec sommaire, marges de reliure, pagination recto-verso et pages blanches nécessaires. Vous pourrez ensuite enregistrer le résultat en PDF pour l'imprimeur, sans modifier votre fichier d'origine.</p>
                         <p>Le manuscrit source reste inchangé. La mise en page est recalculée au format choisi pour l'imprimeur : A5 pour Corep, ou l'un des formats proposés par Bookelis. Ce n'est pas une simple réduction de page. La conversion n'est pas une reproduction exacte du document bureautique : relisez l'aperçu, en particulier les tableaux, les notes, les images et la taille des caractères, puis faites valider le PDF final par l'imprimeur.</p>
                     </div>
                 </div>
@@ -244,10 +244,10 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 <div class="resource-card important-resource" id="paper-interior-step">
                     <div>
                         <strong>1. Importer votre manuscrit pour composer l'intérieur PDF</strong>
-                        <p>Formats actuellement convertibles : <strong>.docx, .odt</strong> (Word ou LibreOffice). Pour un ancien fichier <code>.doc</code>, enregistrez-le d'abord en DOCX ou ODT. Les fichiers TXT ne sont pas pris en charge.</p>
+                        <p>Formats acceptés : <strong>.docx, .odt, .epub</strong>. Si vous avez déjà un EPUB sans DRM, importez-le directement : il sera recomposé pour le papier sans altérer le fichier numérique. Pour un ancien <code>.doc</code>, enregistrez-le d'abord en DOCX ou ODT. Les fichiers TXT et les EPUB protégés ne sont pas pris en charge.</p>
                         <label>Manuscrit papier à mettre en page
-                            <input type="file" name="office_manuscript" accept=".docx,.odt,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.oasis.opendocument.text">
-                            <span class="field-help">Fichier lu temporairement pour l'aperçu, jamais envoyé à l'imprimeur automatiquement. Maximum affiché selon votre serveur : <?= e(UploadLimits::officeLabel($config)) ?>. Si la limite du serveur est inférieure à 30 Mo, elle prévaut.</span>
+                            <input type="file" name="office_manuscript" accept=".docx,.odt,.epub,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.oasis.opendocument.text,application/epub+zip">
+                            <span class="field-help">Fichier lu temporairement pour l'aperçu, jamais envoyé à l'imprimeur automatiquement. Taille maximale selon votre serveur : <?= e(UploadLimits::officeLabel($config)) ?>. Contrôlez les images, notes, tableaux et styles complexes après recomposition.</span>
                         </label>
                     </div>
                 </div>
@@ -333,10 +333,10 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 
                     <label class="check-row"><input type="checkbox" name="print_toc_enabled" value="1"<?= checked('print_toc_enabled', true) ?>> <span><strong>Sommaire automatique</strong> — construit depuis les chapitres et recalculé après pagination.</span></label>
                     <label class="check-row"><input type="checkbox" name="print_hide_chapter_openers" value="1"<?= checked('print_hide_chapter_openers', true) ?>> <span>Masquer le numéro visible sur la première page de chaque chapitre.</span></label>
-                    <p class="note"><strong>Principe :</strong> le manuscrit DOCX/ODT est recomposé en pages ; les numéros du sommaire sont calculés après pagination, et non copiés depuis Word. Les sauts recto/verso sont pris en charge par la composition.</p>
+                    <p class="note"><strong>Principe :</strong> le manuscrit DOCX, ODT ou EPUB est recomposé en pages ; les numéros du sommaire sont recalculés après pagination, et non repris du fichier source. Les sauts recto/verso sont pris en charge par la composition.</p>
                     <div class="submit-row print-preview-row">
                         <button type="submit" class="secondary-action" formaction="/print-preview.php" formtarget="_blank" formnovalidate id="paper-generate-button">Générer et prévisualiser le PDF intérieur</button>
-                        <span>Le générateur lit le DOCX ou l'ODT choisi ci-dessus, applique vos réglages et ouvre un aperçu paginé. Vous pourrez utiliser « Enregistrer en PDF » depuis la boîte d'impression. Vérifiez le résultat avant l'envoi à Corep.</span>
+                        <span>Le générateur lit le DOCX, l’ODT ou l’EPUB sélectionné ci-dessus, applique vos réglages Corep ou Bookelis et ouvre un aperçu paginé. Utilisez « Enregistrer en PDF » depuis la boîte d'impression. Vérifiez le résultat avant l'envoi à l’imprimeur.</span>
                     </div>
                 </div>
 
