@@ -9,6 +9,12 @@ $check(str_contains($src, 'name="office_manuscript" accept=".docx,.odt,.epub,')
     && str_contains($src, 'Formats acceptés : <strong>.pdf, .docx, .odt, .epub</strong>')
     && str_contains($src, 'Les fichiers TXT et les EPUB protégés ne sont pas pris en charge.'),
     'Le champ papier doit proposer DOCX, ODT et EPUB sans DRM.');
+$digitalStart=strpos($src, 'id="panel-digital"');
+$digitalContent=$digitalStart!==false ? substr($src,$digitalStart,1750) : '';
+$check(str_contains($digitalContent, 'Ouvrir le générateur EPUB') &&
+       str_contains($digitalContent, "['atelier_epub_url']") &&
+       str_contains($digitalContent, 'target="_blank" rel="noopener noreferrer"'),
+    'L’onglet Numérique doit proposer l’Atelier EPUB en nouvel onglet via la configuration existante.');
 $previewForInput=(string)file_get_contents(dirname(__DIR__) . '/public/print-preview.php');
 $check(str_contains($previewForInput, 'EpubPrintSource::fromUpload($manuscript, $maxBytes)')
     && str_contains($previewForInput, 'OfficePrintSource::fromUpload($manuscript, $maxBytes)')

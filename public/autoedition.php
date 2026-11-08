@@ -203,6 +203,12 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
             </section>
             <section class="autoedition-panel" id="panel-digital" role="tabpanel" aria-labelledby="tab-digital" data-panel-name="digital">
             <p class="field-help">La publication numérique est indépendante de l’impression papier. Si vous ne souhaitez qu’un livre papier, passez directement à l’onglet « Livre papier ».</p>
+            <?php if ((string) ($config['atelier_epub_url'] ?? '') !== ''): ?>
+                <p class="autoedition-epub-generator-link">
+                    <a class="button-link secondary" href="<?= e((string) $config['atelier_epub_url']) ?>" target="_blank" rel="noopener noreferrer">Ouvrir le générateur EPUB <span aria-hidden="true">↗</span></a>
+                    <span class="field-help">Créez ou corrigez votre EPUB dans un nouvel onglet, puis revenez ici pour l’importer.</span>
+                </p>
+            <?php endif; ?>
             <fieldset>
                 <legend>Version numérique — EPUB</legend>
                 <div class="form-grid two-columns">
