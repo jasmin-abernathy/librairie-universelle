@@ -86,6 +86,18 @@
         if(bookelisTransferPages)bookelisTransferPages.textContent=String(pages);
         if(copyPages)copyPages.disabled=critical;
         if(copySummary)copySummary.disabled=critical;
+        if (document.body.dataset.estimateMode==='1' && window.parent!==window) {
+            // Uniquement les métadonnées nécessaires au simulateur : jamais le manuscrit.
+            window.parent.postMessage({
+                type:'librairie:paper-count',
+                pages, provider:document.body.dataset.printProvider,
+                trim:document.body.dataset.printTrim,
+                request:document.body.dataset.estimateRequest,
+                overLimit:corepOverLimit,
+                critical:critical,
+                missingImages:missingImages.length
+            },window.location.origin);
+        }
         const sheets=Math.ceil(pages/2);
         status.textContent=pages+' page'+(pages>1?'s':'')+' · '+sheets+
             ' feuille'+(sheets>1?'s':'')+' recto-verso';
@@ -105,6 +117,9 @@
         audit.replaceChildren(...points.map(s=>{const li=document.createElement('li');li.textContent=s;return li;}));
         printReady();
     }).catch(()=>{
+        if (document.body.dataset.estimateMode==='1' && window.parent!==window) {
+            window.parent.postMessage({type:'librairie:paper-count',error:'La composition a échoué. Vérifiez le manuscrit et les images.',request:document.body.dataset.estimateRequest},window.location.origin);
+        }
         status.textContent='La pagination a échoué : vérifiez le DOCX/ODT et ses illustrations.';
         audit.textContent='Impossible de vérifier les pages générées.';
         critical=true;
