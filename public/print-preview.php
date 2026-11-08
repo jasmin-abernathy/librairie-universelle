@@ -5,7 +5,8 @@ declare(strict_types=1);
 $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
 // Un manuscrit non publié doit être paginé sans exécuter de script distant.
 $estimateOnly = $_SERVER['REQUEST_METHOD'] === 'POST' && (string)($_POST['estimate_only'] ?? '') === '1';
-$framePolicy = $estimateOnly ? "'self'" : "'none'";
+$embeddedPreview = $_SERVER['REQUEST_METHOD'] === 'POST' && (string)($_POST['wizard_preview'] ?? '') === '1';
+$framePolicy = ($estimateOnly || $embeddedPreview) ? "'self'" : "'none'";
 header("Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'none'; base-uri 'none'; frame-ancestors {$framePolicy}; form-action 'self'; object-src 'none'");
 header('Referrer-Policy: no-referrer');
 require_once dirname(__DIR__) . '/src/Csrf.php';
