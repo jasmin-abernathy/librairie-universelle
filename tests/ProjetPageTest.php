@@ -27,6 +27,14 @@ foreach ([
     'Les manuscrits ne sont jamais envoyés',
     'une fiche est créée',
     'vente intégrée',
+    'DOCX, un ODT ou un EPUB sans DRM',
+    'Corep Metz',
+    'Bookelis',
+    'sept formats',
+    'gabarit officiel',
+    'convention signée',
+    '3 %',
+    '/conditions-generales.php',
 ] as $needle) {
     // Case and accents matter: keep outward-facing promises regression-tested.
     $check(str_contains($page, $needle), 'Mention attendue absente : ' . $needle);
@@ -34,6 +42,17 @@ foreach ([
 $check(str_contains($page, 'n\'annonçons ni stock en temps réel, ni vente intégrée, ni partenariat contractuel'), 'Pas de limites explicites des promesses commerciales.');
 $check(str_contains($page, 'ne signifie pas vendre directement sur notre plateforme'), 'Une fiche ne doit pas promettre de paiement intégré.');
 $check(str_contains($page, "nom de travail"), 'Nom provisoire masqué.');
+$check(!str_contains($page, 'Amazon') && !str_contains($page, 'Fnac'),
+    'La présentation du projet ne doit pas faire la promotion des grandes enseignes.');
+$check(str_contains($page, 'aucun frais n\'est dû pour un simple contact')
+    && str_contains($page, "La Librairie n'encaisse pas le prix du livre"),
+    'La commission doit être conditionnée à une vente réelle, sans simuler un paiement intégré.');
+$check(str_contains($page, 'convention signée de commission à 3 %')
+    && str_contains($page, 'papier ou EPUB'),
+    'La signature préalable doit aussi couvrir le référencement des EPUB indépendants.');
+$check(str_contains($page, 'couverture complète avec tranche')
+    && str_contains($page, 'deux faces de couverture séparées'),
+    'Ne pas confondre les sorties Corep et Bookelis.');
 $check(str_contains($css, '@media(max-width:640px)'), 'Mise en page mobile absente.');
 $check(!str_contains($page, '<script src="https://'), 'Ressource externe indésirable.');
 echo "Page Le projet : vision locale, parcours auteurs, limites réelles et responsive OK\n";
