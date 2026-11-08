@@ -13,17 +13,29 @@ $valid=[
 'description'=>'Un livre descriptif de test dont le synopsis est suffisamment long pour le catalogue public.',
 'book_format'=>'both','isbn'=>'','price'=>'15,50','ebook_price'=>'8,00','seller_type'=>'individual',
 'private_email'=>'secret@example.org','public_email'=>'public@example.org',
+'seller_legal_name'=>'Camille Exemple','seller_postal_address'=>'12 rue du Livre, 57000 Metz, France',
+'seller_phone'=>'+33 6 12 34 56 78',
 'seller_url'=>'https://example.org/acheter','rights_confirmed'=>'1',
 'public_contact_confirmed'=>'1','seller_responsibility_confirmed'=>'1'];
 $id=$service->submit($valid);
 $assert($id>0,'Proposition non enregistrée');
 $assert($service->visible()===[],'Fiche en attente déjà publique');
 $assert($service->counts()['pending']===1,'File de modération absente');
+$assert($service->contractData($id)['seller_legal_name']==='Camille Exemple','Coordonnées privées manquantes au contrat.');
+try{$service->moderate($id,'publish');$assert(false,'Publication sans contrat signé autorisée.');}
+catch(InvalidArgumentException $e){$assert(str_contains($e->getMessage(),'convention'),'Motif du blocage non explicite.');}
+$assert($service->visibleEbooks()===[],'Un EPUB sans convention apparaît dans le catalogue.');
+try {$service->recordSignature($id,'');$assert(false,'Référence de signature vide acceptée.');}
+catch(InvalidArgumentException $e) {}
+$service->recordSignature($id,'CONTRAT-TEST-2026-001');
+$assert(($service->pendingReview('pending')[0]['agreement_signed_at']??null)!==null,'Signature non visible en administration.');
 $assert($service->moderate($id,'publish','Relecture humaine'),'Approbation impossible');
 $public=$service->visible($id);
 $assert(count($public)===1,'Fiche approuvée invisible');
 $assert((int)$public[0]['price_cents']===1550,'Prix incorrect');
 $assert(!array_key_exists('private_email',$public[0]),'E-mail de suivi exposé publiquement');
+$assert(!array_key_exists('seller_postal_address',$public[0]),'Adresse postale privée exposée publiquement.');
+$assert(!array_key_exists('seller_legal_name',$public[0]),'Identité légale privée exposée publiquement.');
 $assert(!array_key_exists('review_note',$public[0]),'Note privée exposée');
 $assert($public[0]['seller_url']==='https://example.org/acheter','Contact direct absent');
 $assert((int)$public[0]['ebook_price_cents']===800,'Prix EPUB distinct non enregistré.');
@@ -87,6 +99,9 @@ $assert($stored['siret']==='12345678900012','SIRET non enregistré');
 $assert($stored['registered_company_name']==='MAISON DES LIVRES TEST','Dénomination du registre non sauvegardée');
 $assert($stored['siret_verified_at']!==null,'Date de vérification absente');
 $assert($professionalService->visible($proId)===[],'Professionnel visible avant modération');
+try {$professionalService->moderate($proId,'publish');$assert(false,'Entreprise publiée sans contrat.');}
+catch(InvalidArgumentException $e) {}
+$professionalService->recordSignature($proId,'REF-PRO-2026-02');
 $assert($professionalService->moderate($proId,'publish'),'Publication humaine du professionnel impossible');
 $assert(count($professionalService->visible($proId))===1,'Publication professionnelle non visible');
 $missingSiret=$pro;$missingSiret['siret']='';
@@ -124,6 +139,7 @@ $individualWithFakeSiret['selected_company_siret']='00000000000000';
 $individualId=$professionalService->submit($individualWithFakeSiret);
 $stmt=$pdo->query('SELECT siret FROM author_book_listings WHERE id='.$individualId);
 $assert($stmt->fetchColumn()===null,'SIRET particulier enregistré sans raison');
+$assert($professionalService->visible($individualId)===[],'Un autre vendeur hérite de la convention.');
 
 $root=dirname(__DIR__);
 $form=(string)file_get_contents($root.'/public/proposer-livre.php');
@@ -148,6 +164,12 @@ $assert(str_contains($css,'var(--accent)') && str_contains($css,'@media(max-widt
 $assert(!str_contains($form,'type="file"'),'Le formulaire reçoit encore des manuscrits');
 $assert(str_contains($admin,'AdminAuth::enforce('),'Administration non protégée');
 $assert(str_contains($admin,'value="publish"'),'Approbation manuelle absente');
+$assert(str_contains($admin,'value="mark_signed"') && str_contains($admin,'/admin/contrat-auteur.php?id='),
+  'Contrat prérempli ou confirmation manuelle de la signature absents.');
+$assert(str_contains($form,'name="seller_legal_name"') && str_contains($form,'name="seller_postal_address"'),
+  'Coordonnées contractuelles du vendeur absentes du dépôt.');
+$assert(str_contains($admin,'agreement_signed_at') && str_contains($admin,'disabled aria-disabled'),
+  'Bouton Publier non verrouillé en attente de signature.');
 $assert(str_contains($admin,'registered_company_name'),'Vérification SIRET absente de l’administration');
 $assert(str_contains($legacy,'http_response_code(410)'),'Ancien dépôt non désactivé');
 $assert(!str_contains($legacy,'$service->submit($_POST, $_FILES)'),'Ancienne réception de fichiers encore active');

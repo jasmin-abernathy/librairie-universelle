@@ -86,6 +86,9 @@ jobs:
       - name: Author listings require manual approval and no manuscript uploads
         run: php tests/AuthorListingsTest.php
 
+      - name: PDF agreement secure download and seller identity
+        run: php tests/SellerAgreementPdfTest.php
+
       - name: Shared site navigation, ordering and mobile styles
         run: php tests/SiteNavigationTest.php
 
