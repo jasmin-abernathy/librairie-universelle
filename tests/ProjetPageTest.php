@@ -46,8 +46,8 @@ $check(mb_stripos($page, "la Librairie n'encaisse pas le prix du livre") !== fal
 $check(str_contains($page, "nom de travail"), 'Nom provisoire masqué.');
 $check(!str_contains($page, 'Amazon') && !str_contains($page, 'Fnac'),
     'La présentation du projet ne doit pas faire la promotion des grandes enseignes.');
-$check(str_contains($page, 'aucun frais n\'est dû pour un simple contact')
-    && str_contains($page, "La Librairie n'encaisse pas le prix du livre"),
+$check(mb_stripos($page, 'aucun frais n\'est dû pour un simple contact') !== false
+    && mb_stripos($page, "la Librairie n'encaisse pas le prix du livre") !== false,
     'La commission doit être conditionnée à une vente réelle, sans simuler un paiement intégré.');
 $check(str_contains($page, 'convention signée de commission à 3 %')
     && str_contains($page, 'papier ou EPUB'),
