@@ -11,7 +11,7 @@ $assert=static function(bool $ok,string $why):void{if(!$ok){fwrite(STDERR,$why."
 $valid=[
 'title'=>'Un livre indépendant','author_name'=>'Autrice publique','subtitle'=>'',
 'description'=>'Un livre descriptif de test dont le synopsis est suffisamment long pour le catalogue public.',
-'book_format'=>'both','isbn'=>'','price'=>'15,50','seller_type'=>'individual',
+'book_format'=>'both','isbn'=>'','price'=>'15,50','ebook_price'=>'8,00','seller_type'=>'individual',
 'private_email'=>'secret@example.org','public_email'=>'public@example.org',
 'seller_url'=>'https://example.org/acheter','rights_confirmed'=>'1',
 'public_contact_confirmed'=>'1','seller_responsibility_confirmed'=>'1'];
@@ -26,11 +26,15 @@ $assert((int)$public[0]['price_cents']===1550,'Prix incorrect');
 $assert(!array_key_exists('private_email',$public[0]),'E-mail de suivi exposé publiquement');
 $assert(!array_key_exists('review_note',$public[0]),'Note privée exposée');
 $assert($public[0]['seller_url']==='https://example.org/acheter','Contact direct absent');
+$assert((int)$public[0]['ebook_price_cents']===800,'Prix EPUB distinct non enregistré.');
+$assert((int)$service->visibleEbooks()[0]['digital_price_cents']===800,'Prix EPUB incorrect dans le catalogue.');
 $assert(count($service->visible(null,'Autrice'))===1,'Recherche impossible');
 $assert(count($service->visibleEbooks()) === 1,
     'Une fiche papier et numérique publiée doit figurer dans le catalogue EPUB.');
 $assert(count($service->visibleEbooks('Autrice','paid')) === 1,
     'Recherche EPUB payante indisponible.');
+$invalidDigital=$valid;unset($invalidDigital['ebook_price']);
+try{$service->submit($invalidDigital);$assert(false,'Prix EPUB obligatoire pour les deux formats.');}catch(InvalidArgumentException $e){}
 $assert($service->visibleEbooks('Autrice','free') === [],
     'Le filtre EPUB gratuit présente un livre payant.');
 $assert($service->moderate($id,'hide'),'Masquage impossible');

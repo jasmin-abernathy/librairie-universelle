@@ -56,3 +56,5 @@
   .author-book-search .button-link,
   .siret-result-card .button-link {width:100%}
 }
+
+#listing-ebook-price-field[hidden]{display:none!important}#listing-ebook-price-field small{display:block;color:var(--muted);font-weight:400;font-size:.85rem;margin-top:.3rem}

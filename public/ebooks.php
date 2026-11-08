@@ -154,7 +154,7 @@ function modeLabel(string $mode): string
               <h3><a href="/livre-auteur.php?id=<?= (int)$book['id'] ?>"><?= e($book['title']) ?></a></h3>
               <p class="ebook-indie-author"><?= e($book['author_name']) ?></p>
               <p><?= e(mb_strimwidth($book['description'],0,175,'…','UTF-8')) ?></p>
-              <strong class="ebook-indie-price"><?= (int)$book['price_cents'] === 0 ? 'Gratuit' : number_format((int)$book['price_cents']/100,2,',',' ').' €' ?></strong>
+              <strong class="ebook-indie-price"><?= (int)$book['digital_price_cents'] === 0 ? 'Gratuit' : number_format((int)$book['digital_price_cents']/100,2,',',' ').' €' ?></strong>
               <a href="/livre-auteur.php?id=<?= (int)$book['id'] ?>" class="button-link">Voir la fiche et contacter le vendeur</a>
             </article>
           <?php endforeach; ?>

@@ -79,11 +79,12 @@ header('Referrer-Policy: no-referrer');
 <label>Sous-titre (facultatif) <input maxlength="200" name="subtitle" value="<?= $old('subtitle') ?>"></label>
 <label>Nom public de l’auteur ou de l’autrice <input required maxlength="140" name="author_name" value="<?= $old('author_name') ?>"></label>
 <label>Format
-<select name="book_format" required>
+<select name="book_format" id="listing-book-format" required>
 <?php foreach(['paper'=>'Papier','ebook'=>'Numérique','both'=>'Papier et numérique'] as $val=>$label): ?><option value="<?= $val ?>"<?= ($_POST['book_format']??'paper')===$val?' selected':'' ?>><?= $label ?></option><?php endforeach; ?>
 </select></label>
 <label>ISBN (facultatif, si attribué) <input name="isbn" maxlength="24" value="<?= $old('isbn') ?>" inputmode="numeric"></label>
-<label>Prix public en euros (0 si gratuit) <input name="price" required maxlength="12" inputmode="decimal" placeholder="15,00" value="<?= $old('price') ?>"></label>
+<label>Prix public (€ ; 0 si gratuit) <input name="price" required maxlength="12" inputmode="decimal" placeholder="15,00" value="<?= $old('price') ?>"></label>
+<label id="listing-ebook-price-field">Prix public de l'EPUB (€ ; si papier et numérique) <input name="ebook_price" id="listing-ebook-price" maxlength="12" inputmode="decimal" placeholder="9,00" value="<?= $old('ebook_price') ?>"><small>Le numérique peut avoir un prix différent du papier.</small></label>
 </div>
 <label>Résumé (30 à 1 600 caractères) <textarea required minlength="30" maxlength="1600" name="description" rows="6"><?= $old('description') ?></textarea></label>
 </fieldset>

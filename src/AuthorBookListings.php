@@ -83,6 +83,16 @@ final class AuthorBookListings
         if ($priceCents > 99999999) {
             throw new InvalidArgumentException('Prix trop élevé.');
         }
+        $ebookPriceCents = null;
+        if ($format === 'both') {
+            $raw = str_replace(',', '.', $get('ebook_price', 12));
+            if (!preg_match('/^\\d{1,6}(?:\\.\\d{1,2})?$/D', $raw)) {
+                throw new InvalidArgumentException('Indiquez le prix public du livre numérique (0 si gratuit).');
+            }
+            $parts = explode('.', $raw, 2);
+            $ebookPriceCents = (int)$parts[0] * 100 + (int)str_pad($parts[1] ?? '', 2, '0');
+            if ($ebookPriceCents > 99999999) throw new InvalidArgumentException('Prix numérique trop élevé.');
+        }
         foreach (['rights_confirmed', 'public_contact_confirmed', 'seller_responsibility_confirmed'] as $confirmation) {
             if (($input[$confirmation] ?? null) !== '1') {
                 throw new InvalidArgumentException('Veuillez confirmer vos droits, la publication des coordonnées et la vente directe.');
@@ -91,7 +101,7 @@ final class AuthorBookListings
         return [
             'title' => $title, 'subtitle' => $subtitle, 'author_name' => $author,
             'description' => $desc, 'book_format' => $format, 'isbn' => $isbn,
-            'price_cents' => $priceCents, 'seller_type' => $sellerType, 'siret' => $siret,
+            'price_cents' => $priceCents, 'ebook_price_cents' => $ebookPriceCents, 'seller_type' => $sellerType, 'siret' => $siret,
             'private_email' => $email, 'public_email' => $publicEmail,
             'seller_url' => $url,
         ];
@@ -121,17 +131,17 @@ final class AuthorBookListings
         }
         $stmt = $this->pdo->prepare(
             'INSERT INTO author_book_listings
-            (status,title,subtitle,author_name,description,book_format,isbn,price_cents,seller_type,siret,registered_company_name,siret_verified_at,
+            (status,title,subtitle,author_name,description,book_format,isbn,price_cents,ebook_price_cents,seller_type,siret,registered_company_name,siret_verified_at,
              private_email,public_email,seller_url,rights_confirmed,public_contact_confirmed,seller_responsibility_confirmed)
              VALUES
-            (\'pending\',:title,:subtitle,:author_name,:description,:book_format,:isbn,:price_cents,:seller_type,:siret,:registered_company_name,:siret_verified_at,
+            (\'pending\',:title,:subtitle,:author_name,:description,:book_format,:isbn,:price_cents,:ebook_price_cents,:seller_type,:siret,:registered_company_name,:siret_verified_at,
              :private_email,:public_email,:seller_url,1,1,1)'
         );
         $stmt->execute([
             ':title'=>$item['title'], ':subtitle'=>$item['subtitle'] ?: null,
             ':author_name'=>$item['author_name'], ':description'=>$item['description'],
             ':book_format'=>$item['book_format'], ':isbn'=>$item['isbn'] ?: null,
-            ':price_cents'=>$item['price_cents'], ':seller_type'=>$item['seller_type'],
+            ':price_cents'=>$item['price_cents'], ':ebook_price_cents'=>$item['ebook_price_cents'], ':seller_type'=>$item['seller_type'],
             ':siret'=>$item['siret'], ':registered_company_name'=>$registeredCompanyName,
             ':siret_verified_at'=>$siretVerifiedAt,
             ':private_email'=>$item['private_email'],
@@ -156,7 +166,7 @@ final class AuthorBookListings
             $params[':author_search'] = $pattern;
         }
         $stmt = $this->pdo->prepare(
-            'SELECT id,title,subtitle,author_name,description,book_format,isbn,price_cents,
+            'SELECT id,title,subtitle,author_name,description,book_format,isbn,price_cents,ebook_price_cents,
                seller_type,siret,registered_company_name,siret_verified_at,public_email,seller_url,reviewed_at
              FROM author_book_listings WHERE ' . $where .
             ' ORDER BY reviewed_at DESC,id DESC LIMIT ' . max(1, min(100, $limit))
@@ -172,15 +182,18 @@ final class AuthorBookListings
     public function visibleEbooks(string $query = '', string $mode = 'all', int $limit = 24): array
     {
         $limit = max(1, min(100, $limit));
-        $sql = "SELECT id,title,subtitle,author_name,description,book_format,isbn,price_cents,
+        $sql = "SELECT id,title,subtitle,author_name,description,book_format,isbn,price_cents,ebook_price_cents,
                 seller_type,public_email,seller_url,reviewed_at
+                CASE WHEN book_format='both' THEN COALESCE(ebook_price_cents,price_cents)
+                ELSE price_cents END AS digital_price_cents
                 FROM author_book_listings
                 WHERE status='published' AND book_format IN ('ebook','both')";
         $params = [];
+        $digitalPrice = "CASE WHEN book_format='both' THEN COALESCE(ebook_price_cents,price_cents) ELSE price_cents END";
         if ($mode === 'free') {
-            $sql .= " AND price_cents = 0";
+            $sql .= " AND ".$digitalPrice." = 0";
         } elseif ($mode === 'paid') {
-            $sql .= " AND price_cents > 0";
+            $sql .= " AND ".$digitalPrice." > 0";
         }
         $query = trim(mb_substr($query, 0, 80));
         if ($query !== '') {

@@ -285,6 +285,7 @@ CREATE TABLE IF NOT EXISTS author_book_listings (
     book_format TEXT NOT NULL CHECK(book_format IN ('paper','ebook','both')),
     isbn TEXT,
     price_cents INTEGER NOT NULL CHECK(price_cents BETWEEN 0 AND 99999999),
+    ebook_price_cents INTEGER CHECK(ebook_price_cents IS NULL OR ebook_price_cents BETWEEN 0 AND 99999999),
     seller_type TEXT NOT NULL CHECK(seller_type IN ('professional','individual')),
     siret TEXT,
     registered_company_name TEXT,

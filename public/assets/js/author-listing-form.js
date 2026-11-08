@@ -1,5 +1,16 @@
 (() => {
   'use strict';
+  const fmt = document.getElementById('listing-book-format');
+  const eRow = document.getElementById('listing-ebook-price-field');
+  const eInput = document.getElementById('listing-ebook-price');
+  const syncFormat = () => {
+    if (!fmt || !eRow || !eInput) return;
+    eRow.hidden = fmt.value !== 'both';
+    eInput.required = fmt.value === 'both';
+    eInput.disabled = fmt.value !== 'both';
+  };
+  fmt?.addEventListener('change',syncFormat);
+  syncFormat();
   const selector = document.getElementById('listing-seller-type');
   const fieldset = document.getElementById('professional-siret-field');
   const input = document.getElementById('listing-siret');

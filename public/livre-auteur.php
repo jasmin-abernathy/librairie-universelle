@@ -8,6 +8,7 @@ if(!$item){http_response_code(404);header('X-Robots-Tag: noindex');header('Conte
 $book=$item[0];
 $e=static fn(mixed $v):string=>htmlspecialchars((string)$v,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');
 $price=number_format((int)$book['price_cents']/100,2,',',' ').' €';
+$ebookPrice=number_format((int)($book['ebook_price_cents'] ?? $book['price_cents'])/100,2,',',' ').' €';
 $format=['paper'=>'Papier','ebook'=>'Numérique','both'=>'Papier et numérique'][$book['book_format']]??'Livre';
 ?>
 <!doctype html><html lang="fr"><head>
@@ -28,7 +29,8 @@ $format=['paper'=>'Papier','ebook'=>'Numérique','both'=>'Papier et numérique']
 <div><h2>À propos de ce livre</h2><p class="author-book-description"><?= nl2br($e($book['description'])) ?></p></div>
 <aside class="author-book-contact">
 <h2>Contacter l’auteur ou le vendeur</h2>
-<dl><dt>Format</dt><dd><?= $e($format) ?></dd><dt>Prix annoncé par le vendeur</dt><dd><?= $e($price) ?></dd>
+<dl><dt>Format</dt><dd><?= $e($format) ?></dd><dt><?= $book['book_format']==='both'?'Prix public papier':'Prix public annoncé' ?></dt><dd><?= $e($price) ?></dd>
+<?php if($book['book_format']==='both'): ?><dt>Prix public EPUB</dt><dd><?= $e($ebookPrice) ?></dd><?php endif; ?>
 <dt>Statut déclaré</dt><dd><?= $book['seller_type']==='professional'?'Professionnel':'Particulier' ?></dd>
 <?php if($book['seller_type']==='professional' && !empty($book['siret'])): ?>
 <dt>SIRET (registre public)</dt><dd><?= $e($book['siret']) ?></dd>

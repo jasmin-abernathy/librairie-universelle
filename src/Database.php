@@ -25,6 +25,7 @@ final class Database
         // tables du MVP sans devoir être supprimée manuellement.
         self::execFile($pdo, $config['schema_path'], 'schéma SQL');
         self::ensureOfficialSiretColumns($pdo);
+        self::ensureEbookPriceColumn($pdo);
 
         if (!empty($config['seed_path']) && is_file($config['seed_path'])) {
             self::execFile($pdo, $config['seed_path'], 'corpus initial');
@@ -55,6 +56,18 @@ final class Database
                     throw $error;
                 }
             }
+        }
+    }
+
+    private static function ensureEbookPriceColumn(PDO $pdo): void
+    {
+        $columns = array_column($pdo->query('PRAGMA table_info(author_book_listings)')->fetchAll(), 'name');
+        if ($columns === [] || in_array('ebook_price_cents', $columns, true)) return;
+        try {
+            $pdo->exec('ALTER TABLE author_book_listings ADD COLUMN ebook_price_cents INTEGER');
+        } catch (PDOException $error) {
+            $cols = array_column($pdo->query('PRAGMA table_info(author_book_listings)')->fetchAll(), 'name');
+            if (!in_array('ebook_price_cents', $cols, true)) throw $error;
         }
     }
 
