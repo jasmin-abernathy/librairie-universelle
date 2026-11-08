@@ -28,7 +28,7 @@
   const pdfx = get('paper-pdfx-step');
   const kit = get('paper-dossier-step');
   const corepTransfer = get('paper-corep-step');
-  const bookelisTransfer = bookelisCover?.nextElementSibling;
+  const bookelisTransfer = fieldset.querySelector('.resource-card.paper-step-card[data-printer-only="bookelis"]:not(#paper-bookelis-cover-step)');
   const resources = fieldset.querySelector('.resource-section');
   const create = (tag,cls,text) => {
     const el = document.createElement(tag);
@@ -131,7 +131,7 @@
   const setStatus = message => {results.textContent=message;state.textContent=message;};
   const validSteps=()=>isPdf()?[0,2,3,4]:[0,1,2,3,4];
   const pagesOk=()=>Number.isInteger(Number(pagesField.value)) && Number(pagesField.value)>0;
-  const show=index=>{
+  const show=(index,initial=false)=>{
     if(!validSteps().includes(index))index=validSteps()[0];
     active=index;seen=Math.max(seen,index);
     steps.forEach((item,i)=>{
@@ -144,8 +144,10 @@
     back.hidden=active===0;
     next.textContent=active===4?'Revoir les étapes':'Continuer →';
     if(active===4)next.hidden=true;else next.hidden=false;
-    root.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
-    steps[active].title.setAttribute('tabindex','-1');steps[active].title.focus({preventScroll:true});
+    if(!initial && !panel.hidden){
+      root.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+      steps[active].title.setAttribute('tabindex','-1');steps[active].title.focus({preventScroll:true});
+    }
     if(active===1 && hasSource() && !pagesOk())scheduleEstimate();
     if(active===3)refreshAdvice();
   };
@@ -222,6 +224,12 @@
   frame.setAttribute('aria-hidden','true');
   frame.tabIndex=-1;
   root.appendChild(frame);
+  frame.addEventListener('load',()=>{
+    try{
+      const error=frame.contentDocument?.querySelector('.error-box');
+      if(error && hasSource())setStatus('Pagination impossible : '+error.textContent.trim());
+    }catch(_){}
+  });
   const estimateOnly=create('input');estimateOnly.type='hidden';estimateOnly.name='estimate_only';estimateOnly.value='1';form.appendChild(estimateOnly);
   const estimateNonce=create('input');estimateNonce.type='hidden';estimateNonce.name='estimate_nonce';form.appendChild(estimateNonce);
   const runEstimate=()=>{
@@ -351,5 +359,5 @@
   pagesField.value='';
   updateBarcode();
   syncProvider();
-  show(0);
+  show(0,true);
 })();
