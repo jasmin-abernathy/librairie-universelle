@@ -82,7 +82,7 @@ $submissions = $service->listSubmissions($statusFilter);
 </header>
 <main>
     <section class="page-hero compact">
-        <p class="eyebrow">Validation humaine</p>
+        <p class="eyebrow">Soumissions en attente</p>
         <h1>Soumissions d’autoédition</h1>
         <p class="lede">Aucune soumission n’est publiée automatiquement. Les fichiers peuvent être ouverts uniquement depuis cette zone protégée.</p>
     </section>

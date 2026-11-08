@@ -257,7 +257,7 @@ function modeLabel(string $mode): string
         <div>
             <p class="section-kicker">Auteurs et autrices</p>
             <h2>Faites découvrir votre livre sans nous envoyer votre EPUB.</h2>
-            <p>Proposez sa fiche descriptive, son prix et un contact direct. Chaque fiche attend une vérification humaine avant publication ; aucun fichier ni paiement ne passe par la Librairie.</p>
+            <p>Proposez sa fiche descriptive, son prix et un contact direct. Chaque fiche est examinée avant sa mise en ligne ; aucun fichier ni paiement ne passe par la Librairie.</p>
         </div>
         <a class="button-link secondary" href="/proposer-livre.php">Proposer la fiche de mon livre</a>
     </section>

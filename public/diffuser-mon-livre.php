@@ -36,7 +36,7 @@ header('Referrer-Policy: no-referrer');
                 <span class="sales-step-number" aria-hidden="true">1</span>
                 <h3>Proposer la fiche de mon livre</h3>
                 <p>Décrivez votre livre, son format, son prix et comment contacter directement son vendeur dans le <a href="/proposer-livre.php">formulaire de référencement</a>. Aucun manuscrit ni fichier EPUB/PDF n'est transmis à la Librairie.</p>
-                <p class="sales-step-note"><strong>Catalogue :</strong> la fiche ne devient publique qu’après vérification et approbation humaine. Le lecteur contacte directement l’auteur ou le vendeur, sans commande ni paiement sur la Librairie.</p>
+                <p class="sales-step-note"><strong>Catalogue :</strong> la fiche ne devient publique qu’après examen et publication de la fiche. Le lecteur contacte directement l’auteur ou le vendeur, sans commande ni paiement sur la Librairie.</p>
             </article>
             <article class="sales-step">
                 <span class="sales-step-number" aria-hidden="true">2</span>
@@ -118,7 +118,7 @@ header('Referrer-Policy: no-referrer');
 
     <section class="sales-after" id="accompagnement" aria-labelledby="services-auteurs-title">
         <h2 id="services-auteurs-title">Besoin d'un accompagnement avant la vente ?</h2>
-        <p>Le générateur et le démarchage des librairies restent gratuits. Vous pouvez aussi choisir une aide humaine pour éviter les erreurs les plus courantes avant d'imprimer.</p>
+        <p>Le générateur et le démarchage des librairies restent gratuits. Vous pouvez aussi choisir un accompagnement pour éviter les erreurs les plus courantes avant d'imprimer.</p>
         <div class="sales-step-grid">
             <article class="sales-step">
                 <h3>Vérification de vos PDF</h3>
@@ -127,7 +127,7 @@ header('Referrer-Policy: no-referrer');
             </article>
             <article class="sales-step">
                 <h3>Correction accompagnée</h3>
-                <p><strong>À partir de 179 € HT</strong> — Correction assistée avec contrôle humain et vérification technique. Pas de correction exhaustive d'un roman à prix fixe.</p>
+                <p><strong>À partir de 179 € HT</strong> — Correction assistée, relecture des propositions et vérification technique. Pas de correction exhaustive d'un roman à prix fixe.</p>
                 <p><a class="text-link" href="/prestations-auteurs.php#correction">Voir les conditions et demander un devis →</a></p>
             </article>
         </div>

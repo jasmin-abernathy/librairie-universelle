@@ -19,7 +19,7 @@ function e_no_ai(?string $value): string
     <meta name="theme-color" content="#f7f3ea">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Sans IA — <?= e_no_ai($config['name']) ?>">
-    <meta property="og:description" content="Recherche déterministe, validation humaine des autoéditions, sources identifiées et aucune recommandation opaque.">
+    <meta property="og:description" content="Recherche claire, sources identifiées, fiches examinées avant publication et recommandations expliquées.">
     <title>Sans IA — <?= e_no_ai($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
 </head>
@@ -41,7 +41,7 @@ function e_no_ai(?string $value): string
             <article><h3>Pas de profil lecteur caché</h3><p>Le comportement de navigation n’a pas vocation à produire un profil destiné à influencer les résultats.</p></article>
             <article><h3>Pas de recommandation opaque</h3><p>Un livre ne doit pas être poussé parce qu’un modèle a calculé qu’il maximiserait un clic ou une vente.</p></article>
             <article><h3>Des règles visibles</h3><p>Un classement peut utiliser des critères explicites : format choisi, prix, disponibilité, distance ou ordre alphabétique.</p></article>
-            <article><h3>Des choix humains</h3><p>Les sélections éditoriales et la validation des ouvrages indépendants restent des décisions humaines.</p></article>
+            <article><h3>Des choix éditoriaux</h3><p>Les sélections de livres et les propositions des auteurs sont examinées avant publication.</p></article>
         </div>
     </section>
 
@@ -61,7 +61,7 @@ function e_no_ai(?string $value): string
         <p class="lede small">Le serveur peut contrôler des éléments objectifs — format, taille, signature PDF, structure EPUB, ISBN. Mais il ne décide pas si une soumission mérite d’entrer dans le storefront.</p>
         <ul class="check-list">
             <li>Le contrôle technique est déterministe.</li>
-            <li>La décision de validation, demande de corrections ou refus est humaine.</li>
+            <li>Une proposition peut être acceptée, renvoyée pour correction ou refusée après examen.</li>
             <li>Aucun score caché ne classe les auteurs indépendants.</li>
             <li>Une autoédition validée peut apparaître dans la recherche normale, sans être enfermée dans un sous-catalogue invisible.</li>
         </ul>
@@ -69,7 +69,7 @@ function e_no_ai(?string $value): string
 
     <section class="content-section" aria-labelledby="human-title">
         <div class="section-kicker">Découverte</div>
-        <h2 id="human-title">Découvrir des livres peut rester profondément humain.</h2>
+        <h2 id="human-title">Découvrir des livres selon ses envies.</h2>
         <ul class="check-list">
             <li>Sélections d’un libraire ou d’une librairie.</li>
             <li>Listes thématiques éditoriales avec auteur clairement identifié.</li>
@@ -90,7 +90,7 @@ function e_no_ai(?string $value): string
 
 <footer>
     <div class="footer-links"><a href="/ebooks.php">Ebooks</a><a href="/autoedition.php">Autoédition</a><a href="/feedback.php">Donner un retour</a></div>
-    <p>Recherche déterministe · sources identifiées · validation éditoriale humaine.</p>
+    <p>Sources identifiées · recherche transparente · choix éditoriaux expliqués.</p>
 </footer>
 </body>
 </html>

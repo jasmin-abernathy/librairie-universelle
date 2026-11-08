@@ -91,14 +91,14 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 </div>
             </div>
         <?php endif; ?>
-        <p class="note"><strong>Deux parcours complémentaires :</strong> <a href="/proposer-livre.php">proposer la fiche de votre livre pour une vérification humaine</a> et <a href="/diffuser-mon-livre.php">préparer vos contacts avec des librairies</a>. Les EPUB, PDF et dossiers ZIP restent téléchargeables. Aucun fichier n’est transmis automatiquement à une librairie ou à un imprimeur.</p>
+        <p class="note"><strong>Deux parcours complémentaires :</strong> <a href="/proposer-livre.php">proposer votre livre au catalogue</a> et <a href="/diffuser-mon-livre.php">préparer vos contacts avec des librairies</a>. Les EPUB, PDF et dossiers ZIP restent téléchargeables. Aucun fichier n’est transmis automatiquement à une librairie ou à un imprimeur.</p>
     </section>
 
     <?php if ($successId !== null): ?>
         <section class="content-section">
             <div class="success-box" role="status">
                 <h2>Dépôt reçu.</h2>
-                <p>Référence interne : <strong>#<?= (int) $successId ?></strong>. Le livre n’est pas encore publié : il passe maintenant par la validation humaine. Une fois validé et publié, sa fiche apparaîtra dans le catalogue.</p>
+                <p>Référence interne : <strong>#<?= (int) $successId ?></strong>. Le livre n’est pas encore publié : la fiche doit d’abord être examinée avant publication. Une fois validé et publié, sa fiche apparaîtra dans le catalogue.</p>
                 <p>Vous pouvez déjà préparer la suite, sans contacter les librairies avant d'avoir confirmé les informations de vente : <a href="/diffuser-mon-livre.php"><strong>préparer ma fiche de présentation et mon premier contact avec les librairies →</strong></a></p>
             </div>
         </section>
@@ -497,7 +497,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 
 <footer>
     <div class="footer-links"><a href="/ebooks.php">Ebooks</a><a href="/feedback.php?kind=self_publishing">Donner un retour</a><a href="/projet.php">Le projet</a></div>
-    <p>Autoédition accompagnée et filtrée humainement — sans classement automatique opaque.</p>
+    <p>Préparez vos livres, découvrez des auteurs indépendants et trouvez des imprimeurs.</p>
 </footer>
 <script src="/assets/js/autoedition-print.js"></script>
 <script src="/assets/js/autoedition-tabs.js?v=20261018-2"></script>

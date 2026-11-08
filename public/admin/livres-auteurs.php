@@ -36,7 +36,7 @@ $items=$service->pendingReview($status);
 <body><a class="skip-link" href="#main">Aller au contenu</a>
 <header class="site-header"><a class="brand" href="/admin/">Administration</a><nav class="site-nav"><a href="/admin/">Tableau de bord</a><a href="/admin/submissions.php">Anciens dépôts</a><a href="/livres-auteurs.php" target="_blank" rel="noopener noreferrer">Voir le catalogue ↗</a></nav></header>
 <main id="main" class="author-books-page">
-<section class="page-hero compact"><p class="eyebrow">Publication humaine obligatoire</p><h1>Valider les fiches d’auteurs</h1>
+<section class="page-hero compact"><p class="eyebrow">Fiches à examiner</p><h1>Valider les fiches d’auteurs</h1>
 <p>Seules les fiches que tu publies deviennent visibles. Aucun manuscrit ni paiement n'est transmis à la plateforme.</p></section>
 <?php if($error): ?><div class="error-box" role="alert"><?= $e($error) ?></div><?php endif; ?>
 <?php if($message): ?><div class="success-box" role="status"><?= $e($message) ?></div><?php endif; ?>

@@ -83,7 +83,7 @@ function e_project(?string $value): string
         <div class="feature-grid">
             <article><span aria-hidden="true">1</span><h3>Lecteurs et lectrices</h3><p>Chercher une œuvre, découvrir ses éditions, accéder à des ebooks gratuits ou à des offres commerciales identifiées, et repérer les librairies proches.</p></article>
             <article><span aria-hidden="true">2</span><h3>Librairies</h3><p>À terme, rendre leurs stocks visibles sans double saisie, puis recevoir des demandes de réservation ou de commande avec leur accord et dans le respect de leurs outils.</p></article>
-            <article><span aria-hidden="true">3</span><h3>Auteurs indépendants</h3><p>Préparer leur livre avec des outils gratuits, proposer uniquement une fiche descriptive au catalogue après vérification humaine, puis préparer un message pour approcher les librairies locales.</p></article>
+            <article><span aria-hidden="true">3</span><h3>Auteurs indépendants</h3><p>Préparer leur livre avec des outils gratuits, proposer uniquement une fiche descriptive au catalogue après examen de la fiche, puis préparer un message pour approcher les librairies locales.</p></article>
             <article><span aria-hidden="true">4</span><h3>Imprimeurs de proximité</h3><p>Recevoir des dossiers mieux préparés et, à terme, participer à un circuit d'impression locale adapté aux besoins des auteurs et des lecteurs.</p></article>
         </div>
     </section>
@@ -95,7 +95,7 @@ function e_project(?string $value): string
         <div class="project-journey">
             <article><span>01</span><h3>Créer</h3><p>Composer l'intérieur du livre, préparer les couvertures, générer les PDF et les réunir dans un dossier destiné à l'imprimeur.</p><a href="/autoedition.php?partie=paper">Utiliser les outils gratuits →</a></article>
             <article><span>02</span><h3>Faire imprimer</h3><p>Demander un devis à un imprimeur. Le prototype oriente notamment vers le formulaire officiel de Corep Metz, sans lui envoyer automatiquement de fichiers.</p><a href="/dossier-impression.php">Préparer le dossier →</a></article>
-            <article><span>03</span><h3>Faire référencer</h3><p>Proposer une fiche descriptive de livre : après vérification humaine et publication par l’équipe, une fiche est créée. <strong>Les manuscrits ne sont jamais envoyés à la Librairie.</strong> Les ventes et contacts se font directement avec les auteurs.</p><a href="/proposer-livre.php">Proposer ma fiche →</a></article>
+            <article><span>03</span><h3>Faire référencer</h3><p>Proposer une fiche descriptive de livre : après examen et publication par l’équipe, une fiche est créée. <strong>Les manuscrits ne sont jamais envoyés à la Librairie.</strong> Les ventes et contacts se font directement avec les auteurs.</p><a href="/proposer-livre.php">Proposer ma fiche →</a></article>
             <article><span>04</span><h3>Proposer aux librairies</h3><p>Créer une fiche de présentation et un message personnalisé, trouver des librairies proches et discuter avec elles des conditions de commande ou de dépôt-vente.</p><a href="/diffuser-mon-livre.php">Préparer ma diffusion →</a></article>
         </div>
         <p class="project-clarification">Être référencé au catalogue ne signifie pas vendre directement sur notre plateforme : les lecteurs contactent le vendeur. Paiement, livraison et éventuels accords avec les librairies restent gérés directement par les parties.</p>
@@ -103,11 +103,11 @@ function e_project(?string $value): string
 
     <section class="content-section" aria-labelledby="human-title">
         <p class="section-kicker">Accompagnement facultatif</p>
-        <h2 id="human-title">Les outils restent gratuits. Le temps humain, lui, peut être rémunéré.</h2>
+        <h2 id="human-title">Des outils gratuits, et un accompagnement si vous en avez besoin.</h2>
         <p>Si un auteur préfère ne pas tout vérifier seul, Le Potager du Web propose deux prestations distinctes, sur devis :</p>
         <div class="project-prices">
-            <article><h3>Vérification avant impression</h3><p class="project-price">79 € HT</p><p>Contrôle humain des fichiers et compte rendu des problèmes visibles : pagination, marges, couvertures, lisibilité.</p></article>
-            <article><h3>Correction accompagnée</h3><p class="project-price">Dès 179 € HT</p><p>Correction orthographique et grammaticale assistée par logiciel, avec vérification humaine dans un périmètre défini. Il ne s'agit pas d'une relecture intégrale garantie à ce prix.</p></article>
+            <article><h3>Vérification avant impression</h3><p class="project-price">79 € HT</p><p>Contrôle des fichiers et compte rendu des problèmes visibles : pagination, marges, couvertures, lisibilité.</p></article>
+            <article><h3>Correction accompagnée</h3><p class="project-price">Dès 179 € HT</p><p>Correction orthographique et grammaticale assistée par logiciel, avec relecture des corrections dans un périmètre défini. Il ne s'agit pas d'une relecture intégrale garantie à ce prix.</p></article>
         </div>
         <p><a class="text-link" href="/prestations-auteurs.php">Voir les prestations et demander un devis →</a></p>
     </section>
@@ -124,13 +124,13 @@ function e_project(?string $value): string
                     <li>Annuaire de librairies locales à Metz et en Moselle, <strong>sans prétendre connaître leurs stocks en direct</strong></li>
                     <li>Outils gratuits de préparation papier, PDF, couvertures et dossier d'impression</li>
                     <li>Guide de diffusion et création locale d'un message à adresser aux librairies</li>
-                    <li>Demandes de devis pour un accompagnement humain facultatif</li>
+                    <li>Demandes de devis pour un accompagnement facultatif</li>
                 </ul>
             </article>
             <article class="project-status">
                 <h3>Encore en préparation</h3>
                 <ul>
-                    <li>Tests en production de la soumission de fiches de livres, avec publication uniquement après validation humaine</li>
+                    <li>Tests en production de la soumission de fiches de livres, avec publication uniquement après examen de la fiche</li>
                     <li>Premières impressions et commandes testées avec de vrais auteurs et imprimeurs</li>
                     <li>Connexion autorisée aux logiciels et stocks des librairies volontaires</li>
                     <li>Faciliter la prise de contact directe entre auteurs, libraires et lecteurs, sans encaissement par la plateforme</li>

@@ -9,7 +9,7 @@ header('Referrer-Policy: no-referrer');
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <meta name="description" content="Accompagnement facultatif des auteurs indépendants : vérification des fichiers pour l'impression et correction assistée avec contrôle humain.">
+    <meta name="description" content="Accompagnement facultatif des auteurs indépendants : vérification des fichiers pour l'impression et correction assistée et relecture des propositions.">
     <title>Prestations pour auteurs — Librairie universelle</title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
     <link rel="stylesheet" href="/assets/css/prestations-auteurs.css?v=20261021-1">
@@ -19,7 +19,7 @@ header('Referrer-Policy: no-referrer');
 <?php $currentNav = 'autoedition'; require dirname(__DIR__) . '/src/views/site-header.php'; ?>
 <main id="main" class="author-services">
     <section class="page-hero compact">
-        <p class="eyebrow">Un coup de main humain, sans obligation</p>
+        <p class="eyebrow">Un accompagnement à la carte</p>
         <h1>Votre livre mérite un dernier regard.</h1>
         <p class="lede">Nos outils de mise en page, de couverture et de préparation à l'impression restent gratuits. Si vous le souhaitez, Le Potager du Web peut aussi vérifier vos fichiers ou vous aider à corriger votre texte.</p>
         <p><a class="text-link" href="/autoedition.php">← Revenir au générateur gratuit</a></p>
@@ -27,9 +27,9 @@ header('Referrer-Policy: no-referrer');
     <section class="author-services-grid" aria-label="Prestations facultatives">
         <article class="author-service-card" id="verification">
             <p class="eyebrow">Avant l'impression</p>
-            <h2>Vérification humaine des fichiers</h2>
+            <h2>Vérification des PDF avant impression</h2>
             <p class="author-service-price">79 € <small>HT · tarif indicatif</small></p>
-            <p>Vous avez préparé vos PDF ? Une personne les examine pour repérer les problèmes les plus visibles avant de demander l'impression.</p>
+            <p>Vous avez préparé vos PDF ? Nous les examinons pour repérer les problèmes les plus visibles avant de demander l'impression.</p>
             <ul>
                 <li>Pagination, marges et pages blanches</li>
                 <li>Format, lisibilité, couverture et informations sur le livre</li>
@@ -42,10 +42,10 @@ header('Referrer-Policy: no-referrer');
             <p class="eyebrow">Texte et impression</p>
             <h2>Correction accompagnée</h2>
             <p class="author-service-price">Dès 179 € <small>HT · sur devis</small></p>
-            <p>Une première passe d'orthographe, de grammaire et de typographie assistée par logiciel, avec contrôle humain des propositions, puis vérification technique des fichiers.</p>
+            <p>Une première passe d'orthographe, de grammaire et de typographie assistée par logiciel, avec relecture des propositions, puis vérification technique des fichiers.</p>
             <ul>
                 <li>Repérage des fautes et incohérences typographiques</li>
-                <li>Validation humaine des corrections dans le périmètre convenu</li>
+                <li>Relecture des corrections dans le périmètre convenu</li>
                 <li>Contrôle du dossier avant impression</li>
             </ul>
             <p class="author-service-limit">Ce prix ne garantit pas la correction intégrale d'un roman ni une relecture éditoriale exhaustive. Le devis dépend de la longueur, de l'état du texte et du temps nécessaire.</p>

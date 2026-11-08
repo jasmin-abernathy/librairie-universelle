@@ -15,7 +15,7 @@ $price=static fn(int $cents):string=>number_format($cents/100,2,',',' ').' €';
 </head><body><a class="skip-link" href="#main">Aller au contenu</a>
 <?php $currentNav='authorbooks'; require dirname(__DIR__).'/src/views/site-header.php'; ?>
 <main id="main" class="author-books-page">
-<section class="page-hero compact"><p class="eyebrow">Livres proposés · vérification humaine</p>
+<section class="page-hero compact"><p class="eyebrow">Sélection d’auteurs indépendants</p>
 <h1>Les livres des auteurs indépendants</h1>
 <p class="lede">Des fiches proposées par les auteurs et examinées avant leur mise en ligne. La Librairie ne vend pas ces livres : l’achat ou la demande se fait directement auprès du vendeur indiqué.</p>
 <a class="button-link" href="/proposer-livre.php">Proposer la fiche de mon livre →</a>
@@ -25,7 +25,7 @@ $price=static fn(int $cents):string=>number_format($cents/100,2,',',' ').' €';
 <label>Rechercher par livre ou auteur <input type="search" name="q" maxlength="80" value="<?= $e($q) ?>" placeholder="Titre ou auteur"></label>
 <button type="submit" class="button-link">Rechercher</button>
 </form>
-<?php if(!$items): ?><p class="note"><?= $q!==''?'Aucun livre publié ne correspond à cette recherche.':'Aucune fiche d’auteur n’est encore publiée. Les propositions attendent une vérification humaine.' ?></p>
+<?php if(!$items): ?><p class="note"><?= $q!==''?'Aucun livre publié ne correspond à cette recherche.':'Aucune fiche d’auteur n’est encore publiée. Les premières propositions sont en cours d’examen.' ?></p>
 <?php else: ?><div class="author-book-grid">
 <?php foreach($items as $item): ?><article class="author-book-card">
 <p class="eyebrow"><?= $e($item['book_format']==='both'?'Papier et numérique':($item['book_format']==='ebook'?'Numérique':'Papier')) ?> · <?= $e($item['seller_type']==='professional'?'Vendeur professionnel':'Vendeur particulier') ?></p>

@@ -54,14 +54,14 @@ header('Referrer-Policy: no-referrer');
 <?php $currentNav='propose'; require dirname(__DIR__).'/src/views/site-header.php'; ?>
 <main id="main" class="author-books-page">
 <section class="page-hero compact">
-<p class="eyebrow">Catalogue indépendant · référencement humain</p>
+<p class="eyebrow">Catalogue indépendant · livres d’auteurs</p>
 <h1>Proposer la fiche de mon livre</h1>
 <p class="lede">Décrivez votre ouvrage et indiquez comment les lecteurs peuvent vous contacter ou l’acheter directement. <strong>Ne transmettez aucun manuscrit, EPUB ni PDF.</strong> La Librairie n’encaisse rien et ne vend rien en votre nom.</p>
 <div class="cta-row"><a class="text-link" href="/livres-auteurs.php">Voir les livres déjà référencés →</a><a class="text-link" href="/diffuser-mon-livre.php">Découvrir le parcours vers les librairies →</a></div>
 </section>
 <section class="content-section">
 <h2>Avant l’envoi</h2>
-<p>La proposition est <strong>privée tant que l’administrateur ne l’a pas validée</strong>. La vérification porte sur les informations de la fiche, pas sur l’intégralité du manuscrit. Tu conserves la responsabilité des prix, du paiement, de la livraison, des retours et des obligations légales liées à la vente.</p>
+<p>La proposition est <strong>privée tant que l’administrateur ne l’a pas validée</strong>. La vérification porte sur les informations de la fiche, pas sur l’intégralité du manuscrit. Vous conservez la responsabilité des prix, du paiement, de la livraison, des retours et des obligations légales liées à la vente.</p>
 <p>L’adresse de suivi reste privée. L’adresse de contact publique et le lien de vente seront visibles par tous <strong>seulement après validation</strong>. Ne renseignez pas d’adresse personnelle que vous ne souhaitez pas diffuser.</p>
 </section>
 <?php if($accepted): ?>
@@ -105,9 +105,9 @@ header('Referrer-Policy: no-referrer');
 </div>
 <p class="field-help">Indiquez au moins une adresse publique ou un lien HTTPS. Pour les professionnels, la consultation du registre officiel est obligatoire avant l’envoi. La Librairie ne fournit pas de commande, de paiement ni de livraison.</p>
 </fieldset>
-<fieldset><legend>Confirmation avant modération</legend>
+<fieldset><legend>Avant d’envoyer ma fiche</legend>
 <label class="check-row"><input type="checkbox" name="rights_confirmed" value="1" required<?= !empty($_POST['rights_confirmed'])?' checked':'' ?>> Je confirme être habilité à présenter ce livre et ses informations.</label>
-<label class="check-row"><input type="checkbox" name="public_contact_confirmed" value="1" required<?= !empty($_POST['public_contact_confirmed'])?' checked':'' ?>> J’accepte la publication de la fiche, du moyen de contact choisi et, si je suis professionnel, du SIRET et de la dénomination officielle après validation humaine. Mon adresse de suivi reste privée.</label>
+<label class="check-row"><input type="checkbox" name="public_contact_confirmed" value="1" required<?= !empty($_POST['public_contact_confirmed'])?' checked':'' ?>> J’accepte la publication de la fiche, du moyen de contact choisi et, si je suis professionnel, du SIRET et de la dénomination officielle après validation de la fiche. Mon adresse de suivi reste privée.</label>
 <label class="check-row"><input type="checkbox" name="seller_responsibility_confirmed" value="1" required<?= !empty($_POST['seller_responsibility_confirmed'])?' checked':'' ?>> Je comprends que la Librairie met uniquement en relation et que je gère directement toute vente éventuelle avec le lecteur.</label>
 </fieldset>
 <button type="submit" class="button-link author-book-submit">Envoyer ma fiche pour vérification</button>

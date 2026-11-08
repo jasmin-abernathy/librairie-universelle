@@ -226,7 +226,7 @@ SQL);
                 ':title' => $submission['title'],
                 ':subtitle' => $submission['subtitle'],
                 ':language' => $submission['language'],
-                ':note' => 'Publication indépendante validée humainement. Les droits restent ceux déclarés par l’auteur ou l’autrice.',
+                ':note' => 'Publication indépendante acceptée après examen de sa fiche. Les droits restent ceux déclarés par l’auteur ou l’autrice.',
             ]);
             $workId = (int) $this->pdo->lastInsertId();
 
@@ -420,7 +420,7 @@ SQL);
 
         $insert = $this->pdo->prepare(<<<'SQL'
 INSERT INTO sources (name, source_type, data_license)
-VALUES ('Auteurs indépendants validés', 'publisher', 'Données fournies par l’auteur et validées humainement pour le storefront')
+VALUES ('Auteurs indépendants validés', 'publisher', 'Données fournies par l’auteur et vérifiées avant publication')
 SQL);
         $insert->execute();
         return (int) $this->pdo->lastInsertId();
