@@ -25,7 +25,7 @@ foreach ([
     'stocks en direct',
     'sans prétendre connaître leurs stocks en direct',
     'Les manuscrits ne sont jamais envoyés',
-    'une fiche est créée',
+    'la publication exige une convention signée',
     'vente intégrée',
     'DOCX, un ODT ou un EPUB sans DRM',
     'Corep Metz',
@@ -40,7 +40,9 @@ foreach ([
     $check(str_contains($page, $needle), 'Mention attendue absente : ' . $needle);
 }
 $check(str_contains($page, 'n\'annonçons ni stock en temps réel, ni vente intégrée, ni partenariat contractuel'), 'Pas de limites explicites des promesses commerciales.');
-$check(str_contains($page, 'ne signifie pas vendre directement sur notre plateforme'), 'Une fiche ne doit pas promettre de paiement intégré.');
+$check(str_contains($page, "La Librairie n'encaisse pas le prix du livre")
+    && str_contains($page, 'Le vendeur gère la commande, le paiement et la livraison'),
+    'Une fiche ne doit pas promettre de paiement intégré.');
 $check(str_contains($page, "nom de travail"), 'Nom provisoire masqué.');
 $check(!str_contains($page, 'Amazon') && !str_contains($page, 'Fnac'),
     'La présentation du projet ne doit pas faire la promotion des grandes enseignes.');
