@@ -62,6 +62,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <link rel="stylesheet" href="/assets/css/author-draft.css?v=20261018-3">
     <link rel="stylesheet" href="/assets/css/autoedition-paper.css?v=20261019-1">
     <link rel="stylesheet" href="/assets/css/print-provider-flow.css?v=20261102-1">
+    <link rel="stylesheet" href="/assets/css/paper-wizard.css?v=20261108-1">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -244,7 +245,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 <div class="resource-card important-resource" id="paper-interior-step">
                     <div>
                         <strong>1. Importer votre manuscrit pour composer l'intérieur PDF</strong>
-                        <p>Formats acceptés : <strong>.docx, .odt, .epub</strong>. Si vous avez déjà un EPUB sans DRM, importez-le directement : il sera recomposé pour le papier sans altérer le fichier numérique. Pour un ancien <code>.doc</code>, enregistrez-le d'abord en DOCX ou ODT. Les fichiers TXT et les EPUB protégés ne sont pas pris en charge.</p>
+                        <p>Formats acceptés : <strong>.docx, .odt, .epub</strong> ou PDF déjà maquetté (dans le champ suivant). Si vous avez déjà un EPUB sans DRM, importez-le directement : il sera recomposé pour le papier sans altérer le fichier numérique. Pour un ancien <code>.doc</code>, enregistrez-le d'abord en DOCX ou ODT. Les fichiers TXT et les EPUB protégés ne sont pas pris en charge.</p>
                         <label>Manuscrit papier à mettre en page
                             <input type="file" name="office_manuscript" accept=".docx,.odt,.epub,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.oasis.opendocument.text,application/epub+zip">
                             <span class="field-help">Fichier lu temporairement pour l'aperçu, jamais envoyé à l'imprimeur automatiquement. Taille maximale selon votre serveur : <?= e(UploadLimits::officeLabel($config)) ?>. Contrôlez les images, notes, tableaux et styles complexes après recomposition.</span>
@@ -293,12 +294,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                                 <option value="hardcover"<?= ($_POST['print_binding'] ?? '') === 'hardcover' ? ' selected' : '' ?>>Relié</option>
                             </select>
                         </label>
-                        <label>Début des chapitres
-                            <select name="print_chapter_start">
-                                <option value="right"<?= ($_POST['print_chapter_start'] ?? 'right') === 'right' ? ' selected' : '' ?>>Toujours sur une page de droite</option>
-                                <option value="next"<?= ($_POST['print_chapter_start'] ?? '') === 'next' ? ' selected' : '' ?>>À la page suivante, gauche ou droite</option>
-                            </select>
-                        </label>
+                        <input type="hidden" name="print_chapter_start" value="right">
                         <label>Numéros de page
                             <select name="print_page_number_position">
                                 <option value="outside"<?= ($_POST['print_page_number_position'] ?? 'outside') === 'outside' ? ' selected' : '' ?>>Côté extérieur — gauche sur page gauche, droite sur page droite</option>
@@ -313,12 +309,8 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                                 <option value="arabic"<?= ($_POST['print_front_matter_numbering'] ?? '') === 'arabic' ? ' selected' : '' ?>>Numérotation continue en chiffres arabes</option>
                             </select>
                         </label>
-                        <label>Fond perdu
-                            <select name="print_bleed_mm">
-                                <option value="0"<?= (string) ($_POST['print_bleed_mm'] ?? '0') === '0' ? ' selected' : '' ?>>0 mm — livre sans éléments jusqu’au bord</option>
-                                <option value="3"<?= (string) ($_POST['print_bleed_mm'] ?? '') === '3' ? ' selected' : '' ?>>3 mm</option>
-                            </select>
-                        </label>
+                        <input type="hidden" name="print_bleed_mm" value="3">
+                        <p class="field-help">Fonds perdus gérés par le profil d’impression : 3 mm dans le réglage initial Corep, aucun choix manuel. Pour Bookelis, le générateur ne certifie pas les fonds perdus : leurs consignes exigent 5 mm sur l’intérieur si des images atteignent le bord, et un gabarit distinct pour la couverture. Un livre uniquement textuel n’a normalement pas besoin de fonds perdus.</p>
                         <label>Marge intérieure / reliure
                             <select id="print-gutter-mode" name="print_gutter_mode">
                                 <option value="auto"<?= ($_POST['print_gutter_mode'] ?? 'auto') === 'auto' ? ' selected' : '' ?>>Automatique selon le nombre de pages</option>
@@ -400,7 +392,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     <p>Pour Corep, la grille concerne uniquement les tirages de <strong>120, 200 ou 300 pages</strong> et les quantités exactes affichées, en A5 broché N&B 80 g. Indiquez le nombre réel de pages relevé dans l’aperçu : en dehors des paliers autorisés, un devis est nécessaire. Nous avons reçu de <strong>Corep Metz</strong> les caractéristiques techniques et l’autorisation de présenter une grille TTC indicative. Si elle est disponible et encore publiable, ses montants sont affichés ci-dessous ; le devis réel reste à confirmer par l’imprimeur.</p>
                     <div class="print-cost-controls">
                         <label>Nombre de pages
-                            <input id="print-estimate-pages" type="number" min="1" max="5000" step="1" value="200" inputmode="numeric">
+                            <input id="print-estimate-pages" type="number" min="1" max="5000" step="1" value="" placeholder="Calcul après import" inputmode="numeric">
                             <span class="field-help" id="print-pages-feedback">Après avoir ouvert l'aperçu, son nombre de pages sera repris ici automatiquement.</span>
                         </label>
                         <label>Tirage
@@ -499,6 +491,8 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 <script src="/assets/js/autoedition-print.js"></script>
 <script src="/assets/js/autoedition-tabs.js?v=20261018-2"></script>
 <script src="/assets/js/author-draft.js?v=20261018-3"></script>
+<script src="/assets/js/paper-barcode.js?v=20261018-1"></script>
+<script src="/assets/js/paper-wizard.js?v=20261108-1"></script>
 <script src="/assets/js/printing-estimate.js?v=20261102-1"></script>
 </body>
 </html>
