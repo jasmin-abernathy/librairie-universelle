@@ -227,7 +227,56 @@
   readyPdf.addEventListener('change',syncKitFields);
   source.addEventListener('change',syncKitFields);
   form.querySelectorAll('input[name="print_provider"]').forEach(el=>el.addEventListener('change',syncKitFields));
-  syncKitFields();
+  const finalFrame=create('iframe','paper-wizard-final-frame');
+  finalFrame.id='paper-wizard-final-frame';
+  finalFrame.name='paper_wizard_final_iframe';
+  finalFrame.title='Aperçu du PDF intérieur et commandes d’export';
+  finalFrame.hidden=true;
+  steps[4].section.insertBefore(finalFrame,kitBuilder);
+  const finalFrameStatus=create('p','paper-wizard-help','L’aperçu final s’affichera ici sans recharger votre page.');
+  steps[4].section.insertBefore(finalFrameStatus,finalFrame);
+  const finalPreviewFlag=create('input');
+  finalPreviewFlag.type='hidden';finalPreviewFlag.name='wizard_preview';finalPreviewFlag.value='0';
+  form.appendChild(finalPreviewFlag);
+  const pdfSourceButton=get('paper-generate-button');
+  let originalObjectUrl=null;
+  const originalLabel=pdfSourceButton?.closest('.print-preview-row');
+  const previewWithinWizard=()=>{
+    if(!hasSource()||isPdf()){
+      finalFrameStatus.textContent='Le PDF importé est conservé à l’identique : vous pouvez le vérifier directement et l’utiliser dans le kit.';
+      return;
+    }
+    const target=form.target,action=form.action,estimate=estimateOnly.value;
+    form.target=finalFrame.name;form.action='/print-preview.php';
+    estimateOnly.value='0';finalPreviewFlag.value='1';
+    finalFrame.hidden=false;
+    finalFrameStatus.textContent='Composition de l’aperçu en cours dans cet espace. Après vérification, utilisez « Enregistrer l’intérieur en PDF » dans la fenêtre intégrée.';
+    try{HTMLFormElement.prototype.submit.call(form);}
+    catch(_){finalFrameStatus.textContent='Aperçu impossible. Essayez le bouton d’export classique.';}
+    finally{
+      form.target=target;form.action=action;estimateOnly.value=estimate;finalPreviewFlag.value='0';
+    }
+  };
+  if(pdfSourceButton){
+    pdfSourceButton.textContent='Composer et prévisualiser le PDF dans cette étape';
+    pdfSourceButton.addEventListener('click',event=>{event.preventDefault();previewWithinWizard();});
+  }
+  const syncFinalFrame=()=>{
+    if(originalObjectUrl){URL.revokeObjectURL(originalObjectUrl);originalObjectUrl=null;}
+    finalFrame.hidden=true;
+    if(originalLabel) originalLabel.hidden=isPdf();
+    if(isPdf()&&readyPdf.files?.[0]){
+      originalObjectUrl=URL.createObjectURL(readyPdf.files[0]);
+      finalFrame.src=originalObjectUrl;
+      finalFrame.hidden=false;
+      finalFrameStatus.textContent='PDF d’origine affiché sans recomposition. Certaines visionneuses mobiles ouvrent le document dans un lecteur dédié.';
+    } else {
+      finalFrame.removeAttribute('src');
+      finalFrameStatus.textContent='Pour un DOCX/ODT/EPUB, composez et vérifiez le PDF intérieur directement ici.';
+    }
+  };
+  readyPdf.addEventListener('change',syncFinalFrame);
+  source.addEventListener('change',syncFinalFrame);
 
   // Les étapes d'une seule page évitent les rechargements HTML et conservent tous les champs du formulaire.
   let active=0,seen=0,pdfData=null,analysisPending=false,estimateTimer=null,nonce=0,estimateRequest='';
@@ -466,5 +515,7 @@
   pagesField.value='';
   updateBarcode();
   syncProvider();
+  syncKitFields();
+  syncFinalFrame();
   show(0,true);
 })();
