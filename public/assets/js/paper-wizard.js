@@ -279,7 +279,7 @@
   source.addEventListener('change',syncFinalFrame);
 
   // Les étapes d'une seule page évitent les rechargements HTML et conservent tous les champs du formulaire.
-  let active=0,seen=0,pdfData=null,analysisPending=false,estimateTimer=null,nonce=0,estimateRequest='';
+  let active=0,seen=0,pdfData=null,analysisPending=false,estimateTimer=null,nonce=0,estimateRequest='',pdfCheckSerial=0;
   const isPdf=()=>Boolean(readyPdf.files?.length);
   const hasSource=()=>Boolean(source.files?.length);
   const selection=()=>form.querySelector('input[name="print_provider"]:checked')?.value||'corep_metz';
@@ -352,6 +352,7 @@
   form.querySelectorAll('input[name="print_provider"]').forEach(r=>r.addEventListener('change',syncProvider));
   const analyzePdf=async()=>{
     if(!isPdf())return;
+    const ticket=++pdfCheckSerial,selectedFile=readyPdf.files[0];
     pdfData=null;analysisPending=true;
     setStatus('Lecture du format et du nombre de pages du PDF…');
     const body=new FormData();
@@ -361,7 +362,7 @@
       const response=await fetch('/analyser-pdf.php',{method:'POST',body,credentials:'same-origin',headers:{'Accept':'application/json'}});
       const data=await response.json();
       if(!response.ok||data.error)throw Error(data.error||'Analyse impossible.');
-      if(!isPdf())return;
+      if(!isPdf()||ticket!==pdfCheckSerial||readyPdf.files[0]!==selectedFile)return;
       pdfData=data;
       pagesField.value=String(data.pages);
       pagesField.dispatchEvent(new Event('input',{bubbles:true}));
@@ -369,9 +370,11 @@
       setStatus('PDF : '+data.pages+' pages, '+fmt+'. Mise en page conservée ; vérifiez les éventuelles pages de formats différents.');
       syncProvider();
     }catch(e){
-      pdfData=null;
-      invalidate('PDF non analysé : '+(e.message||'erreur')+'. Le fichier reste intact. Un devis fiable nécessite une vérification du PDF.');
-    }finally{analysisPending=false;}
+      if(ticket===pdfCheckSerial){
+        pdfData=null;
+        invalidate('PDF non analysé : '+(e.message||'erreur')+'. Le fichier reste intact. Un devis fiable nécessite une vérification du PDF.');
+      }
+    }finally{if(ticket===pdfCheckSerial)analysisPending=false;}
   };
   const frame=document.createElement('iframe');
   frame.id='paper-wizard-pagination-frame';
@@ -424,7 +427,7 @@
     refreshAdvice();
   });
   source.addEventListener('change',()=>{
-    if(source.files?.length){readyPdf.value='';pdfData=null;}
+    if(source.files?.length){pdfCheckSerial+=1;readyPdf.value='';pdfData=null;analysisPending=false;}
     invalidate(source.files?.length?'Manuscrit chargé : choisissez vos réglages pour calculer les pages.':'Choisissez un manuscrit ou un PDF.');
     syncProvider();
     if(hasSource()&&active===1)scheduleEstimate();
