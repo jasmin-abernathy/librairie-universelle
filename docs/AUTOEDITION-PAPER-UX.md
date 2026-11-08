@@ -1,12 +1,32 @@
-# Parcours papier — ordre des étapes et ergonomie mobile
+# Assistant papier — étapes dynamiques
 
-Ordre affiché dans le panneau « Livre papier » :
-1. Importer un DOCX/ODT, régler la pagination, puis générer le PDF intérieur.
-2. Convertir si nécessaire le PDF intérieur en PDF/X-4 ou PDF/X-1a. **Étape facultative** : le serveur peut ne pas être configuré, le PDF standard reste valide si l'imprimeur l'accepte.
-3. Créer et enregistrer séparément les deux couvertures. Si l'imprimeur demande du PDF/X pour elles, revenir à l'atelier de conversion individuellement.
-4. Estimer le coût d'impression sur la grille connue (indicative, sans modifier le comparateur d'imprimeurs).
-5. Vérifier les trois PDF et constituer le dossier ZIP destiné à l'imprimeur.
+Version du 8 novembre 2026. L’outil principal reste `/autoedition.php?partie=paper` : il ne délègue ni la vente ni les manuscrits aux imprimeurs. Les fichiers restent sur l’appareil lors de la préparation du kit ; les uploads nécessaires à l’analyse PDF et à la pagination sont temporaires, côté hébergement, sans transmission à Corep ni à Bookelis.
 
-Une navigation interne en haut du panneau donne accès immédiatement aux cinq étapes. L'ordre du HTML est identique à l'ordre de lecture et de tabulation ; aucune réorganisation purement visuelle par CSS ne vient inverser l'accessibilité.
+## Parcours
 
-Les boutons CTA sont compacts et fluides en mobile, le bouton PDF/X est visuellement secondaire pour éviter de le présenter comme obligatoire ou déjà activé. Le champ d'import JSON des brouillons possède un véritable input de fichier focusable au clavier, un label distinct et un statut lisible, sans découpe du texte par la largeur du bouton natif. Les tests PHP vérifient l'ordre des étapes, l'unicité des liens, la présence d'une navigation et du support mobile.
+Le parcours est un assistant en cinq écrans dans **le même conteneur** (`public/assets/js/paper-wizard.js`, `paper-wizard.css`) :
+
+1. Importer un DOCX/ODT/EPUB à recomposer **ou** un PDF déjà maquetté. Le fichier original n’est pas modifié.
+2. Pour DOCX/ODT/EPUB seulement : sélectionner le prestataire et le format, régler marges, pagination et sommaire. Le début des chapitres n’est plus réglable : il reste positionné à droite. Aucun choix manuel de fonds perdus ; le profil Corep utilise 3 mm pour la recomposition, Bookelis reste à 0 dans ce moteur pour ne pas faussement certifier 5 mm sur des pages bord à bord.
+3. Choisir la couverture et, si besoin, saisir un ISBN papier officiel et générer son EAN-13 en SVG, ou utiliser une image existante, ou laisser Bookelis le placer. Un tutoriel dirige vers le formulaire AFNIL. Le code à barres local ne constitue pas une attribution d’ISBN ni une certification d’impression.
+4. Comparer les coûts et simuler un prix de vente libre : Corep uniquement sur ses paliers de grille datée, Bookelis via son calculateur officiel ou un coût unitaire réel saisi par l’utilisateur. La recommandation est arrondie à l’euro, sur une hypothèse de rémunération brute définie par l’auteur et de remise libraire de 30 % lorsqu’elle s’applique.
+5. Revoir le PDF, puis constituer localement un ZIP propre au prestataire : **Corep** (intérieur + deux couvertures PDF + fiche) ou **Bookelis** (intérieur + couverture complète à plat depuis le gabarit officiel + fiche + consignes). Les conversions PDF/X éventuelles et le BAT restent des actions séparées.
+
+La navigation entre écrans ne recharge pas l’HTML principal. Les contrôles et messages sont accessibles au clavier et visibles sur mobile ; le manuscrit et les autres champs ne sont pas effacés au changement de réglage.
+
+## Pagination et PDF
+
+- **DOCX/ODT/EPUB :** un POST dans un iframe *même origine* permet à Paged.js de produire la pagination réelle **sans créer de PDF final** (`estimate_only` dans `print-preview.php`). Le résultat retourne exclusivement le nombre de pages, l’imprimeur et le format via `postMessage` contrôlé sur la même origine. Le calcul est relancé avec temporisation quand les paramètres changent. L’aperçu définitif se fait dans un iframe visible dans la dernière étape, puis le navigateur permet d’enregistrer le PDF. Le contrôle visuel reste obligatoire.
+- **PDF déjà maquetté :** `analyser-pdf.php` lit le nombre de pages et le format via `pdfinfo` sur un upload éphémère, sans reproportionner le document. Le format reporté provient de la première page ; le reste du document et les fonds perdus nécessitent un contrôle. Si `pdfinfo` n’est pas disponible, le message le dit explicitement : aucune estimation présentée comme vérifiée.
+- La limite Corep connue est de **680 pages** en A5 sur papier 80 g ; le profil Corep est exclu en cas de dépassement ou de format PDF incompatible. Les autres conditions sont à confirmer par l’agence.
+- Le calculateur Bookelis ne dispose pas d’API ou de grille autorisée dans le dépôt. Aucun prix Bookelis en direct n’est inventé. Le coût de fabrication, l’impression, le transport, la commission de librairie et la fiscalité ne se confondent pas.
+
+## Consignes Bookelis et Corep
+
+- Corep Metz : dos carré collé A5, intérieur N&B 80 g, couverture couleur en faces séparées sans fond perdu ni traits de coupe d’après les échanges pilotes ; validation finale par l’atelier.
+- Bookelis : couverture à plat (quatrième + tranche + première) selon son gabarit officiel. Fond perdu public documenté de 8 mm en couverture et 5 mm en intérieur **si les éléments vont au bord** ; ces exigences ne doivent pas être remplacées par un fond perdu universel de 3 mm. Un texte sans élément au bord peut ne pas nécessiter de fond perdu.
+- Les kits vérifient les signatures de début et de fin PDF mais ne garantissent pas la conformité prépresse, les polices incorporées, les couleurs, les cotes de tranche ou un BAT accepté. L’utilisateur soumet lui-même les fichiers au prestataire.
+
+## Tests et publication
+
+CI : syntaxe PHP/JS et tests du parcours historique. La production doit être vérifiée séparément via la procédure Git → o2switch ; une CI verte n’est pas une preuve de déploiement ni de bon fonctionnement en situation réelle.
