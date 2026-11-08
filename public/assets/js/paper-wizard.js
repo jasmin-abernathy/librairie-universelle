@@ -98,10 +98,10 @@
     '<p id="wizard-isbn-feedback" role="status" aria-live="polite"></p>'+
     '<div class="paper-wizard-barcode-choices"><label><input type="radio" name="wizard_barcode_mode" value="generate" checked> Générer gratuitement le code-barres</label>'+
     '<label><input type="radio" name="wizard_barcode_mode" value="existing"> J’ai déjà son image</label>'+
-    '<label><input type="radio" name="wizard_barcode_mode" value="bookelis"> Laisser Bookelis l’ajouter</label></div>'+
+    '<label><input type="radio" name="wizard_barcode_mode" value="bookelis"> Laisser Bookelis l’ajouter (si ISBN Bookelis)</label></div>'+
     '<div id="wizard-barcode-generated" hidden><img id="wizard-barcode-preview" alt="Aperçu du code-barres ISBN" width="226" height="164"><p><a id="wizard-barcode-download" class="button-link secondary" download="code-barres-isbn.svg">Télécharger le code-barres SVG</a></p><small>Contrôlez la lisibilité et le contraste en noir sur fond blanc avant impression.</small></div>'+
     '<div id="wizard-barcode-existing" hidden><label>Image fournie par votre éditeur ou l’AFNIL<input id="wizard-barcode-file" type="file" accept=".svg,.png,.jpg,.jpeg,image/svg+xml,image/png,image/jpeg"></label><p>Réutilisez cette image sur votre quatrième de couverture. Elle ne sera pas remplacée automatiquement.</p></div>'+
-    '<p id="wizard-barcode-bookelis" hidden>Bookelis peut placer automatiquement l’ISBN, le code-barres et le prix sur votre quatrième de couverture. Ne les ajoutez pas une seconde fois.</p>'+
+    '<p id="wizard-barcode-bookelis" hidden>Si Bookelis attribue l’ISBN, son outil peut placer automatiquement l’ISBN, le code-barres et le prix. Pour votre propre ISBN, prévoyez une image et vérifiez les consignes Bookelis. Ne dupliquez pas ces éléments.</p>'+
     '<details><summary>Je n’ai pas d’ISBN : comment en obtenir un ?</summary><ol>'+
     '<li>Pour un livre destiné uniquement à vos proches, aucun ISBN n’est nécessaire.</li>'+
     '<li>Pour une édition destinée à la vente, <a href="https://www.afnil.org/formulaire/demande_isbn_particulier/" target="_blank" rel="noopener noreferrer">remplissez la demande officielle auprès de l’AFNIL</a> (si vous publiez comme particulier).</li>'+
@@ -449,8 +449,8 @@
     get('wizard-barcode-bookelis').hidden=mode!=='bookelis';
     barcodeGenerated.hidden=true;
     const digits=window.PaperBarcode?.digits(isbn.value)||'';
-    if(!digits){isbnFeedback.textContent='Sans ISBN : possible pour une impression strictement privée.';return;}
-    if(!window.PaperBarcode?.valid(digits)){isbnFeedback.textContent='ISBN-13 invalide : vérifiez les 13 chiffres et la clé de contrôle. Aucun code-barres inventé.';return;}
+    if(!digits){try{sessionStorage.removeItem('librairie:paper-isbn-for-cover');}catch(_){} isbnFeedback.textContent='Sans ISBN : possible pour une impression strictement privée.';return;}
+    if(!window.PaperBarcode?.valid(digits)){try{sessionStorage.removeItem('librairie:paper-isbn-for-cover');}catch(_){} isbnFeedback.textContent='ISBN-13 invalide : vérifiez les 13 chiffres et la clé de contrôle. Aucun code-barres inventé.';return;}
     isbnFeedback.textContent='ISBN-13 valide sur le plan du chiffre de contrôle. Son attribution officielle reste à vérifier auprès de l’éditeur.';
     try{sessionStorage.setItem('librairie:paper-isbn-for-cover',digits);}catch(_){}
     if(mode!=='generate')return;
