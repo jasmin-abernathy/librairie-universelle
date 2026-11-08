@@ -492,6 +492,8 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 <script src="/assets/js/autoedition-tabs.js?v=20261018-2"></script>
 <script src="/assets/js/author-draft.js?v=20261018-3"></script>
 <script src="/assets/js/paper-barcode.js?v=20261018-1"></script>
+<script src="/assets/js/printer-kit.js?v=20261018-1"></script>
+<script src="/assets/js/printer-zip.js?v=20261018-1"></script>
 <script src="/assets/js/paper-wizard.js?v=20261108-1"></script>
 <script src="/assets/js/printing-estimate.js?v=20261102-1"></script>
 </body>
