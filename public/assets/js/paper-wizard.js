@@ -463,7 +463,7 @@
   form.querySelectorAll('input[name="wizard_barcode_mode"]').forEach(e=>e.addEventListener('change',updateBarcode));
   const pageMoney=new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'});
   const toMoney=value=>pageMoney.format(value);
-  const roundPrice=v=>Math.ceil(v*2)/2;
+  const roundPrice=v=>Math.ceil(v);
   const grids=(()=>{try{return JSON.parse(pricePanel.dataset.grids||'[]');}catch(_){return [];}})();
   const refreshAdvice=()=>{
     if(!pricePanel)return;
