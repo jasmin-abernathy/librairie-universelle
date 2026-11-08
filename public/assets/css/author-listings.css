@@ -58,3 +58,13 @@
 }
 
 #listing-ebook-price-field[hidden]{display:none!important}#listing-ebook-price-field small{display:block;color:var(--muted);font-weight:400;font-size:.85rem;margin-top:.3rem}
+
+/* Validation de la convention de vente directe : accessible même sur mobile. */
+.author-agreement-box{background:#eff5ef;border:1px solid #a8c4af;border-radius:1rem;margin:1rem 0;padding:1rem}
+.author-agreement-box h3{margin:0 0 .6rem;font-size:1.05rem}
+.author-agreement-box .button-link{display:inline-flex;white-space:normal;max-width:100%;text-align:center}
+.author-agreement-box label{display:block;margin:.8rem 0;font-weight:700}
+.author-agreement-box label.check-row{display:flex;align-items:flex-start;gap:.6rem;font-weight:500}
+.author-agreement-box input[type=text]{width:100%;box-sizing:border-box;min-height:44px;padding:.7rem;border:1px solid #899c8d;border-radius:.65rem}
+.author-agreement-box input[type=checkbox]{width:1.2rem;height:1.2rem;flex:none}
+.author-book-actions button:disabled{cursor:not-allowed;opacity:.48}

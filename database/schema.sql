@@ -317,4 +317,3 @@ CREATE TABLE IF NOT EXISTS seller_agreements (
     signature_reference TEXT NOT NULL,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX IF NOT EXISTS idx_author_book_listings_seller_key ON author_book_listings(seller_key);
