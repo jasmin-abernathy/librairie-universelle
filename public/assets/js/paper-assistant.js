@@ -3,6 +3,15 @@
   const el = id => document.getElementById(id);
   const ids = ['paper-size','paper-title','paper-author','paper-subtitle','paper-bg','paper-ink','paper-description','paper-isbn','paper-price','paper-front-ready'];
   const items = Object.fromEntries(ids.map(id => [id, el(id)]));
+  // Reprendre uniquement un ISBN-13 valide transmis par l'assistant papier,
+  // sans jamais remplacer une saisie ou un brouillon existant.
+  try {
+    const isbnFromWizard=sessionStorage.getItem('librairie:paper-isbn-for-cover');
+    if(items['paper-isbn'] && !items['paper-isbn'].value.trim() &&
+       window.PaperBarcode?.valid(isbnFromWizard||'')) {
+      items['paper-isbn'].value=isbnFromWizard;
+    }
+  } catch (_) { /* stockage désactivé : saisie manuelle conservée */ }
   const front = el('paper-front-preview');
   const back = el('paper-back-preview');
   if (!front || !back) return;
