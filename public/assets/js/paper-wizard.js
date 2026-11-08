@@ -116,9 +116,10 @@
     '<p>Repères de prix calculés à partir du coût de fabrication connu et de votre rémunération brute souhaitée, sans prix de vente imposé.</p>'+
     '<div class="paper-wizard-price-inputs"><label>Coût d’impression unitaire si vous avez un devis (€)<input type="number" id="wizard-manual-cost" min="0" step=".01" inputmode="decimal" placeholder="À renseigner si nécessaire"></label>'+
     '<label>Rémunération brute souhaitée par livre (€)<input type="number" id="wizard-target-earnings" min="0" step=".5" value="4" inputmode="decimal"></label></div>'+
-    '<div class="paper-wizard-price-cards"><div><span>Vente directe</span><strong id="wizard-price-direct">—</strong></div><div><span>Vente en librairie (remise de 30 % supposée)</span><strong id="wizard-price-shop">—</strong></div></div>'+
+    '<label class="check-row"><input id="wizard-plan-bookstores" type="checkbox" checked> Prévoir aussi les ventes en librairie (remise professionnelle hypothétique de 30 %)</label>'+ 
+    '<div class="paper-wizard-price-cards"><div><span>Prix public unique TTC suggéré</span><strong id="wizard-price-public">—</strong></div><div><span>Reste brut par exemplaire — vente directe</span><strong id="wizard-price-direct">—</strong></div><div><span>Reste brut par exemplaire — vente en librairie (30 %)</span><strong id="wizard-price-shop">—</strong></div></div>'+
     '<p id="wizard-price-origin" role="status">Le tarif de Bookelis est à obtenir sur son calculateur officiel. Aucun montant n’est inventé.</p>'+
-    '<p class="paper-wizard-help">Il s’agit de repères, pas de bénéfices nets ni de prix imposés. Frais de distribution, livraison, taxes et retours éventuels ne sont pas inclus. À confirmer avec l’imprimeur et le libraire.</p>';
+    '<p class="paper-wizard-help"><strong>Prix unique du livre :</strong> en France, un livre neuf a un seul prix public TTC fixé par l’éditeur pour une même édition, quel que soit le vendeur (hors rabais légaux). Ces montants sont des restes bruts simulés, pas des bénéfices nets. Les frais de livraison, commissions réelles, fiscalité et retours restent à déduire. Le prix TTC final devra figurer sur la couverture.</p>';
   add(3,priceAdvice);
   add(4,oldGenerate,pdfx,kit,corepTransfer,bookelisTransfer,resources);
   const finalHelp = create('p','paper-wizard-help','Le kit comprend les PDF préparés et les consignes propres à l’imprimeur choisi. Aucun achat ni transfert n’est déclenché : la confirmation du devis, le contrôle des fichiers et le BAT restent chez le professionnel.');
@@ -168,6 +169,7 @@
         title,author,isbn13:isbnVal?window.PaperBarcode.digits(isbnVal):null,
         provider:pr,format:size(),pages:count,quantity:qty,
         cover_type:form.querySelector('select[name="print_binding"]')?.value||'paperback',
+        public_price_ttc:form.querySelector('input[name="paper_price"]')?.value||null,
         barcode_mode:form.querySelector('input[name="wizard_barcode_mode"]:checked')?.value||'generate',
         guarantee:'Prix indicatif ou devis à confirmer : le ZIP n’est pas un contrôle prépresse ni un BAT.',
         original_pdf_preserved:isPdf()
@@ -484,15 +486,21 @@
     }
     const earned=Number(get('wizard-target-earnings')?.value);
     if(unit===null||!Number.isFinite(earned)||earned<0){
-      get('wizard-price-direct').textContent='—';get('wizard-price-shop').textContent='—';
+      get('wizard-price-public').textContent='—';
+      get('wizard-price-direct').textContent='—';
+      get('wizard-price-shop').textContent='—';
     }else{
-      get('wizard-price-direct').textContent=toMoney(roundPrice(unit+earned));
-      get('wizard-price-shop').textContent=toMoney(roundPrice((unit+earned)/0.7));
+      const includeBookshops=get('wizard-plan-bookstores').checked;
+      const publicPrice=roundPrice((unit+earned)/(includeBookshops?0.7:1));
+      get('wizard-price-public').textContent=toMoney(publicPrice);
+      get('wizard-price-direct').textContent=toMoney(publicPrice-unit);
+      get('wizard-price-shop').textContent=toMoney(publicPrice*.7-unit);
     }
     get('wizard-price-origin').textContent=origin;
   };
   get('wizard-manual-cost').addEventListener('input',refreshAdvice);
   get('wizard-target-earnings').addEventListener('input',refreshAdvice);
+  get('wizard-plan-bookstores').addEventListener('change',refreshAdvice);
   pagesField.addEventListener('input',refreshAdvice);
   get('print-estimate-quantity')?.addEventListener('change',refreshAdvice);
   get('print-trim-size')?.addEventListener('change',refreshAdvice);
