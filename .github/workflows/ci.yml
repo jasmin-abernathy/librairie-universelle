@@ -188,14 +188,14 @@ jobs:
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=20' | grep 'À vérifier'
           curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep 'Un titre, plusieurs façons de le lire.'
           ! curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep -q 'class="ebook-card"'
-          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep '/assets/css/ebooks.css?v=20261009-2'
+          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep '/assets/css/ebooks.css?v=20261108-1'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'data-result-limit="8"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'id="federated-results"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'id="indexed-results"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'Wikisource FR'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr&mode=free' | grep 'Ebooks Libres et Gratuits'
           test "$(curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr&mode=free' | grep -c '>BnF<')" = "0"
-          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep 'Recherche externe désactivée en mode payant'
+          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep 'Vente directe par les auteurs uniquement'
           test "$(curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep -c 'data-discovery-search')" = "0"
           php -r '$html = file_get_contents("http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr"); $f = strpos($html, "id=\"federated-results\""); $i = strpos($html, "id=\"indexed-results\""); if ($f === false || $i === false || $f > $i) { fwrite(STDERR, "Les catalogues externes doivent précéder les offres locales.\n"); exit(1); }'
           grep -F "Recherche dans les catalogues…" public/assets/js/discovery.js
@@ -276,14 +276,14 @@ jobs:
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'traduction française'
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=20' | grep 'À vérifier'
           curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep 'Un titre, plusieurs façons de le lire.'
-          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep '/assets/css/ebooks.css?v=20261009-2'
+          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep '/assets/css/ebooks.css?v=20261108-1'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'data-result-limit="8"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'id="federated-results"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'id="indexed-results"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'Wikisource FR'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr&mode=free' | grep 'Ebooks Libres et Gratuits'
           test "$(curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr&mode=free' | grep -c '>BnF<')" = "0"
-          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep 'Recherche externe désactivée en mode payant'
+          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep 'Vente directe par les auteurs uniquement'
           test "$(curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep -c 'data-discovery-search')" = "0"
           php -r '$html = file_get_contents("http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr"); $f = strpos($html, "id=\"federated-results\""); $i = strpos($html, "id=\"indexed-results\""); if ($f === false || $i === false || $f > $i) { fwrite(STDERR, "Les catalogues externes doivent précéder les offres locales.\n"); exit(1); }'
           grep -F "Recherche dans les catalogues…" public/assets/js/discovery.js
@@ -348,14 +348,14 @@ jobs:
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'traduction française'
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=20' | grep 'À vérifier'
           curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep 'Un titre, plusieurs façons de le lire.'
-          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep '/assets/css/ebooks.css?v=20261009-2'
+          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep '/assets/css/ebooks.css?v=20261108-1'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'data-result-limit="8"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'id="federated-results"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'id="indexed-results"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'Wikisource FR'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr&mode=free' | grep 'Ebooks Libres et Gratuits'
           test "$(curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr&mode=free' | grep -c '>BnF<')" = "0"
-          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep 'Recherche externe désactivée en mode payant'
+          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep 'Vente directe par les auteurs uniquement'
           test "$(curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep -c 'data-discovery-search')" = "0"
           php -r '$html = file_get_contents("http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr"); $f = strpos($html, "id=\"federated-results\""); $i = strpos($html, "id=\"indexed-results\""); if ($f === false || $i === false || $f > $i) { fwrite(STDERR, "Les catalogues externes doivent précéder les offres locales.\n"); exit(1); }'
           grep -F "Recherche dans les catalogues…" public/assets/js/discovery.js
@@ -420,14 +420,14 @@ jobs:
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=2' | grep 'traduction française'
           curl --fail --silent 'http://127.0.0.1:8080/work.php?id=20' | grep 'À vérifier'
           curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep 'Un titre, plusieurs façons de le lire.'
-          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep '/assets/css/ebooks.css?v=20261009-2'
+          curl --fail --silent http://127.0.0.1:8080/ebooks.php | grep '/assets/css/ebooks.css?v=20261108-1'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'data-result-limit="8"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'id="federated-results"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'id="indexed-results"'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr' | grep 'Wikisource FR'
           curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr&mode=free' | grep 'Ebooks Libres et Gratuits'
           test "$(curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr&mode=free' | grep -c '>BnF<')" = "0"
-          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep 'Recherche externe désactivée en mode payant'
+          curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep 'Vente directe par les auteurs uniquement'
           test "$(curl --fail --silent 'http://127.0.0.1:8080/ebooks.php?q=1984&mode=paid' | grep -c 'data-discovery-search')" = "0"
           php -r '$html = file_get_contents("http://127.0.0.1:8080/ebooks.php?q=Germinal&lang%5B%5D=fr"); $f = strpos($html, "id=\"federated-results\""); $i = strpos($html, "id=\"indexed-results\""); if ($f === false || $i === false || $f > $i) { fwrite(STDERR, "Les catalogues externes doivent précéder les offres locales.\n"); exit(1); }'
           grep -F "Recherche dans les catalogues…" public/assets/js/discovery.js

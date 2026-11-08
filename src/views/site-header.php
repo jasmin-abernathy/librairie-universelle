@@ -12,10 +12,11 @@ $siteNavItems = [
     'diffusion' => ['href' => '/diffuser-mon-livre.php', 'label' => 'Contacter des librairies'],
     'projet' => ['href' => '/projet.php', 'label' => 'Le projet'],
     'sans-ia' => ['href' => '/sans-ia.php', 'label' => 'Pourquoi sans IA ?'],
+    'conditions' => ['href' => '/conditions-generales.php', 'label' => 'Conditions générales'],
 ];
 $readerKeys = ['search', 'librairies', 'ebooks', 'authorbooks'];
 $authorKeys = ['autoedition', 'propose', 'diffusion'];
-$aboutKeys = ['projet', 'sans-ia'];
+$aboutKeys = ['projet', 'sans-ia', 'conditions'];
 $escapeNav = static fn (string $value): string => htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 ?>
 <header class="site-header" data-site-navigation>

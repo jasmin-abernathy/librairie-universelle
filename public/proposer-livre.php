@@ -62,6 +62,7 @@ header('Referrer-Policy: no-referrer');
 <section class="content-section">
 <h2>Avant l’envoi</h2>
 <p>La proposition est <strong>privée tant que l’administrateur ne l’a pas validée</strong>. La vérification porte sur les informations de la fiche, pas sur l’intégralité du manuscrit. Vous conservez la responsabilité des prix, du paiement, de la livraison, des retours et des obligations légales liées à la vente.</p>
+<p>La proposition d'une fiche est gratuite. Une commission éventuelle de 3 % sur des ventes apportées par la Librairie ne s'applique qu'après une convention séparée, signée avec le vendeur. Voir les <a href="/conditions-generales.php">conditions générales</a>.</p>
 <p>L’adresse de suivi reste privée. L’adresse de contact publique et le lien de vente seront visibles par tous <strong>seulement après validation</strong>. Ne renseignez pas d’adresse personnelle que vous ne souhaitez pas diffuser.</p>
 </section>
 <?php if($accepted): ?>
@@ -106,6 +107,7 @@ header('Referrer-Policy: no-referrer');
 <p class="field-help">Indiquez au moins une adresse publique ou un lien HTTPS. Pour les professionnels, la consultation du registre officiel est obligatoire avant l’envoi. La Librairie ne fournit pas de commande, de paiement ni de livraison.</p>
 </fieldset>
 <fieldset><legend>Avant d’envoyer ma fiche</legend>
+<p class="field-help">Consultez les <a href="/conditions-generales.php">conditions générales</a>. Le dépôt seul ne vaut pas signature de la convention à 3 % : la demande de signature est une étape distincte.</p>
 <label class="check-row"><input type="checkbox" name="rights_confirmed" value="1" required<?= !empty($_POST['rights_confirmed'])?' checked':'' ?>> Je confirme être habilité à présenter ce livre et ses informations.</label>
 <label class="check-row"><input type="checkbox" name="public_contact_confirmed" value="1" required<?= !empty($_POST['public_contact_confirmed'])?' checked':'' ?>> J’accepte la publication de la fiche, du moyen de contact choisi et, si je suis professionnel, du SIRET et de la dénomination officielle après validation de la fiche. Mon adresse de suivi reste privée.</label>
 <label class="check-row"><input type="checkbox" name="seller_responsibility_confirmed" value="1" required<?= !empty($_POST['seller_responsibility_confirmed'])?' checked':'' ?>> Je comprends que la Librairie met uniquement en relation et que je gère directement toute vente éventuelle avec le lecteur.</label>

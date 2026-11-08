@@ -1,6 +1,6 @@
 # Accord de référencement sur la confiance — 3 %
 
-Statut : modèle de travail (non activé dans le formulaire public ; à valider avant signature).
+Statut : modèle de travail pour Odoo Sign. Les CGV sont consultables sur /conditions-generales.php. Aucune commission n'est activée sans convention signée.
 
 ## Principe
 
@@ -17,15 +17,17 @@ Statut : modèle de travail (non activé dans le formulaire public ; à valider 
 
 **Entre les soussignés** : (A) l'entreprise individuelle de Jasmin Lévêque, exploitant la marque Le Potager du Web, informations professionnelles à compléter, et (B) le vendeur/éditeur, nom, identité/qualité et coordonnées à compléter.
 
-**1. Objet** — Le Potager du Web publie sur Librairie Universelle les fiches de livres acceptées et facilite la mise en relation avec des lecteurs. Il ne vend pas, n'encaisse pas et ne livre pas les livres. Le vendeur conserve la responsabilité de ses prix, offres, livraisons, droits d'auteur, réclamations et obligations légales.
+**1. Objet** — Le Potager du Web publie sur Librairie Universelle les fiches de livres papier et/ou EPUB autoédités acceptées et facilite la mise en relation avec des lecteurs. Il ne vend pas, n'encaisse pas et ne livre pas les livres. Le vendeur conserve la responsabilité de ses prix, offres, livraisons, droits d'auteur, réclamations et obligations légales.
 
-**2. Prix** — Le vendeur déclare le prix public TTC applicable à chaque édition, le tient à jour et respecte la réglementation du prix unique du livre concerné. Il ne majore pas le prix du livre pour récupérer la commission. Les frais d'expédition sont distingués et respectent la réglementation applicable.
+**2. Prix** — Le vendeur déclare séparément le prix public TTC applicable à chaque édition papier ou numérique, le tient à jour et respecte la réglementation du prix unique du livre concerné. Il ne majore pas le prix du livre pour récupérer la commission. Les frais d'expédition sont distingués et respectent la réglementation applicable.
 
-**3. Commission** — Pour chaque vente réellement conclue et encaissée auprès d'un lecteur présenté par la Librairie, le vendeur verse à l'entreprise une commission égale à 3 % du montant TTC effectivement encaissé pour les livres concernés, hors livraison et après déduction des annulations et remboursements. Rien n'est dû pour un simple contact, une vente non payée ou une vente étrangère à la mise en relation. Le Potager du Web facture la commission au vendeur dans le régime de TVA qui lui est applicable.
+**3. Commission** — Pour chaque vente d'un livre papier ou numérique réellement conclue et encaissée auprès d'un lecteur présenté par la Librairie, le vendeur verse à l'entreprise une commission égale à 3 % du montant TTC effectivement encaissé pour les livres concernés, hors livraison et après déduction des annulations et remboursements. Rien n'est dû pour un simple contact, une vente non payée ou une vente étrangère à la mise en relation. Le Potager du Web facture la commission au vendeur dans le régime de TVA qui lui est applicable.
 
 **4. Déclaration de bonne foi** — Une fois par trimestre, le vendeur communique par un simple e-mail ou confirme en un clic son bilan : nombre de ventes attribuables à la Librairie et montant TTC total correspondant, hors livraison, annulations et remboursements. Il peut répondre « aucune vente ». L'entreprise établit une facture uniquement pour les montants déclarés. Aucune preuve systématique, liste de clients ou accès aux paiements n'est demandé. Les compteurs anonymisés de demandes servent de repères, non de preuves de vente ou de présomption de fraude.
 
 **5. Confidentialité et fin de l'accord** — Les messages sont adressés uniquement au vendeur et ne sont ni copiés à l'entreprise, ni conservés dans une boîte de réception de la plateforme. Le site traite provisoirement les données nécessaires à l'envoi et n'en conserve qu'un compteur agrégé de transmissions réussies (vendeur, livre, période), sans identité ni contenu des lecteurs. Le lecteur est informé avant l'envoi du destinataire, de la finalité et des modalités de traitement. Chaque partie peut mettre fin au référencement à tout moment par e-mail, sans frais, en conservant les obligations nées des ventes déjà conclues. Les désaccords sont d'abord traités à l'amiable.
+
+**6. Articulation avec les conditions générales** — La présente convention précise les engagements commerciaux spécifiques. Le vendeur reconnaît avoir pu consulter les conditions générales publiées sur https://librairie.lepotager.org/conditions-generales.php, sans que de futures modifications unilatérales puissent modifier les obligations de commission déjà signées. Les prestations de correction et d'impression restent distinctes.
 
 Le vendeur confirme disposer des droits nécessaires à la commercialisation. L'accord prend effet à la date de sa signature par les deux parties.
 

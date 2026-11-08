@@ -37,7 +37,7 @@ $format=['paper'=>'Papier','ebook'=>'Numérique','both'=>'Papier et numérique']
 <?php if($book['isbn']): ?><dt>ISBN déclaré</dt><dd><?= $e($book['isbn']) ?></dd><?php endif; ?></dl>
 <?php if($book['seller_url']): ?><p><a class="button-link" href="<?= $e($book['seller_url']) ?>" target="_blank" rel="noopener noreferrer nofollow">Ouvrir la page du vendeur ↗</a></p><?php endif; ?>
 <?php if($book['public_email']): ?><p><a href="mailto:<?= $e($book['public_email']) ?>">Écrire à l’auteur ou au vendeur</a></p><?php endif; ?>
-<p class="field-help">Achat, paiement, expédition, droit de rétractation éventuel et réclamations se traitent directement avec le vendeur. La Librairie ne perçoit pas le paiement et ne garantit ni les prix ni la disponibilité.</p>
+<p class="field-help">Achat, paiement, accès au fichier EPUB, expédition, rétractation éventuelle et réclamations se traitent directement avec le vendeur. La Librairie ne perçoit pas le paiement et ne garantit ni les prix ni la disponibilité. <a href="/conditions-generales.php">Conditions générales</a>.</p>
 </aside></section></main>
 <footer><div class="footer-links"><a href="/livres-auteurs.php">Livres indépendants</a><a href="/proposer-livre.php">Proposer mon livre</a></div></footer>
 </body></html>

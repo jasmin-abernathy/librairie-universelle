@@ -37,5 +37,5 @@ $price=static fn(int $cents):string=>number_format($cents/100,2,',',' ').' €';
 </article><?php endforeach; ?>
 </div><?php endif; ?>
 </section></main>
-<footer><div class="footer-links"><a href="/proposer-livre.php">Proposer un livre</a><a href="/diffuser-mon-livre.php">Diffuser auprès des librairies</a></div><p>Les ventes sont conclues directement avec les auteurs.</p></footer>
+<footer><div class="footer-links"><a href="/proposer-livre.php">Proposer un livre</a><a href="/diffuser-mon-livre.php">Diffuser auprès des librairies</a></div><p>Les ventes sont conclues directement avec les auteurs. <a href="/conditions-generales.php">Conditions générales</a>.</p></footer>
 </body></html>

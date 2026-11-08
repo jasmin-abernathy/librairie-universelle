@@ -30,7 +30,7 @@ $html = $render('propose');
 $expected = [
     'Chercher un livre', 'Librairies proches', 'Livres numériques', 'Livres d’auteurs',
     'Pour les auteurs', 'Préparer mon livre', 'Proposer mon livre au catalogue',
-    'Contacter des librairies', 'À propos', 'Le projet', 'Pourquoi sans IA ?',
+    'Contacter des librairies', 'À propos', 'Le projet', 'Pourquoi sans IA ?', 'Conditions générales',
 ];
 $last = -1;
 foreach ($expected as $label) {
@@ -53,7 +53,7 @@ $pages = [
     'index.php'=>'search', 'ebooks.php'=>'ebooks', 'autoedition.php'=>'autoedition',
     'diffuser-mon-livre.php'=>'diffusion','livres-auteurs.php'=>'authorbooks',
     'livre-auteur.php'=>'authorbooks','proposer-livre.php'=>'propose',
-    'projet.php'=>'projet','sans-ia.php'=>'sans-ia','work.php'=>'ebooks',
+    'projet.php'=>'projet','sans-ia.php'=>'sans-ia','conditions-generales.php'=>'conditions','work.php'=>'ebooks',
     'assistant-papier.php'=>'autoedition','dossier-impression.php'=>'autoedition',
     'prestations-auteurs.php'=>'autoedition','feedback.php'=>null,
     'export-pdfx.php'=>'autoedition',
