@@ -161,7 +161,21 @@ $check(str_contains($apache,'Header always set X-Frame-Options "SAMEORIGIN"') &&
        str_contains($apache,"frame-ancestors 'self'") &&
        str_contains($apache,"frame-src 'self' blob:"),
     'Apache doit autoriser les aperçus internes sans autoriser les cadres tiers.');
-$check(str_contains($analyze,"Csrf::validate") && str_contains($analyze,"proc_open") &&
-       str_contains($analyze,"pdfinfo") && str_contains($analyze,"corep_eligible"),
+$probe=(string)file_get_contents(dirname(__DIR__).'/src/PdfNativeAnalyzer.php');
+$check(str_contains($analyze,"Csrf::validate") &&
+       str_contains($analyze,"is_uploaded_file") && str_contains($analyze,'PdfNativeAnalyzer::inspect') &&
+       str_contains($probe,"proc_open") && str_contains($probe,"'-dSAFER'") &&
+       str_contains($probe,"pdfinfo") && str_contains($probe,"corep_eligible"),
     'L’analyse native PDF doit rester temporaire, protégée et utile à Corep.');
+require_once dirname(__DIR__).'/src/PdfNativeAnalyzer.php';
+$sample = "PAGES:200\nFIRST:[0 0 419.5276 595.2756]\nMIDDLE:[0 0 419.5276 595.2756]\nLAST:[0 0 419.5276 595.2756]";
+$data=PdfNativeAnalyzer::parseGhostscript($sample);
+$check($data['pages']===200 && $data['trim']==='a5' && $data['corep_eligible']===true,
+    'Un PDF A5 homogène doit être reconnu comme compatible Corep.');
+$oversize=str_replace('PAGES:200','PAGES:681',$sample);
+$check(PdfNativeAnalyzer::parseGhostscript($oversize)['corep_eligible']===false,
+    'Corep doit être exclu au-delà de 680 pages.');
+$mixed=str_replace('LAST:[0 0 419.5276 595.2756]','LAST:[0 0 595.2756 841.8898]',$sample);
+$check(PdfNativeAnalyzer::parseGhostscript($mixed)['corep_eligible']===false,
+    'Les PDF à formats mixtes ne peuvent pas être considérés comme compatibles Corep.');
 echo "Parcours papier, liens et import brouillon : OK\n";
