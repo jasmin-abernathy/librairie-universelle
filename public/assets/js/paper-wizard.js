@@ -85,6 +85,7 @@
   // La reliure se choisit avec la couverture, et non au milieu des marges.
   const binding = form.querySelector('select[name="print_binding"]')?.closest('label');
   if(binding) {binding.firstChild.textContent='Type de couverture / reliure';add(2,binding);}
+  if(pdfGrid && !pdfGrid.children.length) pdfGrid.remove();
   if(pdfHeading) pdfHeading.remove();
   if(pdfHelp) pdfHelp.remove();
   const oldGenerate = get('paper-generate-button')?.closest('.print-preview-row');
@@ -122,6 +123,112 @@
   add(4,oldGenerate,pdfx,kit,corepTransfer,bookelisTransfer,resources);
   const finalHelp = create('p','paper-wizard-help','Le kit comprend les PDF préparés et les consignes propres à l’imprimeur choisi. Aucun achat ni transfert n’est déclenché : la confirmation du devis, le contrôle des fichiers et le BAT restent chez le professionnel.');
   steps[4].section.insertBefore(finalHelp, steps[4].section.firstElementChild?.nextSibling||null);
+
+  // Kit d'impression local. La composition DOCX/ODT/EPUB reste effectuée par
+  // Paged.js : l'utilisateur sauvegarde son intérieur PDF après relecture.
+  const kitBuilder=create('section','paper-wizard-isbn');
+  kitBuilder.innerHTML =
+    '<h3>Assembler et télécharger mon kit d’impression</h3>'+
+    '<p>Pour un PDF déjà maquetté, réutilisez le fichier d’origine. Pour un manuscrit recomposé, ouvrez l’aperçu, enregistrez le PDF intérieur relu, puis ajoutez-le ici. Le kit est créé dans votre navigateur sans transmission à Corep ni Bookelis.</p>'+
+    '<div class="paper-wizard-price-inputs"><label>Titre du livre<input id="wizard-kit-title" maxlength="180" autocomplete="off" required placeholder="Titre figurant en couverture"></label>'+
+    '<label>Nom de l’auteur ou de l’autrice<input id="wizard-kit-author" maxlength="180" autocomplete="off" required placeholder="Nom figurant en couverture"></label></div>'+
+    '<label id="wizard-final-interior-label">Intérieur PDF final (après mise en page)<input type="file" id="wizard-final-interior" accept=".pdf,application/pdf"></label>'+
+    '<label id="wizard-bookelis-cover-label">Couverture Bookelis complète à plat (4e + tranche + 1re) en PDF<input type="file" id="wizard-bookelis-full-cover" accept=".pdf,application/pdf"></label>'+
+    '<p class="paper-wizard-help">Corep utilise la première et la quatrième séparées, à joindre dans l’étape couverture. Bookelis exige sa couverture complète à plat selon son gabarit officiel : ce fichier ne peut pas être fabriqué sans le gabarit correspondant.</p>'+
+    '<button type="button" id="wizard-build-kit" class="paper-wizard-primary">Télécharger le kit ZIP</button>'+
+    '<p id="wizard-kit-feedback" aria-live="polite" role="status">Les PDF devront être validés par l’imprimeur. Un ZIP n’est pas un BAT ni une commande.</p>';
+  add(4,kitBuilder);
+  const kitFeedback=get('wizard-kit-feedback');
+  const validatePdf=async file=>{
+    if(!file||!file.name.toLowerCase().endsWith('.pdf')||file.size<20)throw Error('Un fichier PDF manque ou n’est pas valide.');
+    const header=new Uint8Array(await file.slice(0,5).arrayBuffer());
+    const tail=new Uint8Array(await file.slice(Math.max(0,file.size-4096)).arrayBuffer());
+    if(!window.PrinterKit?.pdfSignature(header)||!window.PrinterKit?.pdfTrailer(tail))
+      throw Error('Le PDF '+file.name+' ne présente pas les marqueurs de début et de fin attendus.');
+    return file;
+  };
+  get('wizard-build-kit').addEventListener('click',async()=>{
+    const button=get('wizard-build-kit');
+    button.disabled=true;kitFeedback.textContent='Vérification des fichiers et préparation locale de l’archive…';
+    try{
+      if(!window.PrinterZip||!window.PrinterKit)throw Error('Le module de création ZIP est indisponible.');
+      const pr=selection(),count=Number(pagesField.value),qty=Number(get('print-estimate-quantity').value);
+      if(!Number.isInteger(count)||count<1||count>5000)throw Error('Le nombre de pages doit être confirmé avant le kit.');
+      if(pr==='corep_metz'&&(count>680||size()!=='a5'))
+        throw Error('Corep Metz accepte ici uniquement l’A5 jusqu’à 680 pages recto verso : choisissez Bookelis ou consultez Corep pour un devis spécial.');
+      if(isPdf()&&(!pdfData||!pdfData.trim))throw Error('Format PDF natif inconnu : demandez une vérification manuelle avant fabrication.');
+      const title=get('wizard-kit-title').value.trim(),author=get('wizard-kit-author').value.trim();
+      if(!title||!author)throw Error('Renseignez le titre et le nom figurant en couverture.');
+      const isbnVal=isbn.value.trim();
+      if(isbnVal&&!window.PaperBarcode?.valid(isbnVal))throw Error('ISBN-13 invalide ; corrigez-le ou laissez le champ vide.');
+      const interior=await validatePdf(isPdf()?readyPdf.files?.[0]:get('wizard-final-interior').files?.[0]);
+      const files=[{name:'interieur.pdf',blob:interior}];
+      const manifest={
+        schema:'librairie-print-kit-v2',created_at:new Date().toISOString(),
+        title,author,isbn13:isbnVal?window.PaperBarcode.digits(isbnVal):null,
+        provider:pr,format:size(),pages:count,quantity:qty,
+        cover_type:form.querySelector('select[name="print_binding"]')?.value||'paperback',
+        barcode_mode:form.querySelector('input[name="wizard_barcode_mode"]:checked')?.value||'generate',
+        guarantee:'Prix indicatif ou devis à confirmer : le ZIP n’est pas un contrôle prépresse ni un BAT.',
+        original_pdf_preserved:isPdf()
+      };
+      let instructions='';
+      if(pr==='corep_metz'){
+        const front=await validatePdf(form.querySelector('input[name="paper_cover_front"]')?.files?.[0]);
+        const back=await validatePdf(form.querySelector('input[name="paper_cover_back"]')?.files?.[0]);
+        files.push({name:'premiere-couverture.pdf',blob:front},{name:'quatrieme-couverture.pdf',blob:back});
+        instructions=[
+          'COREP METZ — DEMANDE DE DEVIS ET CONTROLE PREPRESSE','',
+          '1. Ouvrez https://www.corep.fr/fr/devis-sur-mesure/',
+          '2. Choisissez l’agence de Metz, puis indiquez le format A5 (148 x 210 mm).',
+          '3. Spécifiez intérieur noir et blanc recto verso 80 g, couverture couleur, dos carré collé.',
+          '4. Ajoutez interieur.pdf, premiere-couverture.pdf et quatrieme-couverture.pdf séparément.',
+          '5. Indiquez '+count+' pages et '+qty+' exemplaires ; demandez un devis ferme et un BAT.',
+          '6. Demandez la validation des marges, des polices, des éventuels fonds perdus et de la tranche.',
+          'Les couvertures séparées demandées par Corep Metz ne nécessitent pas de traits de coupe ni fonds perdus.',
+          'Aucun accord national ou prix garanti. Les documents sont à vérifier par l’atelier.'
+        ].join('\n');
+      }else{
+        const cover=await validatePdf(get('wizard-bookelis-full-cover').files?.[0]);
+        files.push({name:'couverture-complete-bookelis.pdf',blob:cover});
+        instructions=[
+          'BOOKELIS — IMPRESSION ET CONTROLE','',
+          '1. Ouvrez https://livres.bookelis.com/imprimer et choisissez le même format.',
+          '2. Renseignez '+count+' pages et '+qty+' exemplaires et choisissez le papier, la couleur et la couverture.',
+          '3. Chargez interieur.pdf puis couverture-complete-bookelis.pdf.',
+          '4. La couverture fournie doit suivre le gabarit officiel généré pour CES paramètres : https://livres.bookelis.com/generation-couverture',
+          '5. Vérifiez les fonds perdus (8 mm sur couverture ; 5 mm sur intérieur avec visuels jusqu’au bord), les polices, le code-barres et le prix.',
+          '6. Comparez le tarif officiel, contrôlez l’épreuve et confirmez la commande chez Bookelis.',
+          'Aucun tarif Bookelis n’a été inventé ni transféré automatiquement depuis la Librairie.'
+        ].join('\n');
+      }
+      files.push({name:'fiche-impression.json',blob:new Blob([JSON.stringify(manifest,null,2)],{type:'application/json'})});
+      if(pr==='bookelis'){
+        files.push({name:'instructions.txt',blob:new Blob([instructions],{type:'text/plain'})});
+      }else{
+        // PrinterZip v1 regroupe exactement trois PDF et une fiche.
+        manifest.instructions=instructions;
+        files[3].blob=new Blob([JSON.stringify(manifest,null,2)],{type:'application/json'});
+      }
+      const zip=await window.PrinterZip.create(files);
+      const url=URL.createObjectURL(zip),link=document.createElement('a');
+      link.href=url;link.download='kit-impression-'+pr+'-'+new Date().toISOString().slice(0,10)+'.zip';
+      document.body.appendChild(link);link.click();link.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),15000);
+      kitFeedback.textContent='Kit ZIP téléchargé : fichiers à faire contrôler, devis et BAT à confirmer chez '+(pr==='bookelis'?'Bookelis':'Corep Metz')+'.';
+    }catch(e){kitFeedback.textContent='Kit non généré : '+(e.message||'vérification impossible.');}
+    finally{button.disabled=false;}
+  });
+  const syncKitFields=()=>{
+    get('wizard-final-interior-label').hidden=isPdf();
+    get('wizard-bookelis-cover-label').hidden=selection()!=='bookelis';
+    if(isPdf()&&pdfData&&get('wizard-kit-title').value.trim()==='')get('wizard-kit-title').value=readyPdf.files[0].name.replace(/\.pdf$/i,'').replace(/[_-]+/g,' ').slice(0,180);
+  };
+  readyPdf.addEventListener('change',syncKitFields);
+  source.addEventListener('change',syncKitFields);
+  form.querySelectorAll('input[name="print_provider"]').forEach(el=>el.addEventListener('change',syncKitFields));
+  syncKitFields();
+
   // Les étapes d'une seule page évitent les rechargements HTML et conservent tous les champs du formulaire.
   let active=0,seen=0,pdfData=null,analysisPending=false,estimateTimer=null,nonce=0,estimateRequest='';
   const isPdf=()=>Boolean(readyPdf.files?.length);
