@@ -289,7 +289,7 @@ function modeLabel(string $mode): string
         <div>
             <p class="section-kicker">Auteurs et autrices</p>
             <h2>Faites découvrir votre livre sans nous envoyer votre EPUB.</h2>
-            <p>Comme pour un livre papier, proposez un EPUB autoédité avec sa fiche, son prix public et un contact vendeur. La Librairie ne demande pas votre fichier et n’encaisse pas la vente. La commission éventuelle de 3 % ne s’applique qu’après convention signée.</p>
+            <p>Comme pour un livre papier, proposez un EPUB autoédité avec sa fiche, son prix public et un contact vendeur. La Librairie ne demande pas votre fichier et n’encaisse pas la vente. Le référencement de la vente directe exige une convention à 3 % signée avant la publication.</p>
         </div>
         <div><a class="button-link secondary" href="/proposer-livre.php">Référencer mon EPUB</a><p class="field-help"><a href="/conditions-generales.php">Conditions de référencement et commission</a></p></div>
     </section>

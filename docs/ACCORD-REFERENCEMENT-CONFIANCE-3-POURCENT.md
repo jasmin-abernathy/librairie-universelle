@@ -1,10 +1,10 @@
 # Accord de référencement sur la confiance — 3 %
 
-Statut : modèle de travail pour Odoo Sign. Les CGV sont consultables sur /conditions-generales.php. Aucune commission n'est activée sans convention signée.
+Statut : modèle de convention à préremplir depuis la fiche vendeur en administration et à envoyer pour signature. Les CGV sont consultables sur /conditions-generales.php. Aucune fiche de vente directe auteur–acheteur ne peut être publiée sans convention signée. Ne pas écrire le nom d'une solution de signature dans le document PDF.
 
 ## Principe
 
-- Un seul accord **par vendeur**, couvrant l'ensemble des livres dont il demande le référencement sur Librairie Universelle.
+- **Référencement direct conditionnel** : tout auteur ou vendeur proposant ses livres à la vente directe via la Librairie doit d'abord signer une convention à 3 %. Un seul accord **par vendeur** couvre ses livres papier et EPUB. Les futures librairies partenaires ont des accords distincts.
 - Chaque fiche conserve son prix public TTC déclaré, son identité de vendeur et ses coordonnées professionnelles publiques lorsque nécessaires.
 - La Librairie transmet les demandes via un formulaire unique **exclusivement au vendeur**. Le Potager du Web ne figure jamais en À, CC ou CCI, ne reçoit pas de copie du message et n'en archive pas le texte. La plateforme conserve uniquement un total agrégé de demandes transmises par vendeur et par livre (par mois), sans noms, courriels ni contenu des lecteurs. Le formulaire informe brièvement le lecteur du routage et du traitement transitoire nécessaire à l'envoi.
 - Le paiement et la livraison restent entièrement gérés par le vendeur.
@@ -13,11 +13,11 @@ Statut : modèle de travail pour Odoo Sign. Les CGV sont consultables sur /condi
 - Aucun surcoût de commission pour l'acheteur. Le vendeur fixe un prix public par édition et respecte les lois sur le prix des livres neufs et numériques. Les frais de livraison restent présentés séparément et soumis aux règles applicables.
 - Référencement non exclusif, résiliable par e-mail sans pénalité ; les commissions déjà dues sur les ventes conclues subsistent.
 
-## Convention simplifiée — modèle destiné à Odoo Sign
+## Convention simplifiée — modèle à préremplir en PDF pour signature
 
 **Entre les soussignés** : (A) l'entreprise individuelle de Jasmin Lévêque, exploitant la marque Le Potager du Web, informations professionnelles à compléter, et (B) le vendeur/éditeur, nom, identité/qualité et coordonnées à compléter.
 
-**1. Objet** — Le Potager du Web publie sur Librairie Universelle les fiches de livres papier et/ou EPUB autoédités acceptées et facilite la mise en relation avec des lecteurs. Il ne vend pas, n'encaisse pas et ne livre pas les livres. Le vendeur conserve la responsabilité de ses prix, offres, livraisons, droits d'auteur, réclamations et obligations légales.
+**1. Objet** — La publication des fiches de vente directe des livres papier et/ou EPUB autoédités est subordonnée à la signature préalable de la présente convention. Le Potager du Web publie ensuite sur Librairie Universelle les fiches de livres acceptées et facilite la mise en relation avec des lecteurs. Il ne vend pas, n'encaisse pas et ne livre pas les livres. Le vendeur conserve la responsabilité de ses prix, offres, livraisons, droits d'auteur, réclamations et obligations légales.
 
 **2. Prix** — Le vendeur déclare séparément le prix public TTC applicable à chaque édition papier ou numérique, le tient à jour et respecte la réglementation du prix unique du livre concerné. Il ne majore pas le prix du livre pour récupérer la commission. Les frais d'expédition sont distingués et respectent la réglementation applicable.
 
@@ -37,16 +37,16 @@ Le vendeur confirme disposer des droits nécessaires à la commercialisation. L'
 
 ## Mise en œuvre prévue — sans sur-ingénierie
 
-1. L'auteur ou le vendeur soumet sa fiche comme actuellement. Aucune vente ni commission tant qu'il n'y a pas d'accord signé.
-2. Pour un nouveau vendeur, l'administrateur envoie un **unique modèle PDF réutilisable** via Odoo Sign.
-3. Après signature des deux parties, le référencement peut être validé et le formulaire de contact activé. L'e-mail est envoyé seulement au vendeur (aucune CC/CCI). Le compteur mensuel agrégé est incrémenté uniquement après un relais réussi, avec limites antispam et sans conserver les messages.
+1. L'auteur ou le vendeur soumet une fiche et ses coordonnées légales privées pour préparer le contrat. Il ne peut pas être publié sans accord signé.
+2. L'administration génère un PDF prérempli avec les coordonnées du vendeur et l'adresse de contact, puis le transmet à signer par le moyen de son choix. Le PDF ne nomme aucune plateforme de signature.
+3. Après signature des deux parties, l'administration enregistre la référence du document signé, puis peut publier le livre. La logique serveur interdit la publication sans cette confirmation. La mise en relation n'est activée qu'après publication. L'e-mail est envoyé seulement au vendeur (aucune CC/CCI). Le compteur mensuel agrégé est incrémenté uniquement après un relais réussi, avec limites antispam et sans conserver les messages.
 4. Chaque trimestre, le vendeur déclare ou confirme en un clic **zéro vente** ou son total de ventes et leur montant (aucune saisie par transaction). Une facture de 3 % est émise seulement si le total déclaré est positif.
 
 **Odoo Sign** : l'instance Odoo utilisée jusqu'ici est sur un abonnement gratuit à une seule application ; son API externe n'est pas accessible, contrairement à l'offre Custom. Ne pas déclencher automatiquement de demandes de signature tant qu'un accès API compatible ou une autre voie autorisée n'est pas configuré. Le modèle PDF à charger manuellement dans Odoo Sign constitue la solution retenue, sans surcoût.
 
 **Protection des données** : informer le lecteur des finalités, destinataires, éventuel prestataire e-mail, durée de traitement/conservation et droits. Ne conserver ni l'adresse de l'acheteur ni le texte dans la base de la Librairie ou les logs applicatifs ; n'afficher que des totaux de demandes. Veiller à ce que le prestataire d'e-mail et les journaux techniques ne conservent pas davantage que nécessaire ; définir une durée de conservation des compteurs et tenir compte des incidents d'envoi.
 
-**À ne pas faire** : ne pas activer de commission rétroactivement sur des fiches déjà publiées ; ne pas présenter une simple acceptation de conditions comme une signature Odoo ; ne pas bloquer l'ancienne publication avant que le processus de signature puisse fonctionner.
+**À ne pas faire** : ne pas facturer des ventes antérieures à la signature ; ne pas présenter une simple acceptation des conditions comme une signature ; ne jamais publier de fiche sans convention signée. Les librairies partenaires futures seront soumises à des conditions distinctes.
 
 ## Références à vérifier pour une version contractuelle définitive
 

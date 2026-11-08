@@ -24,7 +24,7 @@ header('Referrer-Policy: strict-origin-when-cross-origin');
 </header>
 <div class="legal-summary">
 <div><strong>Outils gratuits</strong><span>Préparer un livre et proposer une fiche ne coûte rien.</span></div>
-<div><strong>3 %</strong><span>Uniquement sur une vente attribuable au site, après accord signé.</span></div>
+<div><strong>3 %</strong><span>Convention obligatoire avant toute publication de vente directe auteur–acheteur.</span></div>
 <div><strong>Échanges privés</strong><span>Aucune copie systématique des messages acheteur-vendeur.</span></div>
 </div>
 <nav class="legal-toc" aria-label="Sommaire">
@@ -50,7 +50,7 @@ header('Referrer-Policy: strict-origin-when-cross-origin');
 <p>Les commandes, paiements, livraisons, accès aux fichiers, garanties, retours, remboursements et réclamations concernant la vente sont gérés directement par le vendeur. La Librairie n'encaisse pas les livres et ne garantit ni stock, ni prix chez des tiers, ni délais d'expédition. Elle reste responsable de ses propres obligations légales.</p></section>
 
 <section id="commission"><h2>4. Convention et commission de mise en relation</h2>
-<p>La commission de <strong>3 %</strong> est applicable <strong>exclusivement après signature d'une convention de référencement</strong> par le vendeur et Le Potager du Web, notamment via Odoo Sign. Le simple dépôt d'un livre ne fait pas naître d'obligation de commission. Aucune commission n'est due rétroactivement sur des ventes antérieures à l'entrée en vigueur de la convention.</p>
+<p><strong>Toute fiche destinée à la vente directe entre un auteur et un acheteur doit être couverte par une convention de référencement à 3 %, signée au préalable par le vendeur et Le Potager du Web.</strong> Sans contrat signé, la proposition reste privée et ne peut pas être publiée dans le catalogue, y compris pour un EPUB. La proposition gratuite d'une fiche n'emporte aucune commission tant qu'elle n'est pas publiée ; aucune vente antérieure à la signature ne peut être facturée rétroactivement. Une convention peut couvrir plusieurs livres du même vendeur. Les collaborations futures avec des librairies professionnelles relèveront d'accords distincts.</p>
 <p>Pour les ventes réellement réalisées grâce à une mise en relation issue de la Librairie, la commission correspond à 3 % du <strong>montant TTC des livres effectivement encaissé</strong>, hors frais de livraison, après annulations et remboursements. Elle est supportée par le vendeur et ne s'ajoute pas au prix payé par le lecteur. Aucun montant n'est dû pour un simple contact, un paiement non perçu ou une vente sans lien avec la Librairie.</p>
 <p>La rémunération de mise en relation est facturée comme une <strong>prestation distincte</strong> par Le Potager du Web selon le régime fiscal applicable ; la facture précise le montant, la TVA éventuelle et ses conditions de paiement. Le service ne prélève jamais directement une fraction du paiement de l'acheteur.</p></section>
 
@@ -64,7 +64,7 @@ header('Referrer-Policy: strict-origin-when-cross-origin');
 <p>Le traitement des données des vendeurs sert à examiner et administrer les fiches, gérer la convention et établir les factures éventuellement dues. Les lecteurs peuvent exercer leurs droits en écrivant à <a href="mailto:contact@lepotager.org">contact@lepotager.org</a>. Les données ne doivent pas être conservées au-delà des durées nécessaires au service et des obligations légales ; les durées détaillées et l'identité des prestataires de traitement devront figurer dans la politique de confidentialité complète.</p></section>
 
 <section id="retrait"><h2>7. Retrait, responsabilité et règlement des différends</h2>
-<p>Le référencement est non exclusif. Le vendeur peut demander le retrait de ses fiches par e-mail ; la convention peut être résiliée sans pénalité selon ses modalités. Les commissions déjà acquises pour des ventes conclues pendant son application restent dues. La Librairie peut suspendre une fiche nécessitant vérification ou présentant un risque manifeste, sans supprimer les droits légaux des parties.</p>
+<p>Le référencement direct est non exclusif mais toujours conditionné à la convention signée. Le vendeur peut demander le retrait de ses fiches par e-mail ; la convention peut être résiliée sans pénalité selon ses modalités. Les commissions déjà acquises pour des ventes conclues pendant son application restent dues. La Librairie peut suspendre une fiche nécessitant vérification ou présentant un risque manifeste, sans supprimer les droits légaux des parties.</p>
 <p>Les réclamations concernant les livres doivent d'abord être adressées au vendeur concerné ; celles relatives à la Librairie sont à envoyer à <a href="mailto:contact@lepotager.org">contact@lepotager.org</a>. Les parties recherchent une solution amiable avant toute procédure, sans déroger aux juridictions ou garanties impérativement prévues par la loi, notamment pour les consommateurs.</p>
 <p>La présente version peut évoluer ; une version ultérieure ne modifie pas un contrat déjà signé sans accord nécessaire des parties. <strong>Seule la convention signée détermine l'entrée en vigueur et les modalités commerciales propres au vendeur.</strong></p></section>
 </article>

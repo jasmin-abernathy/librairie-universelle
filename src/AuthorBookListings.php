@@ -50,6 +50,15 @@ final class AuthorBookListings
                 throw new InvalidArgumentException('Recherchez puis sélectionnez votre entreprise dans le registre officiel avant de continuer.');
             }
         }
+        $sellerLegalName = $get('seller_legal_name', 150);
+        $sellerPostalAddress = $get('seller_postal_address', 350, true);
+        $sellerPhone = $get('seller_phone', 32);
+        if (mb_strlen($sellerLegalName) < 3 || mb_strlen($sellerPostalAddress) < 12) {
+            throw new InvalidArgumentException('Indiquez votre identité légale et votre adresse postale privée pour préparer la convention de référencement.');
+        }
+        if ($sellerPhone !== '' && !preg_match('/^[+0-9 ()\.\-]{6,32}$/D', $sellerPhone)) {
+            throw new InvalidArgumentException('Numéro de téléphone invalide.');
+        }
         $email = $get('private_email', 254);
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException('Adresse e-mail privée invalide.');
@@ -103,8 +112,47 @@ final class AuthorBookListings
             'description' => $desc, 'book_format' => $format, 'isbn' => $isbn,
             'price_cents' => $priceCents, 'ebook_price_cents' => $ebookPriceCents, 'seller_type' => $sellerType, 'siret' => $siret,
             'private_email' => $email, 'public_email' => $publicEmail,
-            'seller_url' => $url,
+            'seller_url' => $url, 'seller_legal_name' => $sellerLegalName,
+            'seller_postal_address' => $sellerPostalAddress,
+            'seller_phone' => $sellerPhone,
+            'seller_key' => self::sellerKey($sellerType, $email, $sellerLegalName, $siret),
         ];
+    }
+
+    private static function sellerKey(string $type, string $email, string $name, ?string $siret): string
+    {
+        if ($type === 'professional') return 'professional:' . (string)$siret;
+        return 'individual:' . hash('sha256',
+            mb_strtolower(trim($email), 'UTF-8') . '|' . mb_strtolower(trim($name), 'UTF-8'));
+    }
+
+    public function contractData(int $id): ?array
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM author_book_listings WHERE id=:id LIMIT 1');
+        $stmt->execute([':id'=>$id]);
+        $row = $stmt->fetch();
+        return $row === false ? null : $row;
+    }
+
+    /** Une signature vérifiée couvre toutes les fiches portant la même clé vendeur. */
+    public function recordSignature(int $id, string $reference): void
+    {
+        $book = $this->contractData($id);
+        if ($book === null) throw new InvalidArgumentException('Fiche introuvable.');
+        if (empty($book['seller_key']) || empty($book['seller_legal_name']) || empty($book['seller_postal_address'])) {
+            throw new InvalidArgumentException('Identité ou adresse privée manquante : demandez ces informations au vendeur avant signature.');
+        }
+        $reference = trim($reference);
+        if (mb_strlen($reference, 'UTF-8') < 3 || mb_strlen($reference, 'UTF-8') > 160) {
+            throw new InvalidArgumentException('Indiquez une référence vérifiable du document signé (3 à 160 caractères).');
+        }
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO seller_agreements(seller_key,signed_at,signature_reference)
+             VALUES(:key,CURRENT_TIMESTAMP,:reference)
+             ON CONFLICT(seller_key) DO UPDATE SET
+                 signed_at=CURRENT_TIMESTAMP,signature_reference=excluded.signature_reference,updated_at=CURRENT_TIMESTAMP'
+        );
+        $stmt->execute([':key'=>$book['seller_key'],':reference'=>$reference]);
     }
 
     public function submit(array $input): int
@@ -132,10 +180,10 @@ final class AuthorBookListings
         $stmt = $this->pdo->prepare(
             'INSERT INTO author_book_listings
             (status,title,subtitle,author_name,description,book_format,isbn,price_cents,ebook_price_cents,seller_type,siret,registered_company_name,siret_verified_at,
-             private_email,public_email,seller_url,rights_confirmed,public_contact_confirmed,seller_responsibility_confirmed)
+             private_email,seller_key,seller_legal_name,seller_postal_address,seller_phone,public_email,seller_url,rights_confirmed,public_contact_confirmed,seller_responsibility_confirmed)
              VALUES
             (\'pending\',:title,:subtitle,:author_name,:description,:book_format,:isbn,:price_cents,:ebook_price_cents,:seller_type,:siret,:registered_company_name,:siret_verified_at,
-             :private_email,:public_email,:seller_url,1,1,1)'
+             :private_email,:seller_key,:seller_legal_name,:seller_postal_address,:seller_phone,:public_email,:seller_url,1,1,1)'
         );
         $stmt->execute([
             ':title'=>$item['title'], ':subtitle'=>$item['subtitle'] ?: null,
@@ -145,6 +193,10 @@ final class AuthorBookListings
             ':siret'=>$item['siret'], ':registered_company_name'=>$registeredCompanyName,
             ':siret_verified_at'=>$siretVerifiedAt,
             ':private_email'=>$item['private_email'],
+            ':seller_key'=>$item['seller_key'],
+            ':seller_legal_name'=>$item['seller_legal_name'],
+            ':seller_postal_address'=>$item['seller_postal_address'],
+            ':seller_phone'=>$item['seller_phone'] ?: null,
             ':public_email'=>$item['public_email'] ?: null,
             ':seller_url'=>$item['seller_url'] ?: null,
         ]);
@@ -153,7 +205,10 @@ final class AuthorBookListings
 
     public function visible(?int $id = null, string $query = '', int $limit = 24): array
     {
-        $where = "status = 'published'";
+        $where = "status = 'published' AND EXISTS (
+            SELECT 1 FROM seller_agreements sa
+            WHERE sa.seller_key=author_book_listings.seller_key AND sa.signed_at IS NOT NULL
+        )";
         $params = [];
         if ($id !== null) {
             $where .= ' AND id = :id';
@@ -187,7 +242,9 @@ final class AuthorBookListings
                 CASE WHEN book_format='both' THEN COALESCE(ebook_price_cents,price_cents)
                 ELSE price_cents END AS digital_price_cents
                 FROM author_book_listings
-                WHERE status='published' AND book_format IN ('ebook','both')";
+                WHERE status='published' AND book_format IN ('ebook','both')
+                AND EXISTS (SELECT 1 FROM seller_agreements sa
+                    WHERE sa.seller_key=author_book_listings.seller_key AND sa.signed_at IS NOT NULL)";
         $params = [];
         $digitalPrice = "CASE WHEN book_format='both' THEN COALESCE(ebook_price_cents,price_cents) ELSE price_cents END";
         if ($mode === 'free') {
@@ -212,7 +269,9 @@ final class AuthorBookListings
         $states = ['pending','published','rejected','hidden'];
         $status = in_array($status, $states, true) ? $status : 'pending';
         $stmt = $this->pdo->prepare(
-            'SELECT * FROM author_book_listings WHERE status = :status ORDER BY submitted_at DESC,id DESC LIMIT 150'
+            'SELECT b.*,a.signed_at AS agreement_signed_at,a.signature_reference AS agreement_signature_reference
+               FROM author_book_listings b LEFT JOIN seller_agreements a ON a.seller_key=b.seller_key
+               WHERE b.status = :status ORDER BY b.submitted_at DESC,b.id DESC LIMIT 150'
         );
         $stmt->execute([':status' => $status]);
         return $stmt->fetchAll();
@@ -235,7 +294,10 @@ final class AuthorBookListings
         }
         if ($action === 'publish') {
             // Interdit de publier d'anciennes fiches pro sans vérification officielle.
-            $verify = $this->pdo->prepare('SELECT seller_type,siret,registered_company_name,siret_verified_at FROM author_book_listings WHERE id=:id');
+            $verify = $this->pdo->prepare('SELECT b.seller_type,b.siret,b.registered_company_name,b.siret_verified_at,
+                b.seller_key,b.seller_legal_name,b.seller_postal_address,a.signed_at
+                FROM author_book_listings b LEFT JOIN seller_agreements a ON a.seller_key=b.seller_key
+                WHERE b.id=:id');
             $verify->execute([':id'=>$id]);
             $record = $verify->fetch();
             if (!$record) {
@@ -245,6 +307,10 @@ final class AuthorBookListings
                 && (!preg_match('/^[0-9]{14}$/D', (string)($record['siret'] ?? ''))
                     || empty($record['registered_company_name']) || empty($record['siret_verified_at']))) {
                 throw new InvalidArgumentException('SIRET non vérifié : la fiche professionnelle ne peut pas être publiée.');
+            }
+            if (empty($record['seller_key']) || empty($record['seller_legal_name'])
+                || empty($record['seller_postal_address']) || empty($record['signed_at'])) {
+                throw new InvalidArgumentException('Publication bloquée : convention à 3 % signée et identité du vendeur obligatoires.');
             }
         }
         $note = mb_substr(trim($note), 0, 1000);

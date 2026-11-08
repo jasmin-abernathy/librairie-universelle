@@ -26,6 +26,7 @@ final class Database
         self::execFile($pdo, $config['schema_path'], 'schéma SQL');
         self::ensureOfficialSiretColumns($pdo);
         self::ensureEbookPriceColumn($pdo);
+        self::ensureSellerIdentityColumns($pdo);
 
         if (!empty($config['seed_path']) && is_file($config['seed_path'])) {
             self::execFile($pdo, $config['seed_path'], 'corpus initial');
@@ -69,6 +70,23 @@ final class Database
             $cols = array_column($pdo->query('PRAGMA table_info(author_book_listings)')->fetchAll(), 'name');
             if (!in_array('ebook_price_cents', $cols, true)) throw $error;
         }
+    }
+
+    private static function ensureSellerIdentityColumns(PDO $pdo): void
+    {
+        $columns = array_column($pdo->query('PRAGMA table_info(author_book_listings)')->fetchAll(), 'name');
+        if ($columns === []) return;
+        foreach (['seller_key', 'seller_legal_name', 'seller_postal_address', 'seller_phone'] as $column) {
+            if (in_array($column, $columns, true)) continue;
+            try {
+                $pdo->exec('ALTER TABLE author_book_listings ADD COLUMN ' . $column . ' TEXT');
+            } catch (PDOException $error) {
+                $fresh = array_column($pdo->query('PRAGMA table_info(author_book_listings)')->fetchAll(), 'name');
+                if (!in_array($column, $fresh, true)) throw $error;
+            }
+            $columns[] = $column;
+        }
+        $pdo->exec('CREATE INDEX IF NOT EXISTS idx_author_book_listings_seller_key ON author_book_listings(seller_key)');
     }
 
     private static function execFile(PDO $pdo, string $path, string $label): void

@@ -291,6 +291,10 @@ CREATE TABLE IF NOT EXISTS author_book_listings (
     registered_company_name TEXT,
     siret_verified_at TEXT,
     private_email TEXT NOT NULL,
+    seller_key TEXT,
+    seller_legal_name TEXT,
+    seller_postal_address TEXT,
+    seller_phone TEXT,
     public_email TEXT,
     seller_url TEXT,
     rights_confirmed INTEGER NOT NULL CHECK(rights_confirmed=1),
@@ -304,3 +308,13 @@ CREATE TABLE IF NOT EXISTS author_book_listings (
 CREATE INDEX IF NOT EXISTS idx_author_book_listings_status ON author_book_listings(status, submitted_at);
 CREATE INDEX IF NOT EXISTS idx_author_book_listings_title ON author_book_listings(title COLLATE NOCASE);
 CREATE INDEX IF NOT EXISTS idx_author_book_listings_private_email ON author_book_listings(private_email, submitted_at);
+
+-- Une convention signée par vendeur. Aucune fiche de vente directe n'est
+-- publiable sans entrée signée correspondante (papier, EPUB et gratuit).
+CREATE TABLE IF NOT EXISTS seller_agreements (
+    seller_key TEXT PRIMARY KEY,
+    signed_at TEXT NOT NULL,
+    signature_reference TEXT NOT NULL,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_author_book_listings_seller_key ON author_book_listings(seller_key);
