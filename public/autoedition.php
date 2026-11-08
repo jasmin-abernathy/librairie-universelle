@@ -67,7 +67,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <link rel="stylesheet" href="/assets/css/author-draft.css?v=20261018-3">
     <link rel="stylesheet" href="/assets/css/autoedition-paper.css?v=20261019-1">
     <link rel="stylesheet" href="/assets/css/print-provider-flow.css?v=20261102-1">
-    <link rel="stylesheet" href="/assets/css/paper-wizard.css?v=20261108-1">
+    <link rel="stylesheet" href="/assets/css/paper-wizard.css?v=20261108-2">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -249,8 +249,8 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 
                 <div class="resource-card important-resource" id="paper-interior-step">
                     <div>
-                        <strong>1. Importer votre manuscrit pour composer l'intérieur PDF</strong>
-                        <p>Formats acceptés : <strong>.docx, .odt, .epub</strong> ou PDF déjà maquetté (dans le champ suivant). Si vous avez déjà un EPUB sans DRM, importez-le directement : il sera recomposé pour le papier sans altérer le fichier numérique. Pour un ancien <code>.doc</code>, enregistrez-le d'abord en DOCX ou ODT. Les fichiers TXT et les EPUB protégés ne sont pas pris en charge.</p>
+                        <strong>Choisissez le fichier de votre livre</strong>
+                        <p>Formats acceptés : <strong>.pdf, .docx, .odt, .epub</strong>. Un PDF déjà mis en page sera conservé tel quel. Un DOCX, ODT ou EPUB sans DRM sera recomposé pour l'impression. Les fichiers TXT et les EPUB protégés ne sont pas pris en charge.</p>
                         <label>Manuscrit papier à mettre en page
                             <input type="file" name="office_manuscript" accept=".docx,.odt,.epub,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.oasis.opendocument.text,application/epub+zip">
                             <span class="field-help">Fichier lu temporairement pour l'aperçu, jamais envoyé à l'imprimeur automatiquement. Taille maximale selon votre serveur : <?= e(UploadLimits::officeLabel($config)) ?>. Contrôlez les images, notes, tableaux et styles complexes après recomposition.</span>
@@ -499,7 +499,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 <script src="/assets/js/paper-barcode.js?v=20261018-1"></script>
 <script src="/assets/js/printer-kit.js?v=20261018-1"></script>
 <script src="/assets/js/printer-zip.js?v=20261018-1"></script>
-<script src="/assets/js/paper-wizard.js?v=20261108-1"></script>
+<script src="/assets/js/paper-wizard.js?v=20261108-2"></script>
 <script src="/assets/js/printing-estimate.js?v=20261102-1"></script>
 </body>
 </html>

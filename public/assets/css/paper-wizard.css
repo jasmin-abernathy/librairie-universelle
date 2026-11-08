@@ -50,3 +50,12 @@
  #panel-paper .paper-wizard-footer button{flex:1 1 auto}
 }
 @media(prefers-reduced-motion:reduce){#panel-paper .paper-wizard-screen{animation:none}}
+
+/* Champ unique de sélection ; les champs historiques restent masqués en mode assisté. */
+#panel-paper .paper-wizard-unified-upload{margin:1rem 0;min-width:0}
+#panel-paper .paper-wizard-upload-label{display:block;font-weight:700;line-height:1.55}
+#panel-paper .paper-wizard-upload-label strong{display:block;margin-bottom:.5rem}
+#panel-paper #paper-book-upload{display:block;width:100%;max-width:100%;min-height:48px;padding:.7rem;border:1px solid #9aa99a;border-radius:.75rem;background:#fff;color:inherit;font:inherit}
+#panel-paper #paper-book-upload:focus-visible{outline:3px solid #246644;outline-offset:3px}
+#panel-paper .paper-wizard-upload-feedback{font-weight:650;color:#2e5940;line-height:1.45}
+#panel-paper .paper-wizard-unified-upload[hidden]{display:none!important}

@@ -70,12 +70,35 @@
   nav.after(root);
   nav.hidden = true;
   const add=(index,...items)=>items.filter(Boolean).forEach(node=>steps[index].section.appendChild(node));
-  add(0,intro,sourceCard,pdfLabel,printRequest);
+  // Le texte et le choix sont unifiés avant tout réglage technique.
+  // Les deux champs historiques restent actifs pour les routes existantes,
+  // mais un seul sélecteur les alimente dans les navigateurs compatibles.
+  if (intro) intro.hidden=true;
+  add(0,sourceCard,pdfLabel,printRequest);
   if (printRequest) {printRequest.hidden=true;const control=get('print-preparation-requested');control.checked=true;control.dispatchEvent(new Event('change',{bubbles:true}));}
-  if(pdfLabel) {
-    const lead = create('p','paper-wizard-help','Choisissez soit un manuscrit DOCX/ODT/EPUB à recomposer, soit un PDF dont la mise en page doit rester intacte. Aucun fichier ne part automatiquement chez l’imprimeur.');
-    pdfLabel.before(lead);
-    pdfLabel.querySelector('.field-help')?.replaceChildren(document.createTextNode('PDF déjà mis en page : nous analyserons son format et son nombre de pages, sans le redimensionner.'));
+  let unifiedUpload=null;
+  let unifiedFeedback=null;
+  const legacySourceLabel=source.closest('label');
+  if(typeof DataTransfer==='function' && legacySourceLabel && pdfLabel && sourceCard){
+    const unifiedWrapper=create('div','paper-wizard-unified-upload');
+    const unifiedLabel=create('label','paper-wizard-upload-label');
+    unifiedLabel.appendChild(create('strong','','Importer mon livre'));
+    unifiedUpload=create('input');
+    unifiedUpload.id='paper-book-upload';
+    unifiedUpload.type='file';
+    unifiedUpload.accept='.pdf,.docx,.odt,.epub,application/pdf,application/epub+zip,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.oasis.opendocument.text';
+    unifiedUpload.setAttribute('aria-describedby','paper-book-upload-hint paper-book-upload-feedback');
+    unifiedLabel.appendChild(unifiedUpload);
+    const hint=create('p','paper-wizard-help','Un seul fichier à sélectionner. PDF : conserver la mise en page existante. DOCX, ODT ou EPUB : adapter les pages au format du livre.');
+    hint.id='paper-book-upload-hint';
+    unifiedFeedback=create('p','paper-wizard-upload-feedback','Aucun fichier sélectionné. Votre document ne sera pas envoyé à un imprimeur.');
+    unifiedFeedback.id='paper-book-upload-feedback';
+    unifiedFeedback.setAttribute('role','status');
+    unifiedFeedback.setAttribute('aria-live','polite');
+    unifiedWrapper.append(unifiedLabel,hint,unifiedFeedback);
+    legacySourceLabel.before(unifiedWrapper);
+    legacySourceLabel.hidden=true;
+    pdfLabel.hidden=true;
   }
   const results = create('p','paper-wizard-status');
   results.id='paper-wizard-analysis';
@@ -445,6 +468,55 @@
     }
     refreshAdvice();
   });
+  if(unifiedUpload){
+    unifiedUpload.addEventListener('change',()=>{
+      const file=unifiedUpload.files?.[0];
+      if(!file){
+        source.value=''; readyPdf.value='';
+        source.dispatchEvent(new Event('change',{bubbles:true}));
+        unifiedFeedback.textContent='Aucun fichier sélectionné. Sélectionnez un PDF, DOCX, ODT ou EPUB.';
+        return;
+      }
+      const name=file.name||'';
+      const ext=name.split('.').pop()?.toLowerCase()||'';
+      const format=ext==='pdf'||file.type==='application/pdf'?'pdf'
+        :['docx','odt','epub'].includes(ext)?ext:null;
+      if(!format){
+        unifiedUpload.value='';
+        source.value=''; readyPdf.value='';
+        source.dispatchEvent(new Event('change',{bubbles:true}));
+        unifiedFeedback.textContent='Format non pris en charge : choisissez un PDF, DOCX, ODT ou EPUB sans DRM.';
+        return;
+      }
+      try{
+        const data=new DataTransfer();
+        data.items.add(file);
+        // Les noms de champs de la soumission existante sont conservés.
+        // On transfère le fichier vers une seule cible, et vide l'autre.
+        source.value='';readyPdf.value='';
+        const dest=format==='pdf'?readyPdf:source;
+        dest.files=data.files;
+        if(!dest.files?.length)throw Error('Transfert non disponible');
+        dest.dispatchEvent(new Event('change',{bubbles:true}));
+        unifiedFeedback.textContent=format==='pdf'
+          ?'PDF détecté : sa mise en page est conservée. Nous analysons son format et son nombre de pages ; les réglages de recomposition sont ignorés.'
+          :format.toUpperCase()+' détecté : nous adapterons la pagination au format choisi. Le fichier d’origine reste inchangé.';
+      }catch(_){
+        unifiedWrapperFailure();
+      }
+    });
+    const unifiedWrapperFailure=()=>{
+      // En cas de navigateur ne permettant pas de réaffecter FileList,
+      // préserver les sélecteurs originaux, pas une fausse sélection.
+      unifiedUpload.closest('.paper-wizard-unified-upload').hidden=true;
+      legacySourceLabel.hidden=false;
+      pdfLabel.hidden=false;
+      source.value='';readyPdf.value='';
+      unifiedFeedback.textContent='Votre navigateur nécessite les sélecteurs de fichiers classiques.';
+      setStatus('Sélectionnez votre fichier dans le champ correspondant ci-dessous.');
+    };
+  }
+
   const resetPerBook=()=>{
     const manual=get('wizard-manual-cost');
     if(manual)manual.value='';

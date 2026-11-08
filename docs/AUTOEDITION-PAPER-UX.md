@@ -30,3 +30,7 @@ La navigation entre écrans ne recharge pas l’HTML principal. Les contrôles e
 ## Tests et publication
 
 CI : syntaxe PHP/JS et tests du parcours historique. La production doit être vérifiée séparément via la procédure Git → o2switch ; une CI verte n’est pas une preuve de déploiement ni de bon fonctionnement en situation réelle.
+
+## Import unique (8 novembre, correctif UX)
+
+Dans le navigateur moderne, un seul champ « Importer mon livre » accepte PDF, DOCX, ODT et EPUB. Le format est reconnu après sélection, avec explication contextuelle : le PDF existant conserve sa pagination et passe à la couverture ; les manuscrits passent par le moteur de mise en page et le pré-calcul. Les noms internes de téléversement `print_pdf` et `office_manuscript` ne changent pas afin de conserver toutes les routes existantes. Si le navigateur n’autorise pas le transfert de `FileList`, les deux champs historiques réapparaissent comme solution de compatibilité ; sans JavaScript le formulaire historique est disponible.

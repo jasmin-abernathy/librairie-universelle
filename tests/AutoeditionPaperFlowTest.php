@@ -6,7 +6,7 @@ $draft=file_get_contents(dirname(__DIR__).'/public/assets/css/author-draft.css')
 if(!is_string($src)||!is_string($css)||!is_string($draft))exit(1);
 $check=static function(bool $ok,string $msg):void { if(!$ok){fwrite(STDERR,$msg."\n");exit(1);} };
 $check(str_contains($src, 'name="office_manuscript" accept=".docx,.odt,.epub,')
-    && str_contains($src, 'Formats acceptés : <strong>.docx, .odt, .epub</strong>')
+    && str_contains($src, 'Formats acceptés : <strong>.pdf, .docx, .odt, .epub</strong>')
     && str_contains($src, 'Les fichiers TXT et les EPUB protégés ne sont pas pris en charge.'),
     'Le champ papier doit proposer DOCX, ODT et EPUB sans DRM.');
 $previewForInput=(string)file_get_contents(dirname(__DIR__) . '/public/print-preview.php');
@@ -153,6 +153,13 @@ $apache=(string)file_get_contents(dirname(__DIR__).'/public/.htaccess');
 $analyze=(string)file_get_contents(dirname(__DIR__).'/public/analyser-pdf.php');
 $check(str_contains($src,'/assets/js/paper-wizard.js') && str_contains($src,'/assets/css/paper-wizard.css'),
     'Le formulaire papier doit activer son assistant dynamique.');
+$check(str_contains($wizard,"unifiedUpload.accept='.pdf,.docx,.odt,.epub") &&
+       str_contains($wizard,'const dest=format===\'pdf\'?readyPdf:source') &&
+       str_contains($wizard,"unifiedUpload.addEventListener('change'") &&
+       str_contains($wizard,'legacySourceLabel.hidden=true') &&
+       str_contains($wizard,'pdfLabel.hidden=true') &&
+       str_contains($src,'/assets/js/paper-wizard.js?v=20261108-2'),
+    'Un seul sélecteur visible doit distribuer automatiquement le fichier vers le parseur PDF ou manuscrit.');
 $check(str_contains($wizard,'wizard-barcode-download') &&
        str_contains($wizard,'wizard-plan-bookstores') &&
        str_contains($wizard,'wizard-build-kit') &&
