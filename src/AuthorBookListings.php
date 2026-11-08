@@ -183,7 +183,7 @@ final class AuthorBookListings
     {
         $limit = max(1, min(100, $limit));
         $sql = "SELECT id,title,subtitle,author_name,description,book_format,isbn,price_cents,ebook_price_cents,
-                seller_type,public_email,seller_url,reviewed_at
+                seller_type,public_email,seller_url,reviewed_at,
                 CASE WHEN book_format='both' THEN COALESCE(ebook_price_cents,price_cents)
                 ELSE price_cents END AS digital_price_cents
                 FROM author_book_listings
