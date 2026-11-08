@@ -309,7 +309,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                                 <option value="arabic"<?= ($_POST['print_front_matter_numbering'] ?? '') === 'arabic' ? ' selected' : '' ?>>Numérotation continue en chiffres arabes</option>
                             </select>
                         </label>
-                        <input type="hidden" name="print_bleed_mm" value="3">
+                        <input type="hidden" name="print_bleed_mm" value="0">
                         <p class="field-help">Fonds perdus gérés par le profil d’impression : 3 mm dans le réglage initial Corep, aucun choix manuel. Pour Bookelis, le générateur ne certifie pas les fonds perdus : leurs consignes exigent 5 mm sur l’intérieur si des images atteignent le bord, et un gabarit distinct pour la couverture. Un livre uniquement textuel n’a normalement pas besoin de fonds perdus.</p>
                         <label>Marge intérieure / reliure
                             <select id="print-gutter-mode" name="print_gutter_mode">
