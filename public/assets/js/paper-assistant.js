@@ -11,6 +11,12 @@
        window.PaperBarcode?.valid(isbnFromWizard||'')) {
       items['paper-isbn'].value=isbnFromWizard;
     }
+    const publicPrice=sessionStorage.getItem('librairie:paper-price-for-cover');
+    if(items['paper-price'] && !items['paper-price'].value.trim()
+      && publicPrice && /^[0-9]+(?:\.[0-9]{1,2})?$/.test(publicPrice)
+      && Number(publicPrice)>0 && Number(publicPrice)<10000) {
+      items['paper-price'].value=publicPrice;
+    }
   } catch (_) { /* stockage désactivé : saisie manuelle conservée */ }
   const front = el('paper-front-preview');
   const back = el('paper-back-preview');
