@@ -40,8 +40,8 @@ foreach ([
     $check(str_contains($page, $needle), 'Mention attendue absente : ' . $needle);
 }
 $check(str_contains($page, 'n\'annonçons ni stock en temps réel, ni vente intégrée, ni partenariat contractuel'), 'Pas de limites explicites des promesses commerciales.');
-$check(str_contains($page, "La Librairie n'encaisse pas le prix du livre")
-    && str_contains($page, 'Le vendeur gère la commande, le paiement et la livraison'),
+$check(mb_stripos($page, "la Librairie n'encaisse pas le prix du livre") !== false
+    && mb_stripos($page, 'Le vendeur gère la commande, le paiement et la livraison') !== false,
     'Une fiche ne doit pas promettre de paiement intégré.');
 $check(str_contains($page, "nom de travail"), 'Nom provisoire masqué.');
 $check(!str_contains($page, 'Amazon') && !str_contains($page, 'Fnac'),
