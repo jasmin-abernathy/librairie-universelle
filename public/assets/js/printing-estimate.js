@@ -39,6 +39,9 @@
     } catch (_) { return null; }
   };
   const restorePages = () => {
+    // L'assistant travaille sur le manuscrit courant : ne jamais réutiliser le
+    // nombre de pages d'un ancien ouvrage enregistré dans ce navigateur.
+    if (document.getElementById('paper-wizard')) return;
     const data = readPreview();
     if (!data || data.at === appliedStamp) return;
     if (data.provider === provider() && data.trim === trimInput.value) {
