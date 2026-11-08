@@ -136,7 +136,7 @@ final class SellerAgreementPdf
         $addLine('CONVENTION DE REFERENCEMENT ET DE MISE EN RELATION', true, 14.0, 22);
         $addLine('Livres papier et EPUB autoedites - Commission de 3 % - Accord non exclusif', false, 9.5, 25);
         $addLine('EXPLOITANT', true, 10.4, 17);
-        $paragraph('Jasmin Leveque, entrepreneur individuel - Le Potager du Web. Contact : contact@lepotager.org. Informations complementaires d identification professionnelle a renseigner avant signature.');
+        $paragraph('Le Potager du Web, entreprise individuelle (SIRET 808 087 399 00032), 3 rue Brunehaut, 57000 Metz. Interlocuteur pour le contrat : Jasmin Leveque. Courriel : contact@lepotager.org.');
         $addLine('VENDEUR / SIGNATAIRE - COORDONNEES FOURNIES AU DEPOT', true, 10.4, 18);
         $sellerName = trim((string)$seller['seller_legal_name']);
         $paragraph('Nom legal et qualite : ' . $sellerName . '.');

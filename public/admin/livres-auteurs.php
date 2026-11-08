@@ -2,6 +2,7 @@
 declare(strict_types=1);
 [$config,$pdo] = require dirname(__DIR__,2).'/src/bootstrap.php';
 AdminAuth::enforce($config);
+Csrf::token(); // La session doit démarrer avant le premier octet HTML.
 header('X-Robots-Tag: noindex, nofollow');
 header('Cache-Control: no-store');
 $service=new AuthorBookListings($pdo);

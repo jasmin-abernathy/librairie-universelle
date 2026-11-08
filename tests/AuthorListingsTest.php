@@ -30,6 +30,13 @@ catch(InvalidArgumentException $e) {}
 $service->recordSignature($id,'CONTRAT-TEST-2026-001');
 $assert(($service->pendingReview('pending')[0]['agreement_signed_at']??null)!==null,'Signature non visible en administration.');
 $assert($service->moderate($id,'publish','Relecture humaine'),'Approbation impossible');
+$second=$valid;
+$second['title']='Un second livre du même auteur';
+$secondId=$service->submit($second);
+$assert($service->moderate($secondId,'publish'),
+    'La convention du vendeur ne couvre pas un second livre portant la même identité.');
+$assert(count($service->visible())===2,'Les deux livres du vendeur signataire ne sont pas visibles.');
+$assert($service->moderate($secondId,'hide'),'Impossible de masquer le second livre de test.');
 $public=$service->visible($id);
 $assert(count($public)===1,'Fiche approuvée invisible');
 $assert((int)$public[0]['price_cents']===1550,'Prix incorrect');
