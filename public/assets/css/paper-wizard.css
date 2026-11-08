@@ -1,6 +1,6 @@
 /* Assistant papier, affichage d'une seule étape dans le conteneur d'autoédition. */
 #panel-paper .paper-step-nav[hidden],#panel-paper .paper-wizard-screen[hidden],
-#panel-paper #paper-wizard-pagination-frame,#panel-paper [hidden]{display:none!important}
+#panel-paper [hidden]{display:none!important}
 #panel-paper .paper-wizard{max-width:1050px;min-width:0;scroll-margin-top:1.2rem}
 #panel-paper .paper-wizard-progress{display:flex;gap:.45rem;overflow-x:auto;margin:0 0 1.2rem;padding:.2rem .2rem .6rem;scrollbar-width:thin}
 #panel-paper .paper-wizard-progress-button{appearance:none;flex:0 0 auto;padding:.65rem .75rem;max-width:15rem;border:1px solid #b2c7b5;border-radius:.6rem;background:#f7faf7;color:#28533d;font-size:.86rem;font-weight:650;white-space:normal;cursor:pointer}
@@ -33,7 +33,7 @@
 #panel-paper .paper-wizard-price-cards strong{display:block;font-size:1.5rem;margin-top:.2rem}
 #panel-paper .paper-wizard-provider-mirror{display:flex;flex-direction:column;gap:.5rem;background:#fff;padding:.8rem;border-radius:.65rem;margin:.5rem 0}
 #panel-paper .paper-wizard-provider-mirror select{max-width:100%}
-#panel-paper #paper-wizard-pagination-frame{position:absolute!important;width:1px;height:1px;border:0;visibility:hidden;pointer-events:none}
+#panel-paper #paper-wizard-pagination-frame{position:absolute!important;display:block!important;width:840px;height:1120px;left:-20000px;top:0;border:0;visibility:hidden;pointer-events:none}
 #panel-paper .paper-wizard-screen .paper-provider-fieldset{margin:.5rem 0}
 #panel-paper .paper-wizard-screen .print-preview-row{margin:1rem 0}
 #panel-paper .paper-wizard-screen .print-cost-panel{margin-top:.4rem}
