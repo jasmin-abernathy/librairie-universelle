@@ -354,3 +354,15 @@
     border-color: #8fb09c;
     background: var(--accent-soft);
 }
+
+/* EPUB autoédités : présentation cohérente avec les fiches papier. */
+.ebook-indie-section{padding:clamp(1.2rem,3vw,2.2rem);margin:1rem 0 2.5rem;border:1px solid var(--line);border-radius:1.1rem;background:var(--surface)}
+.ebook-indie-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:1rem;margin-top:1.25rem}
+.ebook-indie-card{min-width:0;display:flex;flex-direction:column;gap:.55rem;background:#fff;border:1px solid var(--line);border-radius:.9rem;padding:1.2rem}
+.ebook-indie-card h3{line-height:1.3;font-size:1.24rem;margin:.1rem 0}
+.ebook-indie-card p{margin:.25rem 0}
+.ebook-indie-author{font-weight:700}
+.ebook-indie-price{display:block;font-size:1.2rem;margin-top:auto}
+.ebook-indie-card .button-link{max-width:100%;text-align:center;margin-top:.6rem;white-space:normal}
+.ebook-indie-note{font-size:.9rem;color:var(--muted);margin-top:1.2rem}
+@media(max-width:620px){.ebook-indie-section{padding:.85rem}.ebook-indie-card{padding:1rem}}

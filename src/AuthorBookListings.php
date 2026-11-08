@@ -165,6 +165,35 @@ final class AuthorBookListings
         return $stmt->fetchAll();
     }
 
+    /**
+     * Livres numériques proposés directement par des auteurs, sans dépôt EPUB.
+     * Ne publier que les fiches déjà approuvées ; le paiement reste externe.
+     */
+    public function visibleEbooks(string $query = '', string $mode = 'all', int $limit = 24): array
+    {
+        $limit = max(1, min(100, $limit));
+        $sql = "SELECT id,title,subtitle,author_name,description,book_format,isbn,price_cents,
+                seller_type,public_email,seller_url,reviewed_at
+                FROM author_book_listings
+                WHERE status='published' AND book_format IN ('ebook','both')";
+        $params = [];
+        if ($mode === 'free') {
+            $sql .= " AND price_cents = 0";
+        } elseif ($mode === 'paid') {
+            $sql .= " AND price_cents > 0";
+        }
+        $query = trim(mb_substr($query, 0, 80));
+        if ($query !== '') {
+            $sql .= ' AND (title LIKE :title_query OR author_name LIKE :author_query)';
+            $params[':title_query'] = '%' . str_replace(['%', '_'], ['\\%', '\\_'], $query) . '%';
+            $params[':author_query'] = $params[':title_query'];
+        }
+        $sql .= ' ORDER BY reviewed_at DESC,id DESC LIMIT ' . $limit;
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
     public function pendingReview(?string $status = null): array
     {
         $states = ['pending','published','rejected','hidden'];

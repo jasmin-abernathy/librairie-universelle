@@ -20,6 +20,13 @@ final class CatalogOfferVisibility
             if (($offer['source_name'] ?? '') === 'Partenaire test') {
                 return false;
             }
+            // Pas de publicité gratuite vers les grandes plateformes commerciales
+            // depuis les pages d'accès numériques, y compris les anciennes offres indexées.
+            if (($offer['offer_type'] ?? '') === 'ebook'
+                && !empty($offer['price_cents'])
+                && ($offer['source_name'] ?? '') !== 'Auteurs indépendants validés') {
+                return false;
+            }
 
             // Les six anciennes offres préremplies portaient cette date exacte.
             // Une vraie offre réactualisée ultérieurement n'est pas masquée.

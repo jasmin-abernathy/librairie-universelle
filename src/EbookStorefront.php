@@ -40,6 +40,11 @@ JOIN works w ON w.id = COALESCE(o.work_id, e.work_id)
 LEFT JOIN work_contributors wc ON wc.work_id = w.id AND wc.role = 'author'
 LEFT JOIN contributors c ON c.id = wc.contributor_id
 WHERE o.offer_type IN ('ebook', 'free_download', 'read_online')
+  AND (
+       o.offer_type IN ('free_download', 'read_online')
+       OR o.price_cents = 0
+       OR s.name = 'Auteurs indépendants validés'
+  )
 SQL;
         $params = [];
 

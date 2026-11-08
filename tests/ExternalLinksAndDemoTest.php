@@ -68,6 +68,14 @@ foreach ($javascriptExternalAnchors as $path => $names) {
 $ebook=(string)file_get_contents($root.'/public/ebooks.php');
 $check(str_contains($ebook,"$"."offers = $"."query !== '' ? EbookStorefront::browse("),
     'La page ebooks doit attendre une vraie recherche avant de présenter des offres.');
+$check(str_contains($ebook,'visibleEbooks(') && str_contains($ebook,'id="epub-independants"')
+  && str_contains($ebook,'Référencer mon EPUB'),
+    'Les auteurs indépendants ne sont pas référencés dans la bibliothèque numérique.');
+$policy=(string)file_get_contents($root.'/src/CatalogOfferVisibility.php');
+$assertPolicy=(string)file_get_contents($root.'/src/EbookStorefront.php');
+$check(str_contains($policy,"'ebook'") && str_contains($policy,"'Auteurs indépendants validés'")
+    && str_contains($assertPolicy,"s.name = 'Auteurs indépendants validés'"),
+    'Les liens des grandes plateformes de vente numérique ne sont pas exclus.');
 $check(str_contains($ebook,"<?php if ($"."query !== ''): ?>"),
     'La section de résultats ne doit pas s’ouvrir sans recherche.');
 $seed=(string)file_get_contents($root.'/database/seed.sql');

@@ -21,6 +21,7 @@ if ($languages === []) {
 }
 
 $offers = $query !== '' ? EbookStorefront::browse($pdo, $config, $mode, $query) : [];
+$independentEbooks = (new AuthorBookListings($pdo))->visibleEbooks($query, $mode, $query === '' ? 8 : 48);
 $allEbookSources = !empty($config['federated_search_enabled'])
     ? array_filter(
         DiscoveryRegistry::definitions(),
@@ -71,12 +72,12 @@ function modeLabel(string $mode): string
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <meta name="description" content="Chercher un ebook gratuit ou payant dans Librairie universelle et plusieurs catalogues externes identifiés.">
+    <meta name="description" content="Découvrez des EPUB indépendants proposés directement par leurs auteurs et des livres numériques libres dans des catalogues identifiés.">
     <meta name="theme-color" content="#f7f3ea">
     <title>Ebooks — <?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
     <link rel="stylesheet" href="/assets/css/discovery.css?v=20261009-3">
-    <link rel="stylesheet" href="/assets/css/ebooks.css?v=20261009-2">
+    <link rel="stylesheet" href="/assets/css/ebooks.css?v=20261108-1">
     <script src="/assets/js/discovery.js?v=20261009-4" defer></script>
 </head>
 <body>
@@ -88,7 +89,7 @@ function modeLabel(string $mode): string
         <div>
             <p class="eyebrow">Bibliothèque d’ebooks</p>
             <h1 id="ebook-title">Un titre, plusieurs façons de le lire.</h1>
-            <p class="lede">Cherchez une œuvre une seule fois. Les offres déjà indexées et les catalogues externes compatibles restent distingués, avec leur provenance visible.</p>
+            <p class="lede">Découvrez des EPUB d’auteurs indépendants et recherchez des livres numériques libres. Pas de liens commerciaux vers les grandes plateformes de vente.</p>
         </div>
         <div class="ebook-hero-facts" aria-label="Périmètre de la recherche">
             <div><strong><?= count($allEbookSources) ?></strong><span>catalogues externes dédiés au numérique</span></div>
@@ -101,7 +102,7 @@ function modeLabel(string $mode): string
         <div class="ebook-search-copy">
             <p class="section-kicker">Recherche</p>
             <h2 id="ebook-search-title">Quel livre cherchez-vous ?</h2>
-            <p>« Tout » réunit les accès disponibles. « Gratuit / libre » ne conserve que les sources qualifiées pour ce type d’accès. « Payant » s’appuie pour l’instant sur les offres commerciales déjà indexées.</p>
+            <p>« Tout » réunit les EPUB autoédités et les catalogues de lecture libre. « Payant » affiche les livres numériques proposés par leurs auteurs, sans redirection vers une grande enseigne.</p>
         </div>
 
         <form class="ebook-search-form" method="get" action="/ebooks.php#ebook-results" role="search">
@@ -131,6 +132,37 @@ function modeLabel(string $mode): string
         </form>
     </section>
 
+
+    <section class="ebook-indie-section" id="epub-independants" aria-labelledby="epub-independants-title">
+      <div class="ebook-block-heading">
+        <div>
+          <p class="section-kicker">Vente directe</p>
+          <h2 id="epub-independants-title">EPUB d’auteurs indépendants</h2>
+        </div>
+        <p>Comme pour les livres papier : prix fixé par le vendeur, fiche examinée avant publication, contact direct et aucun paiement sur la Librairie.</p>
+      </div>
+      <?php if ($independentEbooks === []): ?>
+        <div class="ebook-compact-empty">
+          <strong><?= $query === '' ? 'Les premiers EPUB indépendants sont attendus.' : 'Aucun EPUB indépendant ne correspond à cette recherche.' ?></strong>
+          <span>Vous pouvez proposer un livre numérique, gratuit ou payant, avec son lien de diffusion ou son adresse de contact.</span>
+        </div>
+      <?php else: ?>
+        <div class="ebook-indie-grid">
+          <?php foreach ($independentEbooks as $book): ?>
+            <article class="ebook-indie-card">
+              <p class="eyebrow">EPUB indépendant<?= $book['book_format'] === 'both' ? ' · aussi disponible en papier' : '' ?></p>
+              <h3><a href="/livre-auteur.php?id=<?= (int)$book['id'] ?>"><?= e($book['title']) ?></a></h3>
+              <p class="ebook-indie-author"><?= e($book['author_name']) ?></p>
+              <p><?= e(mb_strimwidth($book['description'],0,175,'…','UTF-8')) ?></p>
+              <strong class="ebook-indie-price"><?= (int)$book['price_cents'] === 0 ? 'Gratuit' : number_format((int)$book['price_cents']/100,2,',',' ').' €' ?></strong>
+              <a href="/livre-auteur.php?id=<?= (int)$book['id'] ?>" class="button-link">Voir la fiche et contacter le vendeur</a>
+            </article>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
+      <p class="ebook-indie-note">Les prix sont déclarés par les vendeurs. Les éventuels frais de livraison ne concernent pas la fourniture d’un EPUB téléchargeable.</p>
+    </section>
+
     <?php if ($query !== ''): ?>
     <section class="ebook-results-section" id="ebook-results" aria-labelledby="ebook-results-title">
         <div class="ebook-results-header">
@@ -140,11 +172,11 @@ function modeLabel(string $mode): string
                 <p class="ebook-results-context"><?= e(modeLabel($mode)) ?> · <?= e(implode(' + ', array_map('strtoupper', $languages))) ?></p>
             </div>
             <div class="ebook-result-summary" aria-label="Résumé des résultats">
-                <span><?= count($offers) ?> offre<?= count($offers) === 1 ? '' : 's' ?> déjà indexée<?= count($offers) === 1 ? '' : 's' ?></span>
+                <span><?= count($independentEbooks) ?> fiche<?= count($independentEbooks) === 1 ? '' : 's' ?> d’auteur<?= count($independentEbooks) === 1 ? '' : 's' ?> · <?= count($offers) ?> accès libre<?= count($offers) === 1 ? '' : 's' ?> indexé<?= count($offers) === 1 ? '' : 's' ?></span>
                 <?php if ($discoveryDefinitions !== []): ?>
                     <span id="discovery-progress" aria-live="polite">0/<?= count($discoveryDefinitions) ?> sources interrogées…</span>
                 <?php elseif ($query !== '' && $mode === 'paid'): ?>
-                    <span>Recherche externe désactivée en mode payant</span>
+                    <span>Vente directe par les auteurs uniquement</span>
                 <?php endif; ?>
             </div>
         </div>
@@ -195,8 +227,8 @@ function modeLabel(string $mode): string
                     </div>
                 </div>
                 <div class="ebook-compact-empty">
-                    <strong>Pas de connecteur commercial externe actif pour le moment.</strong>
-                    <span>Le filtre payant affiche uniquement les offres dont la source, le prix et les conditions sont déjà documentés dans Librairie universelle.</span>
+                    <strong>Les ventes de livres numériques se font directement auprès des auteurs.</strong>
+                    <span>Parcourez les fiches ci-dessous pour consulter les EPUB autoédités déjà référencés.</span>
                 </div>
             </div>
         <?php endif; ?>
@@ -205,19 +237,19 @@ function modeLabel(string $mode): string
             <div class="ebook-block-heading">
                 <div>
                     <p class="ebook-block-label">Catalogue local</p>
-                    <h3>Déjà indexé dans Librairie universelle</h3>
+                    <h3>Accès numériques libres déjà indexés</h3>
                 </div>
-                <p>Prix, format, DRM et fraîcheur sont affichés lorsqu’ils sont connus.</p>
+                <p>Ces accès proviennent des catalogues libres identifiés ; la vente d’EPUB autoédités figure dans la section dédiée.</p>
             </div>
 
             <?php if ($offers === []): ?>
                 <div class="ebook-compact-empty">
-                    <strong><?= $query === '' ? 'Saisissez un titre pour afficher les offres correspondantes.' : 'Aucune offre vérifiée ne correspond à votre recherche.' ?></strong>
+                    <strong>Aucun accès libre indexé pour cette recherche.</strong>
                     <span>
                         <?php if ($discoveryDefinitions !== []): ?>
                             Les résultats des catalogues externes restent visibles juste au-dessus.
                         <?php elseif ($query !== '' && $mode === 'paid'): ?>
-                            Aucune offre payante connue pour ce titre pour le moment.
+                            Découvrez les livres numériques d’auteurs indépendants ci-dessous.
                         <?php else: ?>
                             Lancez une recherche pour interroger aussi les catalogues externes compatibles.
                         <?php endif; ?>
@@ -257,9 +289,9 @@ function modeLabel(string $mode): string
         <div>
             <p class="section-kicker">Auteurs et autrices</p>
             <h2>Faites découvrir votre livre sans nous envoyer votre EPUB.</h2>
-            <p>Proposez sa fiche descriptive, son prix et un contact direct. Chaque fiche est examinée avant sa mise en ligne ; aucun fichier ni paiement ne passe par la Librairie.</p>
+            <p>Comme pour un livre papier, proposez un EPUB autoédité avec sa fiche, son prix public et un contact vendeur. La Librairie ne demande pas votre fichier et n’encaisse pas la vente. La commission éventuelle de 3 % ne s’applique qu’après convention signée.</p>
         </div>
-        <a class="button-link secondary" href="/proposer-livre.php">Proposer la fiche de mon livre</a>
+        <a class="button-link secondary" href="/proposer-livre.php">Référencer mon EPUB</a>
     </section>
 </main>
 

@@ -27,11 +27,18 @@ $assert(!array_key_exists('private_email',$public[0]),'E-mail de suivi exposé p
 $assert(!array_key_exists('review_note',$public[0]),'Note privée exposée');
 $assert($public[0]['seller_url']==='https://example.org/acheter','Contact direct absent');
 $assert(count($service->visible(null,'Autrice'))===1,'Recherche impossible');
+$assert(count($service->visibleEbooks()) === 1,
+    'Une fiche papier et numérique publiée doit figurer dans le catalogue EPUB.');
+$assert(count($service->visibleEbooks('Autrice','paid')) === 1,
+    'Recherche EPUB payante indisponible.');
+$assert($service->visibleEbooks('Autrice','free') === [],
+    'Le filtre EPUB gratuit présente un livre payant.');
 $assert($service->moderate($id,'hide'),'Masquage impossible');
 $assert($service->visible()===[],'Fiche masquée toujours publique');
 $assert($service->moderate($id,'publish'),'Republication impossible');
 $assert($service->moderate($id,'reject'),'Refus impossible');
 $assert($service->visible()===[],'Fiche refusée toujours publique');
+$assert($service->visibleEbooks() === [], 'Fiche EPUB refusée toujours publique');
 $missingContact=$valid;$missingContact['public_email']='';$missingContact['seller_url']='';
 try{$service->submit($missingContact);$assert(false,'Contact manquant autorisé');}
 catch(InvalidArgumentException $e){}
