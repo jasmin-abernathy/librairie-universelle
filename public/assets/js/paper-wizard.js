@@ -281,6 +281,15 @@
   readyPdf.addEventListener('change',syncFinalFrame);
   source.addEventListener('change',syncFinalFrame);
 
+  // Réduire la dernière étape : le kit et l’aperçu sont d’abord, les anciens
+  // utilitaires restent disponibles dans un panneau secondaire facultatif.
+  const finalScreen=steps[4].section;
+  const extras=create('details','paper-wizard-extras');
+  extras.appendChild(create('summary','','Autres outils et imprimeurs'));
+  [pdfx,kit,resources].filter(Boolean).forEach(el=>extras.appendChild(el));
+  [oldGenerate,finalFrameStatus,finalFrame,kitBuilder,corepTransfer,bookelisTransfer,extras]
+    .filter(Boolean).forEach(el=>finalScreen.appendChild(el));
+
   // Les étapes d'une seule page évitent les rechargements HTML et conservent tous les champs du formulaire.
   let active=0,seen=0,pdfData=null,analysisPending=false,estimateTimer=null,nonce=0,estimateRequest='',pdfCheckSerial=0;
   const isPdf=()=>Boolean(readyPdf.files?.length);
@@ -289,7 +298,9 @@
   const size=()=>get('print-trim-size')?.value||'a5';
   const setStatus = message => {results.textContent=message;state.textContent=message;};
   const validSteps=()=>isPdf()?[0,2,3,4]:[0,1,2,3,4];
-  const pagesOk=()=>Number.isInteger(Number(pagesField.value)) && Number(pagesField.value)>0;
+  pagesField.readOnly=true;
+  pagesField.setAttribute('aria-label','Pages calculées automatiquement');
+  const pagesOk=()=>pagesField.value.trim()!=='' && Number.isInteger(Number(pagesField.value)) && Number(pagesField.value)>0;
   const show=(index,initial=false)=>{
     if(!validSteps().includes(index))index=validSteps()[0];
     active=index;seen=Math.max(seen,index);
@@ -312,6 +323,7 @@
   };
   const invalidate=message=>{
     if(!isPdf())pdfData=null;
+    estimateRequest='';
     pagesField.value='';
     pagesField.dispatchEvent(new Event('input',{bubbles:true}));
     setStatus(message);
@@ -418,6 +430,10 @@
     const data=event.data;
     if(!data||data.type!=='librairie:paper-count'||data.request!==estimateRequest)return;
     if(data.error){setStatus('Pagination non disponible : '+data.error);return;}
+    if(data.critical && !data.overLimit){
+      invalidate('Une image est manquante ou la pagination est incomplète. Corrigez le manuscrit avant de calculer un prix.');
+      return;
+    }
     if(!Number.isInteger(data.pages)||data.pages<1)return;
     pagesField.value=String(data.pages);
     pagesField.dispatchEvent(new Event('input',{bubbles:true}));
@@ -429,13 +445,24 @@
     }
     refreshAdvice();
   });
+  const resetPerBook=()=>{
+    const manual=get('wizard-manual-cost');
+    if(manual)manual.value='';
+    const publicPrice=form.querySelector('input[name="paper_price"]');
+    if(publicPrice)publicPrice.value='';
+    try {sessionStorage.removeItem('librairie:paper-price-for-cover');sessionStorage.removeItem('librairie:paper-isbn-for-cover');} catch(_){}
+    get('wizard-price-apply-status').textContent='';
+    seen=0;
+  };
   source.addEventListener('change',()=>{
+    resetPerBook();
     if(source.files?.length){pdfCheckSerial+=1;readyPdf.value='';pdfData=null;analysisPending=false;}
     invalidate(source.files?.length?'Manuscrit chargé : choisissez vos réglages pour calculer les pages.':'Choisissez un manuscrit ou un PDF.');
     syncProvider();
     if(hasSource()&&active===1)scheduleEstimate();
   });
   readyPdf.addEventListener('change',()=>{
+    resetPerBook();
     if(readyPdf.files?.length){source.value='';if(estimateTimer)clearTimeout(estimateTimer);}
     invalidate(readyPdf.files?.length?'PDF chargé : analyse des pages…':'Choisissez un manuscrit ou un PDF.');
     syncProvider();

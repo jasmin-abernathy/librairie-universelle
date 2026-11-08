@@ -144,4 +144,24 @@ $check(preg_match('/#panel-paper\s*>\s*fieldset\s*>\s*legend\s*\{[^}]*float\s*:\
     'Le titre papier doit être positionné dans le cadre sur mobile et ordinateur.');
 $check(preg_match('/#panel-paper\s*>\s*fieldset\s*>\s*\.paper-step-nav\s*\{[^}]*clear\s*:\s*both/s',$css)===1,
     'Les raccourcis doivent passer sous la légende flottante, pas à côté.');
+$wizard=(string)file_get_contents(dirname(__DIR__).'/public/assets/js/paper-wizard.js');
+$apache=(string)file_get_contents(dirname(__DIR__).'/public/.htaccess');
+$analyze=(string)file_get_contents(dirname(__DIR__).'/public/analyser-pdf.php');
+$check(str_contains($src,'/assets/js/paper-wizard.js') && str_contains($src,'/assets/css/paper-wizard.css'),
+    'Le formulaire papier doit activer son assistant dynamique.');
+$check(str_contains($wizard,'wizard-barcode-download') &&
+       str_contains($wizard,'wizard-plan-bookstores') &&
+       str_contains($wizard,'wizard-build-kit') &&
+       str_contains($wizard,'paper_wizard_final_iframe'),
+    'Le parcours guidé doit proposer ISBN, prix public unique et kit dans la même page.');
+$check(str_contains($wizard,'Le kit doit contenir')===false && str_contains($wizard,'finalScreen.appendChild') &&
+       str_contains($wizard,'pagesField.readOnly=true'),
+    'Étape finale guidée et pagination calculée non modifiable attendues.');
+$check(str_contains($apache,'Header always set X-Frame-Options "SAMEORIGIN"') &&
+       str_contains($apache,"frame-ancestors 'self'") &&
+       str_contains($apache,"frame-src 'self' blob:"),
+    'Apache doit autoriser les aperçus internes sans autoriser les cadres tiers.');
+$check(str_contains($analyze,"Csrf::validate") && str_contains($analyze,"proc_open") &&
+       str_contains($analyze,"pdfinfo") && str_contains($analyze,"corep_eligible"),
+    'L’analyse native PDF doit rester temporaire, protégée et utile à Corep.');
 echo "Parcours papier, liens et import brouillon : OK\n";

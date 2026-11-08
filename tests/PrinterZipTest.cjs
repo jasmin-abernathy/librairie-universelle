@@ -23,6 +23,18 @@ const zip=require('../public/assets/js/printer-zip.js');
   pos+=30+f.name.length+f.blob.size;
  }
  assert.equal(pos,central);
+ // Le kit Bookelis comporte deux PDF (intérieur + couverture à plat),
+ // une fiche JSON et les instructions ; Corep utilise trois PDF + fiche.
+ const bookelisEntries=[
+   {name:'interieur.pdf',blob:new Blob(['%PDF-1.4\\nLIVRE'])},
+   {name:'couverture-complete-bookelis.pdf',blob:new Blob(['%PDF-1.4\\nCOUVERTURE'])},
+   {name:'fiche-impression.json',blob:new Blob(['{"provider":"bookelis"}'])},
+   {name:'instructions.txt',blob:new Blob(['Gabarit officiel Bookelis requis'])}
+ ];
+ const bBookelis=await zip.create(bookelisEntries);
+ const vBookelis=new DataView(await bBookelis.arrayBuffer());
+ assert.equal(vBookelis.getUint16(bBookelis.size-12,true),4);
+ assert.equal(vBookelis.getUint32(bBookelis.size-22,true),0x06054b50);
  await assert.rejects(zip.create([entries[0],entries[0],entries[2],entries[3]]));
  console.log('Archive ZIP locale : 4 fichiers et CRC32 OK');
 })().catch(e=>{console.error(e);process.exit(1)});

@@ -73,7 +73,7 @@
         critical=pages<1||pageEls.length!==pages||missingImages.length>0||corepOverLimit;
         rendered=true;
         // Ne conserver que le nombre de pages et le profil, jamais le manuscrit.
-        if (!critical && pages > 0 && pages <= 5000) {
+        if (document.body.dataset.estimateMode!=='1' && !critical && pages > 0 && pages <= 5000) {
             try {
                 localStorage.setItem('librairie:paper-preview-count:v1',JSON.stringify({
                     pages, provider:document.body.dataset.printProvider||'corep_metz',

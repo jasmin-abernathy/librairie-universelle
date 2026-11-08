@@ -13,8 +13,17 @@ DirectoryIndex index.php
 # sur la seule page de prévisualisation, jamais sur le reste du site.
 <Files "print-preview.php">
   <IfModule mod_headers.c>
-    Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'; object-src 'none'"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'none'; base-uri 'none'; frame-ancestors 'self'; form-action 'self'; object-src 'none'"
     Header always set Referrer-Policy "no-referrer"
+  </IfModule>
+</Files>
+
+# Le formulaire papier affiche un aperçu PDF déjà importé dans sa div.
+# Seule cette page accepte les frames blob: locales ; aucune intégration tierce.
+<Files "autoedition.php">
+  <IfModule mod_headers.c>
+    Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; frame-src 'self' blob:; img-src 'self' data: blob:; style-src 'self'; script-src 'self' https://unpkg.com; connect-src 'self' https://data.geopf.fr; upgrade-insecure-requests"
   </IfModule>
 </Files>
 

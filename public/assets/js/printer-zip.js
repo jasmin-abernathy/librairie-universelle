@@ -18,7 +18,7 @@
  }
  const put=(view,off,val,wide)=>wide?view.setUint32(off,val,true):view.setUint16(off,val,true);
  async function create(entries){
-   if(!Array.isArray(entries)||entries.length!==4)throw Error('Trois PDF et une fiche sont nécessaires.');
+   if(!Array.isArray(entries)||entries.length!==4)throw Error('Le kit doit contenir quatre éléments (PDF et fiche/consignes).');
    const names=new Set();let total=0;
    for(const e of entries){
      if(!e||!e.blob||typeof e.blob.slice!=='function'||!Number.isSafeInteger(e.blob.size)||
