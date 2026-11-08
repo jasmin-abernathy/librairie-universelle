@@ -1,0 +1,50 @@
+/* Assistant papier, affichage d'une seule étape dans le conteneur d'autoédition. */
+#panel-paper .paper-step-nav[hidden],#panel-paper .paper-wizard-screen[hidden],
+#panel-paper #paper-wizard-pagination-frame,#panel-paper [hidden]{display:none!important}
+#panel-paper .paper-wizard{max-width:1050px;min-width:0;scroll-margin-top:1.2rem}
+#panel-paper .paper-wizard-progress{display:flex;gap:.45rem;overflow-x:auto;margin:0 0 1.2rem;padding:.2rem .2rem .6rem;scrollbar-width:thin}
+#panel-paper .paper-wizard-progress-button{appearance:none;flex:0 0 auto;padding:.65rem .75rem;max-width:15rem;border:1px solid #b2c7b5;border-radius:.6rem;background:#f7faf7;color:#28533d;font-size:.86rem;font-weight:650;white-space:normal;cursor:pointer}
+#panel-paper .paper-wizard-progress-button[disabled]{opacity:.45;cursor:default}
+#panel-paper .paper-wizard-progress-button.is-current{background:#28533d;color:#fff;border-color:#28533d;opacity:1}
+#panel-paper .paper-wizard-screen{min-width:0;animation:paper-wizard-show .16s ease-out}
+#panel-paper .paper-wizard-heading{font-size:clamp(1.2rem,2.8vw,1.6rem);line-height:1.25;margin:0 0 1rem;outline:none}
+#panel-paper .paper-wizard-footer{border-top:1px solid #d9e3d9;margin-top:1.3rem;padding-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+#panel-paper .paper-wizard-footer button{min-height:44px;border:1px solid #28533d;border-radius:.7rem;padding:.65rem 1rem;font-size:1rem;font-weight:750;cursor:pointer}
+#panel-paper .paper-wizard-primary{background:#28533d;color:#fff}
+#panel-paper .paper-wizard-secondary{background:#fff;color:#28533d}
+#panel-paper .paper-wizard-state{flex:1 1 100%;margin:.2rem 0;color:#435748}
+#panel-paper .paper-wizard-status{margin:.75rem 0;font-size:.94rem;font-weight:650}
+#panel-paper .paper-wizard-help{font-size:.92rem;line-height:1.55;color:#435748;margin:.65rem 0 1rem}
+#panel-paper .paper-wizard-isbn,#panel-paper .paper-wizard-advice{border:1px solid #c7d9cb;border-radius:1rem;padding:1rem;background:#f8fbf8;margin:1rem 0}
+#panel-paper .paper-wizard-isbn h3,#panel-paper .paper-wizard-advice h3{margin:.1rem 0 .65rem}
+#panel-paper .paper-wizard-isbn details{margin-top:1rem;padding:.75rem;border:1px solid #c7d9cb;border-radius:.7rem;background:white}
+#panel-paper .paper-wizard-isbn summary{cursor:pointer;font-weight:700;line-height:1.4}
+#panel-paper .paper-wizard-isbn ol{padding-left:1.4rem}
+#panel-paper .paper-wizard-isbn li{margin:.5rem 0}
+#panel-paper .paper-wizard-barcode-choices{display:grid;gap:.5rem;margin:.9rem 0}
+#panel-paper .paper-wizard-barcode-choices label{display:flex;gap:.5rem;align-items:baseline;font-weight:600}
+#panel-paper .paper-wizard-barcode-choices input{width:auto;flex:none}
+#panel-paper #wizard-barcode-generated{padding:1rem;border-radius:.7rem;background:white;border:1px solid #c7d9cb}
+#panel-paper #wizard-barcode-preview{display:block;max-width:100%;height:auto;image-rendering:auto}
+#panel-paper .paper-wizard-price-inputs,#panel-paper .paper-wizard-price-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.85rem}
+#panel-paper .paper-wizard-price-cards{margin:1rem 0}
+#panel-paper .paper-wizard-price-cards>div{background:white;border:1px solid #cad9cc;border-radius:.75rem;padding:.85rem}
+#panel-paper .paper-wizard-price-cards span{display:block;font-size:.87rem;color:#3a5342}
+#panel-paper .paper-wizard-price-cards strong{display:block;font-size:1.5rem;margin-top:.2rem}
+#panel-paper .paper-wizard-provider-mirror{display:flex;flex-direction:column;gap:.5rem;background:#fff;padding:.8rem;border-radius:.65rem;margin:.5rem 0}
+#panel-paper .paper-wizard-provider-mirror select{max-width:100%}
+#panel-paper #paper-wizard-pagination-frame{position:absolute!important;width:1px;height:1px;border:0;visibility:hidden;pointer-events:none}
+#panel-paper .paper-wizard-screen .paper-provider-fieldset{margin:.5rem 0}
+#panel-paper .paper-wizard-screen .print-preview-row{margin:1rem 0}
+#panel-paper .paper-wizard-screen .print-cost-panel{margin-top:.4rem}
+#panel-paper .paper-wizard-screen .paper-provider-specific[hidden]{display:none!important}
+#panel-paper .paper-wizard-screen a:focus-visible,#panel-paper .paper-wizard-progress-button:focus-visible,
+#panel-paper .paper-wizard-footer button:focus-visible{outline:3px solid #1a6a4e;outline-offset:3px}
+@keyframes paper-wizard-show{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(max-width:650px){
+ #panel-paper .paper-wizard-progress-button{font-size:.78rem;max-width:10.5rem;padding:.55rem}
+ #panel-paper .paper-wizard-price-inputs,#panel-paper .paper-wizard-price-cards{grid-template-columns:minmax(0,1fr)}
+ #panel-paper .paper-wizard-isbn,#panel-paper .paper-wizard-advice{padding:.8rem}
+ #panel-paper .paper-wizard-footer button{flex:1 1 auto}
+}
+@media(prefers-reduced-motion:reduce){#panel-paper .paper-wizard-screen{animation:none}}
