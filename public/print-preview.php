@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
 // Un manuscrit non publié doit être paginé sans exécuter de script distant.
-header('Content-Security-Policy: default-src \'none\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data: blob:; font-src \'self\' data:; connect-src \'none\'; base-uri \'none\'; frame-ancestors \'none\'; form-action \'self\'; object-src \'none\'');
+$estimateOnly = $_SERVER['REQUEST_METHOD'] === 'POST' && (string)($_POST['estimate_only'] ?? '') === '1';
+$framePolicy = $estimateOnly ? "'self'" : "'none'";
+header("Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'none'; base-uri 'none'; frame-ancestors {$framePolicy}; form-action 'self'; object-src 'none'");
 header('Referrer-Policy: no-referrer');
 require_once dirname(__DIR__) . '/src/Csrf.php';
 require_once dirname(__DIR__) . '/src/PrintSettings.php';
@@ -106,7 +108,7 @@ $gutter = $settings['gutter_mode'] === 'custom'
     <link rel="stylesheet" href="/assets/css/print-preview.css">
     <link rel="stylesheet" href="/print-style.php?<?= e($styleQuery) ?>">
 </head>
-<body data-print-provider="<?= e((string)$settings['provider']) ?>" data-print-trim="<?= e((string)$settings['trim_size']) ?>" data-corep-max-pages="<?= PrintSettings::COREP_MAX_PAGES ?>">
+<body data-print-provider="<?= e((string)$settings['provider']) ?>" data-print-trim="<?= e((string)$settings['trim_size']) ?>" data-corep-max-pages="<?= PrintSettings::COREP_MAX_PAGES ?>" data-estimate-mode="<?= $estimateOnly ? '1' : '0' ?>" data-estimate-request="<?= e(substr((string)($_POST['estimate_nonce'] ?? ''),0,32)) ?>">
 <div class="print-toolbar">
     <div>
         <strong><?= e($book['title']) ?></strong>
