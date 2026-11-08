@@ -118,7 +118,8 @@
     '<label>Rémunération brute souhaitée par livre (€)<input type="number" id="wizard-target-earnings" min="0" step=".5" value="4" inputmode="decimal"></label></div>'+
     '<label class="check-row"><input id="wizard-plan-bookstores" type="checkbox" checked> Prévoir aussi les ventes en librairie (remise professionnelle hypothétique de 30 %)</label>'+ 
     '<div class="paper-wizard-price-cards"><div><span>Prix public unique TTC suggéré</span><strong id="wizard-price-public">—</strong></div><div><span>Reste brut par exemplaire — vente directe</span><strong id="wizard-price-direct">—</strong></div><div><span>Reste brut par exemplaire — vente en librairie (30 %)</span><strong id="wizard-price-shop">—</strong></div></div>'+
-    '<p id="wizard-price-origin" role="status">Le tarif de Bookelis est à obtenir sur son calculateur officiel. Aucun montant n’est inventé.</p>'+
+    '<p id="wizard-price-origin" role="status">Le tarif de Bookelis est à obtenir sur son calculateur officiel. Aucun montant n’est inventé.</p>'+ 
+    '<button type="button" id="wizard-apply-price" class="paper-wizard-secondary" disabled>Retenir ce prix public pour ma couverture</button><p id="wizard-price-apply-status" role="status" aria-live="polite"></p>'+
     '<p class="paper-wizard-help"><strong>Prix unique du livre :</strong> en France, un livre neuf a un seul prix public TTC fixé par l’éditeur pour une même édition, quel que soit le vendeur (hors rabais légaux). Ces montants sont des restes bruts simulés, pas des bénéfices nets. Les frais de livraison, commissions réelles, fiscalité et retours restent à déduire. Le prix TTC final devra figurer sur la couverture.</p>';
   add(3,priceAdvice);
   add(4,oldGenerate,pdfx,kit,corepTransfer,bookelisTransfer,resources);
@@ -487,17 +488,31 @@
     const earned=Number(get('wizard-target-earnings')?.value);
     if(unit===null||!Number.isFinite(earned)||earned<0){
       get('wizard-price-public').textContent='—';
+      get('wizard-apply-price').disabled=true;
+      get('wizard-apply-price').dataset.price='';
       get('wizard-price-direct').textContent='—';
       get('wizard-price-shop').textContent='—';
     }else{
       const includeBookshops=get('wizard-plan-bookstores').checked;
       const publicPrice=roundPrice((unit+earned)/(includeBookshops?0.7:1));
       get('wizard-price-public').textContent=toMoney(publicPrice);
+      get('wizard-apply-price').disabled=false;
+      get('wizard-apply-price').dataset.price=String(publicPrice);
       get('wizard-price-direct').textContent=toMoney(publicPrice-unit);
       get('wizard-price-shop').textContent=toMoney(publicPrice*.7-unit);
     }
     get('wizard-price-origin').textContent=origin;
   };
+  get('wizard-apply-price').addEventListener('click',()=>{
+    const price=Number(get('wizard-apply-price').dataset.price);
+    if(!Number.isFinite(price)||price<=0)return;
+    const field=form.querySelector('input[name="paper_price"]');
+    if(!field)return;
+    field.value=price.toFixed(2);
+    field.dispatchEvent(new Event('input',{bubbles:true}));
+    try{sessionStorage.setItem('librairie:paper-price-for-cover',String(price));}catch(_){}
+    get('wizard-price-apply-status').textContent='Prix public TTC retenu : '+toMoney(price)+'. Reprenez-le sur la quatrième de couverture avant d’envoyer le kit à l’imprimeur.';
+  });
   get('wizard-manual-cost').addEventListener('input',refreshAdvice);
   get('wizard-target-earnings').addEventListener('input',refreshAdvice);
   get('wizard-plan-bookstores').addEventListener('change',refreshAdvice);
