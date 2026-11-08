@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 $currentNav = isset($currentNav) ? (string) $currentNav : '';
-$items = [
+$siteNavItems = [
     'search' => ['href' => '/', 'label' => 'Chercher un livre'],
     'librairies' => ['href' => '/#librairies', 'label' => 'Librairies proches'],
     'ebooks' => ['href' => '/ebooks.php', 'label' => 'Livres numériques'],
@@ -30,22 +30,22 @@ $escapeNav = static fn (string $value): string => htmlspecialchars($value, ENT_Q
         </svg>
     </button>
     <nav class="site-nav" id="site-primary-navigation" aria-label="Navigation principale">
-        <?php foreach ($readerKeys as $key): $item = $items[$key]; ?>
-            <a href="<?= $escapeNav($item['href']) ?>"<?= $currentNav === $key ? ' aria-current="page"' : '' ?>><?= $escapeNav($item['label']) ?></a>
+        <?php foreach ($readerKeys as $key): $siteNavItem = $siteNavItems[$key]; ?>
+            <a href="<?= $escapeNav($siteNavItem['href']) ?>"<?= $currentNav === $key ? ' aria-current="page"' : '' ?>><?= $escapeNav($siteNavItem['label']) ?></a>
         <?php endforeach; ?>
         <details class="site-nav-group"<?= in_array($currentNav, $authorKeys, true) ? ' data-active-group="true"' : '' ?>>
             <summary>Pour les auteurs</summary>
             <div class="site-nav-submenu">
-                <?php foreach ($authorKeys as $key): $item = $items[$key]; ?>
-                    <a href="<?= $escapeNav($item['href']) ?>"<?= $currentNav === $key ? ' aria-current="page"' : '' ?>><?= $escapeNav($item['label']) ?></a>
+                <?php foreach ($authorKeys as $key): $siteNavItem = $siteNavItems[$key]; ?>
+                    <a href="<?= $escapeNav($siteNavItem['href']) ?>"<?= $currentNav === $key ? ' aria-current="page"' : '' ?>><?= $escapeNav($siteNavItem['label']) ?></a>
                 <?php endforeach; ?>
             </div>
         </details>
         <details class="site-nav-group"<?= in_array($currentNav, $aboutKeys, true) ? ' data-active-group="true"' : '' ?>>
             <summary>À propos</summary>
             <div class="site-nav-submenu">
-                <?php foreach ($aboutKeys as $key): $item = $items[$key]; ?>
-                    <a href="<?= $escapeNav($item['href']) ?>"<?= $currentNav === $key ? ' aria-current="page"' : '' ?>><?= $escapeNav($item['label']) ?></a>
+                <?php foreach ($aboutKeys as $key): $siteNavItem = $siteNavItems[$key]; ?>
+                    <a href="<?= $escapeNav($siteNavItem['href']) ?>"<?= $currentNav === $key ? ' aria-current="page"' : '' ?>><?= $escapeNav($siteNavItem['label']) ?></a>
                 <?php endforeach; ?>
             </div>
         </details>

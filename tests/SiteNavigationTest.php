@@ -11,6 +11,21 @@ $render = static function (string $current) use ($root): string {
     require $root.'/src/views/site-header.php';
     return (string)ob_get_clean();
 };
+// La vue du menu est incluse dans la portée PHP de sa page appelante.
+// Elle ne doit jamais remplacer les résultats du catalogue ou un item courant.
+$keepPageVariables = static function () use ($root): array {
+    $currentNav = 'authorbooks';
+    $items = [['id' => 123, 'title' => 'Livre test']];
+    $item = ['marker' => 'ne pas écraser'];
+    ob_start();
+    require $root.'/src/views/site-header.php';
+    ob_end_clean();
+    return [$items, $item];
+};
+[$keptItems, $keptItem] = $keepPageVariables();
+$check(($keptItems[0]['title'] ?? null) === 'Livre test' &&
+       ($keptItem['marker'] ?? null) === 'ne pas écraser',
+       'La navigation partagée écrase les variables de la page livres d’auteurs.');
 $html = $render('propose');
 $expected = [
     'Chercher un livre', 'Librairies proches', 'Livres numériques', 'Livres d’auteurs',
