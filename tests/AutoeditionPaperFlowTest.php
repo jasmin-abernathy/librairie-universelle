@@ -144,6 +144,10 @@ $check(preg_match('/#panel-paper\s*>\s*fieldset\s*>\s*legend\s*\{[^}]*float\s*:\
     'Le titre papier doit être positionné dans le cadre sur mobile et ordinateur.');
 $check(preg_match('/#panel-paper\s*>\s*fieldset\s*>\s*\.paper-step-nav\s*\{[^}]*clear\s*:\s*both/s',$css)===1,
     'Les raccourcis doivent passer sous la légende flottante, pas à côté.');
+$check(strpos($src, '$paperCsrfToken = Csrf::token();') <
+       strpos($src, '<!doctype html>') &&
+       str_contains($src, 'name="csrf_token" value="<?= e($paperCsrfToken) ?>"'),
+    'Le cookie de session doit être établi avant le HTML pour les téléchargements HTTP.');
 $wizard=(string)file_get_contents(dirname(__DIR__).'/public/assets/js/paper-wizard.js');
 $apache=(string)file_get_contents(dirname(__DIR__).'/public/.htaccess');
 $analyze=(string)file_get_contents(dirname(__DIR__).'/public/analyser-pdf.php');

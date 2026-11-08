@@ -9,6 +9,11 @@ $errors = [];
 $successId = null;
 $sourceTool = isset($_GET['source']) ? trim((string) $_GET['source']) : '';
 $fromAtelier = $sourceTool === 'atelier-epub';
+// Initialiser le cookie et le jeton CSRF avant toute sortie HTML.
+// Sans cela, certains hébergements n’envoient pas PHPSESSID et les imports échouent.
+require_once dirname(__DIR__) . '/src/Csrf.php';
+$paperCsrfToken = Csrf::token();
+header('Cache-Control: private, no-store');
 
 // L'ancien formulaire n'accepte plus de manuscrits, même si la variable legacy est active.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -135,7 +140,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
         </nav>
         <p class="autoedition-tab-context" id="autoedition-tab-context" role="status" aria-live="polite">Livre papier · Composez votre manuscrit et préparez son impression.</p>
         <form class="submission-form" method="post" enctype="multipart/form-data" id="autoedition-form">
-            <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>">
+            <input type="hidden" name="csrf_token" value="<?= e($paperCsrfToken) ?>">
             <input type="hidden" name="active_panel" value="<?= e((string) ($_POST['active_panel'] ?? 'paper')) ?>" id="active-panel">
 
             <section class="autoedition-panel" id="panel-project" role="tabpanel" aria-labelledby="tab-project" data-panel-name="project">
