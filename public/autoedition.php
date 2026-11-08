@@ -389,11 +389,11 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 
                 <section class="print-cost-panel" id="print-cost-estimator" aria-labelledby="print-cost-title" data-grids="<?= e((string) json_encode($publicPrintGrids, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP)) ?>">
                     <h3 id="print-cost-title">5. Comparer les coûts d'impression</h3>
-                    <p>Pour Corep, la grille concerne uniquement les tirages de <strong>120, 200 ou 300 pages</strong> et les quantités exactes affichées, en A5 broché N&B 80 g. Indiquez le nombre réel de pages relevé dans l’aperçu : en dehors des paliers autorisés, un devis est nécessaire. Nous avons reçu de <strong>Corep Metz</strong> les caractéristiques techniques et l’autorisation de présenter une grille TTC indicative. Si elle est disponible et encore publiable, ses montants sont affichés ci-dessous ; le devis réel reste à confirmer par l’imprimeur.</p>
+                    <p>Pour Corep, la grille concerne uniquement les tirages de <strong>120, 200 ou 300 pages</strong> et les quantités exactes affichées, en A5 broché N&B 80 g. Le nombre de pages est relevé pendant le pré-calcul ; en dehors des paliers autorisés, un devis est nécessaire. Nous avons reçu de <strong>Corep Metz</strong> les caractéristiques techniques et l’autorisation de présenter une grille TTC indicative. Si elle est disponible et encore publiable, ses montants sont affichés ci-dessous ; le devis réel reste à confirmer par l’imprimeur.</p>
                     <div class="print-cost-controls">
                         <label>Nombre de pages
                             <input id="print-estimate-pages" type="number" min="1" max="5000" step="1" value="" placeholder="Calcul après import" inputmode="numeric">
-                            <span class="field-help" id="print-pages-feedback">Après avoir ouvert l'aperçu, son nombre de pages sera repris ici automatiquement.</span>
+                            <span class="field-help" id="print-pages-feedback">Nombre de pages calculé avant l’export final, puis à contrôler dans le PDF imprimable.</span>
                         </label>
                         <label>Tirage
                             <select id="print-estimate-quantity">
@@ -403,8 +403,8 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     </div>
                     <p id="print-estimate-status" class="print-cost-status" role="status" aria-live="polite">Recherche des grilles disponibles…</p>
                     <dl class="print-cost-results">
-                        <div><dt>Prix total TTC</dt><dd id="print-estimate-total">—</dd></div>
-                        <div><dt>Coût d’impression par exemplaire</dt><dd id="print-estimate-unit">—</dd></div>
+                        <div><dt>Corep Metz — prix total TTC indicatif</dt><dd id="print-estimate-total">—</dd></div>
+                        <div><dt>Corep Metz — coût unitaire indicatif</dt><dd id="print-estimate-unit">—</dd></div>
                         <div style="grid-column: 1 / -1"><dt>Solde indicatif par exemplaire avec une hypothèse de remise libraire de 30 %</dt><dd id="print-estimate-balance">—</dd></div>
                     </dl>
                     <p class="print-cost-note" id="print-estimate-source">Tarif indicatif à confirmer avant commande.</p>
