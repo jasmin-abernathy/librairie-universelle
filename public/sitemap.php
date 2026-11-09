@@ -15,7 +15,7 @@ try {
     $base = 'https://librairie.lepotager.org';
     $pages = [
         '/', '/ebooks.php', '/livres-auteurs.php',
-        '/autoedition.php', '/proposer-livre.php', '/diffuser-mon-livre.php',
+        '/autoedition.php', '/diffuser-mon-livre.php',
         '/prestations-auteurs.php', '/assistant-papier.php', '/dossier-impression.php',
         '/projet.php', '/sans-ia.php', '/conditions-generales.php',
     ];
