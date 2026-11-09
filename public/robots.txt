@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /deploy-version.php
+Disallow: /health.php
+Disallow: /print-preview.php
+Disallow: /self-published-download.php
+
+Sitemap: https://librairie.lepotager.org/sitemap.xml
