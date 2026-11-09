@@ -24,6 +24,7 @@ $correctionMailHref = 'mailto:contact@lepotager.org?subject=' . rawurlencode($co
 <!doctype html>
 <html lang="fr">
 <head>
+<link rel="canonical" href="https://librairie.lepotager.org/prestations-auteurs.php">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
