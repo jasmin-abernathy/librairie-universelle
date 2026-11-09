@@ -67,7 +67,7 @@
         const pages=Number(flow.total||0);
         const pageEls=[...target.querySelectorAll('.pagedjs_page')];
         const missingImages=[...target.querySelectorAll('img')].filter(i=>!i.complete||i.naturalWidth===0);
-        // Les débordements graphiques complexes nécessitent toujours une lecture humaine.
+        // Les débordements graphiques complexes nécessitent toujours une vérification visuelle.
         const emptyPageCount=pageEls.filter(p=>!p.textContent.trim()&&!p.querySelector('img,svg,canvas')).length;
         corepOverLimit=isCorep && pages>corepMaxPages;
         critical=pages<1||pageEls.length!==pages||missingImages.length>0||corepOverLimit;
