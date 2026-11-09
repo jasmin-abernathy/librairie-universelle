@@ -16,7 +16,7 @@ function e_project(?string $value): string
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <meta name="description" content="Librairie universelle : trouver des livres et EPUB indépendants, préparer un manuscrit DOCX, ODT ou EPUB pour Corep ou Bookelis et découvrir les librairies proches. Pilote en Moselle.">
+    <meta name="description" content="Librairie universelle : trouvez des livres indépendants, comparez les accès aux EPUB et préparez votre manuscrit pour l’impression en Moselle.">
     <meta name="theme-color" content="#f7f3ea">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Le projet — <?= e_project($config['name']) ?>">
