@@ -74,7 +74,7 @@ function e_project(?string $value): string
             <p>Des réseaux comme <a href="https://www.leslibraires.fr/" target="_blank" rel="noopener noreferrer">leslibraires.fr</a>, <a href="https://www.canalbd.net/" target="_blank" rel="noopener noreferrer">Canal BD</a> et d'autres portails permettent déjà de trouver, réserver et commander des livres, parfois en privilégiant une librairie proche. <strong>Nous ne cherchons ni à copier leurs services ni à détourner les libraires de leurs boutiques actuelles.</strong></p>
             <p><strong>Notre différence est aussi en amont de la vente :</strong> offrir aux auteurs indépendants des outils gratuits pour composer l'intérieur de leur livre à partir d'un DOCX, d'un ODT ou d'un EPUB sans DRM, préparer leur dossier d'impression et prendre contact avec des librairies proches. Le lecteur peut ensuite rechercher un ouvrage et comparer les moyens de le lire ou de l'obtenir. Si une librairie vend déjà un livre via son propre site ou un réseau existant, nous voulons l'y orienter, pas l'obliger à passer par une nouvelle caisse.</p>
         </div>
-        <p>Le pilote démarre en Moselle : outils d'autoédition utilisables, fiches d'auteurs proposées pour vérification humaine, recherche de librairies et préparation de la diffusion locale. Les EPUB indépendants et les œuvres proposées en lecture libre disposent de parcours distincts. La connexion aux stocks ne se fera qu'avec l'accord des librairies. Aucun circuit automatique d'impression ou de vente, aucune double saisie imposée, aucun partenariat présenté comme acquis avant de l'être.</p>
+        <p>Le pilote démarre en Moselle : outils d'autoédition utilisables, fiches d'auteurs examinées avant publication, recherche de librairies et préparation de la diffusion locale. Les EPUB indépendants et les œuvres proposées en lecture libre disposent de parcours distincts. La connexion aux stocks ne se fera qu'avec l'accord des librairies. Aucun circuit automatique d'impression ou de vente, aucune double saisie imposée, aucun partenariat présenté comme acquis avant de l'être.</p>
     </section>
 
     <section class="content-section" aria-labelledby="who-title">
@@ -95,15 +95,15 @@ function e_project(?string $value): string
         <div class="project-journey">
             <article><span>01</span><h3>Préparer les fichiers</h3><p>Importer un DOCX, un ODT ou un EPUB sans DRM, recomposer l'intérieur, régler la pagination et enregistrer le PDF. Le fichier original reste inchangé ; les mises en page complexes doivent être contrôlées.</p><a href="/autoedition.php?partie=paper">Utiliser le générateur papier →</a></article>
             <article><span>02</span><h3>Choisir un imprimeur</h3><p><strong>Corep Metz :</strong> A5, deux faces de couverture séparées et grille de prix indicative autorisée. <strong>Bookelis :</strong> sept formats d'intérieur et gabarit officiel pour la couverture complète avec tranche. Le devis, le BAT et l'envoi des fichiers restent à valider directement avec chaque prestataire.</p><a href="/autoedition.php?partie=paper">Comparer les parcours Corep et Bookelis →</a><p><a href="/dossier-impression.php">Préparer le dossier d'impression →</a></p></article>
-            <article><span>03</span><h3>Faire référencer</h3><p>Proposer une fiche descriptive de livre papier ou EPUB, examinée humainement. <strong>Les manuscrits ne sont jamais envoyés à la Librairie.</strong> Pour la vente directe auteur–acheteur, la publication exige une convention signée de commission à 3 % ; une simple proposition n'est ni publiée ni facturée.</p><a href="/proposer-livre.php">Proposer ma fiche →</a></article>
+            <article><span>03</span><h3>Faire référencer</h3><p>Proposer une fiche descriptive de livre papier ou EPUB. Chaque proposition est étudiée avant sa mise en ligne. <strong>Les manuscrits ne sont jamais envoyés à la Librairie.</strong> Pour la vente directe auteur–acheteur, la publication exige une convention signée de commission à 3 % ; une simple proposition n'est ni publiée ni facturée.</p><a href="/proposer-livre.php">Proposer ma fiche →</a></article>
             <article><span>04</span><h3>Proposer aux librairies</h3><p>Créer une fiche de présentation et un message personnalisé, trouver des librairies proches et discuter avec elles des conditions de commande ou de dépôt-vente.</p><a href="/diffuser-mon-livre.php">Préparer ma diffusion →</a></article>
         </div>
         <p class="project-clarification"><strong>Référencement et vente restent distincts :</strong> la proposition d'une fiche est gratuite, mais une fiche de vente directe auteur–acheteur, papier ou EPUB, ne peut être publiée sans convention signée. La commission de <strong>3 %</strong> porte uniquement sur le prix TTC des livres effectivement vendus grâce à la mise en relation, hors livraison, annulations et remboursements ; aucun frais n'est dû pour un simple contact. Le vendeur gère la commande, le paiement et la livraison : la Librairie n'encaisse pas le prix du livre. <a href="/conditions-generales.php">Consulter les conditions de référencement →</a></p>
     </section>
 
-    <section class="content-section" aria-labelledby="human-title">
+    <section class="content-section" aria-labelledby="accompagnement-title">
         <p class="section-kicker">Accompagnement facultatif</p>
-        <h2 id="human-title">Des outils gratuits, et un accompagnement si vous en avez besoin.</h2>
+        <h2 id="accompagnement-title">Des outils gratuits, et un accompagnement si vous en avez besoin.</h2>
         <p>Si un auteur préfère ne pas tout vérifier seul, Le Potager du Web propose deux prestations distinctes, sur devis :</p>
         <div class="project-prices">
             <article><h3>Vérification avant impression</h3><p class="project-price">79 € HT</p><p>Contrôle des fichiers et compte rendu des problèmes visibles : pagination, marges, couvertures, lisibilité.</p></article>
@@ -124,7 +124,7 @@ function e_project(?string $value): string
                     <li>Annuaire de librairies locales à Metz et en Moselle, <strong>sans prétendre connaître leurs stocks en direct</strong></li>
                     <li>Générateur papier à partir de DOCX, ODT ou EPUB sans DRM : aperçu paginé et export du PDF intérieur pour Corep Metz (A5) ou Bookelis (sept formats)</li>
                     <li>Assistant de couvertures séparées pour Corep, dossier imprimeur et guidage vers le gabarit officiel de couverture complète Bookelis</li>
-                    <li>Proposition gratuite de fiches d'auteurs papier ou EPUB, examen humain et préparation d'une convention de 3 % à signer avant toute publication de vente directe</li>
+                    <li>Proposition gratuite de fiches papier ou EPUB et préparation du contrat de référencement à 3 % à signer avant toute publication de vente directe</li>
                     <li>Guide de diffusion et création locale d'un message à adresser aux librairies</li>
                     <li>Demandes de devis pour un accompagnement facultatif</li>
                 </ul>

@@ -27,4 +27,20 @@ $check(str_contains($paid,'79 €') && str_contains($paid,'179 €'), 'Les deux 
 $check(str_contains($paid,'mailto:contact@lepotager.org') && str_contains($paid,'https://www.lepotager.org/contact/'), 'Les demandes de devis ne sont pas accessibles.');
 $check(str_contains($paid,'avant votre accord') && str_contains($paid,'restent gratuits'), 'Les conditions de paiement ou la gratuité ne sont pas claires.');
 $check(str_contains($auto,'/prestations-auteurs.php') && str_contains($kit,'/prestations-auteurs.php') && str_contains($page,'/prestations-auteurs.php'), 'Offres non reliées aux parcours auteurs.');
+// Éviter sur tout le site public les tournures qui suggèrent une validation
+// « humaine » par opposition à une plateforme robotique. Ne pas réintroduire
+// « vérification humaine », « examiné humainement », etc., dans les textes.
+$publicFiles = new RecursiveIteratorIterator(
+    new RecursiveDirectoryIterator($root.'/public', FilesystemIterator::SKIP_DOTS)
+);
+foreach ($publicFiles as $publicFile) {
+    if (!$publicFile->isFile()
+        || !in_array(strtolower($publicFile->getExtension()), ['php','js'], true)
+        || str_contains($publicFile->getPathname(), '/public/admin/')) {
+        continue;
+    }
+    $contents=(string)file_get_contents($publicFile->getPathname());
+    $check(preg_match('/humain(?:e|es|s|ement)?/iu', $contents) !== 1,
+        'Vocabulaire artificiel réintroduit dans '.$publicFile->getPathname());
+}
 echo "Parcours vente locale, publication contrôlée et relais depuis l’autoédition : OK\n";
