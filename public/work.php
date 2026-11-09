@@ -110,6 +110,19 @@ $localRows = localAvailabilityRows($localAvailability);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <meta name="theme-color" content="#f7f3ea">
+    <?php if ($record !== null): ?>
+    <?php
+    $workName = (string) ($record['work']['title'] ?? '');
+    $workAuthors = trim((string) ($record['work']['contributors'] ?? ''));
+    $seoDescription = 'Consultez les éditions et les modes de lecture répertoriés pour « ' . $workName . ' »'
+        . ($workAuthors !== '' ? ' de ' . $workAuthors : '')
+        . ' : formats, sources et statut des droits.';
+    ?>
+    <meta name="description" content="<?= e(mb_strimwidth($seoDescription, 0, 158, '…', 'UTF-8')) ?>">
+    <link rel="canonical" href="https://librairie.lepotager.org/work.php?id=<?= (int) $record['work']['id'] ?>">
+    <?php else: ?>
+    <meta name="robots" content="noindex,follow">
+    <?php endif; ?>
     <title><?= $record ? e($record['work']['title']) . ' — ' : '' ?><?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/work.css?v=20261104-nav2">
 </head>
