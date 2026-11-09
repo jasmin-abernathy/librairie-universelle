@@ -2,6 +2,24 @@
 declare(strict_types=1);
 $config = require dirname(__DIR__) . '/src/discovery-bootstrap.php';
 header('Referrer-Policy: no-referrer');
+$correctionMailSubject = 'Librairie universelle - demande de relecture et correction';
+$correctionMailBody = implode("\n", [
+    'Bonjour,',
+    '',
+    'Je souhaite une relecture et correction de mon manuscrit.',
+    '',
+    'Titre du livre : ',
+    'Nombre de pages A4 : ',
+    'Nombre de mots : ',
+    'Format du fichier source : DOCX / ODT / EPUB',
+    'Date souhaitée : ',
+    '',
+    'PIÈCE JOINTE À AJOUTER AVANT ENVOI : mon fichier original (.docx, .odt ou .epub), et non un PDF mis en page.',
+    '',
+    'Merci.',
+]);
+$correctionMailHref = 'mailto:contact@lepotager.org?subject=' . rawurlencode($correctionMailSubject)
+    . '&body=' . rawurlencode($correctionMailBody);
 ?>
 <!doctype html>
 <html lang="fr">
@@ -44,20 +62,22 @@ header('Referrer-Policy: no-referrer');
             <p class="author-service-price">179 € <small>HT · jusqu’à 30 pages A4</small></p>
             <p><strong>Je relis et corrige personnellement votre texte</strong> : orthographe, grammaire, ponctuation et typographie. Une fois ce travail terminé, j’utilise un correcteur logiciel pour une dernière vérification, afin de repérer les éventuelles coquilles qui auraient échappé à ma lecture. Le logiciel ne remplace pas mon travail.</p>
             <p><strong>Ce forfait couvre jusqu’à 30 pages A4 de texte courant, dans la limite de 9 000 mots.</strong> La première limite atteinte s’applique.</p>
+            <p><strong>Fichier à envoyer pour la relecture : le manuscrit original en DOCX, ODT ou EPUB sans DRM.</strong> Joignez-le à votre e-mail de demande : je travaille sur le texte source, <strong>pas sur le PDF déjà mis en page pour l’impression</strong>. Le fichier n’est pas transmis automatiquement par le générateur de la Librairie.</p>
             <ul>
                 <li>Relecture attentive et corrections effectuées personnellement</li>
                 <li>Dernier contrôle logiciel pour repérer les oublis éventuels</li>
-                <li>Vérification technique du dossier avant impression</li>
+                <li>Contrôle final du document corrigé ; le dossier PDF d'impression peut être vérifié séparément si vous le souhaitez</li>
             </ul>
             <p class="author-service-limit">Au-delà de 30 pages A4 ou de 9 000 mots, le tarif est défini par devis avant toute intervention. Une réécriture importante, une préparation éditoriale approfondie ou la correction complète d’un roman ne sont pas incluses dans ce forfait.</p>
-            <a class="button-link" href="mailto:contact@lepotager.org?subject=Librairie%20universelle%20-%20devis%20correction%20accompagnee&amp;body=Bonjour%2C%0A%0AJe%20souhaite%20un%20devis%20pour%20une%20correction%20accompagnee.%0A%0ATitre%20du%20livre%20%3A%20%0ALongueur%20approximative%20%3A%20%0AEtat%20du%20manuscrit%20%3A%20%0ADate%20souhaitee%20%3A%20%0A%0AMerci.">Demander un devis</a>
+            <a class="button-link" href="<?= htmlspecialchars($correctionMailHref, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>">Envoyer mon manuscrit pour un devis</a>
+            <p class="field-help">Le bouton prépare l’e-mail, mais n’ajoute pas de pièce jointe : sélectionnez votre DOCX, ODT ou EPUB original dans votre messagerie avant d’envoyer.</p>
         </article>
     </section>
     <p class="author-services-note">Montants indicatifs hors taxes : le devis précisera le total à payer, TVA comprise si applicable. Aucun paiement ni travail facturé avant votre accord. L'impression est facturée séparément par l'imprimeur choisi.</p>
     <section class="content-section" aria-labelledby="author-services-process">
         <h2 id="author-services-process">Comment ça fonctionne ?</h2>
         <ol class="check-list">
-            <li>Vous décrivez votre livre, sa longueur et vos besoins. Pas besoin de transmettre votre manuscrit complet dans le premier message.</li>
+            <li><strong>Pour la relecture à 179 € HT :</strong> joignez à votre e-mail le DOCX, ODT ou EPUB original. Pour la vérification avant impression à 79 € HT, les fichiers à examiner sont les PDF prêts pour l’imprimeur. Aucun fichier n’est envoyé automatiquement depuis cette page.</li>
             <li>Nous précisons ce qui sera vérifié ou corrigé et vous transmettons un devis avec un prix et un délai.</li>
             <li>Vous restez libre d'accepter ou de refuser. Une fois le devis accepté, vous pourrez régler votre facture via <a href="https://www.lepotager.org/paiement/" target="_blank" rel="noopener noreferrer">le paiement sécurisé du Potager</a>.</li>
         </ol>

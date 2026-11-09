@@ -127,7 +127,7 @@ header('Referrer-Policy: no-referrer');
             </article>
             <article class="sales-step">
                 <h3>Relecture et correction</h3>
-                <p><strong>179 € HT, jusqu’à 30 pages A4 et 9 000 mots maximum</strong> — Je relis et corrige moi-même votre texte, puis j’utilise un logiciel pour une dernière vérification. Au-delà, devis préalable.</p>
+                <p><strong>179 € HT, jusqu’à 30 pages A4 et 9 000 mots maximum</strong> — Je relis et corrige moi-même votre <strong>DOCX, ODT ou EPUB original</strong>, puis j’utilise un logiciel pour une dernière vérification. Envoyez le fichier source, pas le PDF mis en page. Au-delà, devis préalable.</p>
                 <p><a class="text-link" href="/prestations-auteurs.php#correction">Voir les conditions et demander un devis →</a></p>
             </article>
         </div>

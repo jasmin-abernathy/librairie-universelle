@@ -29,6 +29,14 @@ foreach ([$paid,$project,$page] as $pricingPage) {
     $check(str_contains($pricingPage,'30 pages A4') && str_contains($pricingPage,'9 000 mots'),
         'La limite de pages et de mots du forfait de relecture doit apparaître dans tous les parcours.');
 }
+$check(str_contains($paid,'$correctionMailBody') &&
+       str_contains($paid,'PIÈCE JOINTE À AJOUTER AVANT ENVOI') &&
+       str_contains($paid,'rawurlencode($correctionMailBody)') &&
+       str_contains($paid,'ne transmet') === false &&
+       str_contains($paid,'DOCX, ODT ou EPUB sans DRM') &&
+       str_contains($project,'DOCX, ODT ou EPUB') &&
+       str_contains($page,'DOCX, ODT ou EPUB original'),
+       'Le manuscrit original doit être explicitement demandé pour la relecture, sans promettre une pièce jointe automatique.');
 $check(str_contains($paid,'Je relis et corrige personnellement') &&
        str_contains($paid,'correcteur logiciel pour une dernière vérification') &&
        !str_contains($paid,"première passe d'orthographe, de grammaire et de typographie assistée par logiciel"),
