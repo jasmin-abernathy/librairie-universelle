@@ -8,6 +8,7 @@ $e=static fn(mixed $v):string=>htmlspecialchars((string)$v,ENT_QUOTES|ENT_SUBSTI
 $price=static fn(int $cents):string=>number_format($cents/100,2,',',' ').' €';
 ?>
 <!doctype html><html lang="fr"><head>
+<link rel="canonical" href="https://librairie.lepotager.org/livres-auteurs.php">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Découvrez les livres présentés par leurs auteurs indépendants et vérifiés par la Librairie. Vente directe : contactez chaque auteur.">
 <title>Livres d’auteurs indépendants — Librairie universelle</title>
