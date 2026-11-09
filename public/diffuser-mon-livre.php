@@ -126,8 +126,8 @@ header('Referrer-Policy: no-referrer');
                 <p><a class="text-link" href="/prestations-auteurs.php#verification">Découvrir cette prestation et demander un devis →</a></p>
             </article>
             <article class="sales-step">
-                <h3>Correction accompagnée</h3>
-                <p><strong>À partir de 179 € HT</strong> — Correction assistée, relecture des propositions et vérification technique. Pas de correction exhaustive d'un roman à prix fixe.</p>
+                <h3>Relecture et correction</h3>
+                <p><strong>179 € HT, jusqu’à 30 pages A4 et 9 000 mots maximum</strong> — Je relis et corrige moi-même votre texte, puis j’utilise un logiciel pour une dernière vérification. Au-delà, devis préalable.</p>
                 <p><a class="text-link" href="/prestations-auteurs.php#correction">Voir les conditions et demander un devis →</a></p>
             </article>
         </div>

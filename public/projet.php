@@ -107,7 +107,7 @@ function e_project(?string $value): string
         <p>Si un auteur préfère ne pas tout vérifier seul, Le Potager du Web propose deux prestations distinctes, sur devis :</p>
         <div class="project-prices">
             <article><h3>Vérification avant impression</h3><p class="project-price">79 € HT</p><p>Contrôle des fichiers et compte rendu des problèmes visibles : pagination, marges, couvertures, lisibilité.</p></article>
-            <article><h3>Correction accompagnée</h3><p class="project-price">Dès 179 € HT</p><p>Correction orthographique et grammaticale assistée par logiciel, avec relecture des corrections dans un périmètre défini. Il ne s'agit pas d'une relecture intégrale garantie à ce prix.</p></article>
+            <article><h3>Relecture et correction</h3><p class="project-price">179 € HT</p><p>J’assure personnellement la relecture et les corrections ; le logiciel sert uniquement à un dernier contrôle. <strong>Jusqu’à 30 pages A4 ou 9 000 mots maximum</strong> pour ce tarif. Au-delà, devis préalable.</p></article>
         </div>
         <p><a class="text-link" href="/prestations-auteurs.php">Voir les prestations et demander un devis →</a></p>
     </section>

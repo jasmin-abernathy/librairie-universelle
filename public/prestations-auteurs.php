@@ -9,7 +9,7 @@ header('Referrer-Policy: no-referrer');
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <meta name="description" content="Accompagnement facultatif des auteurs indépendants : vérification des fichiers pour l'impression et correction assistée et relecture des propositions.">
+    <meta name="description" content="Accompagnement facultatif des auteurs indépendants : contrôle des fichiers d'impression et relecture personnelle de manuscrits, avec un dernier contrôle logiciel.">
     <title>Prestations pour auteurs — Librairie universelle</title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
     <link rel="stylesheet" href="/assets/css/prestations-auteurs.css?v=20261021-1">
@@ -40,15 +40,16 @@ header('Referrer-Policy: no-referrer');
         </article>
         <article class="author-service-card" id="correction">
             <p class="eyebrow">Texte et impression</p>
-            <h2>Correction accompagnée</h2>
-            <p class="author-service-price">Dès 179 € <small>HT · sur devis</small></p>
-            <p>Une première passe d'orthographe, de grammaire et de typographie assistée par logiciel, avec relecture des propositions, puis vérification technique des fichiers.</p>
+            <h2>Relecture et correction</h2>
+            <p class="author-service-price">179 € <small>HT · jusqu’à 30 pages A4</small></p>
+            <p><strong>Je relis et corrige personnellement votre texte</strong> : orthographe, grammaire, ponctuation et typographie. Une fois ce travail terminé, j’utilise un correcteur logiciel pour une dernière vérification, afin de repérer les éventuelles coquilles qui auraient échappé à ma lecture. Le logiciel ne remplace pas mon travail.</p>
+            <p><strong>Ce forfait couvre jusqu’à 30 pages A4 de texte courant, dans la limite de 9 000 mots.</strong> La première limite atteinte s’applique.</p>
             <ul>
-                <li>Repérage des fautes et incohérences typographiques</li>
-                <li>Relecture des corrections dans le périmètre convenu</li>
-                <li>Contrôle du dossier avant impression</li>
+                <li>Relecture attentive et corrections effectuées personnellement</li>
+                <li>Dernier contrôle logiciel pour repérer les oublis éventuels</li>
+                <li>Vérification technique du dossier avant impression</li>
             </ul>
-            <p class="author-service-limit">Ce prix ne garantit pas la correction intégrale d'un roman ni une relecture éditoriale exhaustive. Le devis dépend de la longueur, de l'état du texte et du temps nécessaire.</p>
+            <p class="author-service-limit">Au-delà de 30 pages A4 ou de 9 000 mots, le tarif est défini par devis avant toute intervention. Une réécriture importante, une préparation éditoriale approfondie ou la correction complète d’un roman ne sont pas incluses dans ce forfait.</p>
             <a class="button-link" href="mailto:contact@lepotager.org?subject=Librairie%20universelle%20-%20devis%20correction%20accompagnee&amp;body=Bonjour%2C%0A%0AJe%20souhaite%20un%20devis%20pour%20une%20correction%20accompagnee.%0A%0ATitre%20du%20livre%20%3A%20%0ALongueur%20approximative%20%3A%20%0AEtat%20du%20manuscrit%20%3A%20%0ADate%20souhaitee%20%3A%20%0A%0AMerci.">Demander un devis</a>
         </article>
     </section>

@@ -24,6 +24,15 @@ $check(str_contains($service,"if ($". "submission['status'] !== 'approved')"), '
 $check(str_contains($service,"$". "this->pdo->commit();"), 'Publication cataloguée non transactionnelle.');
 $paid=(string)file_get_contents($root.'/public/prestations-auteurs.php');
 $check(str_contains($paid,'79 €') && str_contains($paid,'179 €'), 'Les deux tarifs ne sont pas publiés.');
+$project=(string)file_get_contents($root.'/public/projet.php');
+foreach ([$paid,$project,$page] as $pricingPage) {
+    $check(str_contains($pricingPage,'30 pages A4') && str_contains($pricingPage,'9 000 mots'),
+        'La limite de pages et de mots du forfait de relecture doit apparaître dans tous les parcours.');
+}
+$check(str_contains($paid,'Je relis et corrige personnellement') &&
+       str_contains($paid,'correcteur logiciel pour une dernière vérification') &&
+       !str_contains($paid,"première passe d'orthographe, de grammaire et de typographie assistée par logiciel"),
+       'La relecture personnelle doit précéder le dernier contrôle logiciel.');
 $check(str_contains($paid,'mailto:contact@lepotager.org') && str_contains($paid,'https://www.lepotager.org/contact/'), 'Les demandes de devis ne sont pas accessibles.');
 $check(str_contains($paid,'avant votre accord') && str_contains($paid,'restent gratuits'), 'Les conditions de paiement ou la gratuité ne sont pas claires.');
 $check(str_contains($auto,'/prestations-auteurs.php') && str_contains($kit,'/prestations-auteurs.php') && str_contains($page,'/prestations-auteurs.php'), 'Offres non reliées aux parcours auteurs.');
