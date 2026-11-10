@@ -356,12 +356,9 @@
     setStatus(message);
     refreshAdvice();
   };
-  const providerMirror=create('label','paper-wizard-provider-mirror');
-  providerMirror.innerHTML='<strong>Choisir le parcours d’impression</strong><select id="wizard-provider"><optgroup label="Imprimeries locales"><option value="corep_metz">Corep Metz</option></optgroup><optgroup label="Autoédition / impression à la demande"><option value="bookelis">Bookelis</option></optgroup></select>';
-  pricePanel.insertBefore(providerMirror,pricePanel.firstElementChild?.nextSibling||null);
-  const mirrorSelect=get('wizard-provider');
+  // Le parcours est choisi une seule fois au début. On peut revenir le modifier
+  // depuis l'indicateur d'étapes ; aucun second sélecteur contradictoire.
   const syncProvider=()=>{
-    mirrorSelect.value=selection();
     const radio=form.querySelector('input[name="print_provider"]:checked');
     const corep=form.querySelector('input[name="print_provider"][value="corep_metz"]');
     if(isPdf() && pdfData && !pdfData.corep_eligible && corep) {
@@ -370,12 +367,9 @@
         const bookelis=form.querySelector('input[name="print_provider"][value="bookelis"]');
         if(bookelis){bookelis.checked=true;bookelis.dispatchEvent(new Event('change',{bubbles:true}));}
       }
-      mirrorSelect.querySelector('option[value="corep_metz"]').disabled=true;
     } else {
       if(corep)corep.disabled=false;
-      mirrorSelect.querySelector('option[value="corep_metz"]').disabled=false;
     }
-    mirrorSelect.value=selection();
     const chapterPolicy=form.querySelector('input[name="print_chapter_start"]');
     if(chapterPolicy) chapterPolicy.value='right';
     const bleedPolicy=form.querySelector('input[name="print_bleed_mm"]');
@@ -387,10 +381,6 @@
     }
     refreshAdvice();
   };
-  mirrorSelect.addEventListener('change',()=>{
-    const radio=form.querySelector('input[name="print_provider"][value="'+mirrorSelect.value+'"]');
-    if(radio && !radio.disabled){radio.checked=true;radio.dispatchEvent(new Event('change',{bubbles:true}));}
-  });
   form.querySelectorAll('input[name="print_provider"]').forEach(r=>r.addEventListener('change',syncProvider));
   const analyzePdf=async()=>{
     if(!isPdf())return;

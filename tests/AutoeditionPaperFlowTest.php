@@ -164,7 +164,7 @@ $check(str_contains($wizard,"unifiedUpload.accept='.pdf,.docx,.odt,.epub") &&
        str_contains($wizard,"unifiedUpload.addEventListener('change'") &&
        str_contains($wizard,'legacySourceLabel.hidden=true') &&
        str_contains($wizard,'pdfLabel.hidden=true') &&
-       str_contains($src,'/assets/js/paper-wizard.js?v=20261110-2'),
+       str_contains($src,'/assets/js/paper-wizard.js?v=20261110-3'),
     'Un seul sélecteur visible doit distribuer automatiquement le fichier vers le parseur PDF ou manuscrit.');
 $check(str_contains($wizard,'wizard-barcode-download') &&
        str_contains($wizard,'wizard-plan-bookstores') &&
@@ -233,7 +233,8 @@ $check(str_contains($src,'id="local-printers-title"') &&
        str_contains($src,'paper-provider-group-local') &&
        str_contains($src,'paper-provider-group-pod') &&
        str_contains($src,'Un autre imprimeur local pourra être ajouté') &&
-       str_contains($wizard,'<optgroup label="Imprimeries locales">') &&
-       str_contains($wizard,'<optgroup label="Autoédition / impression à la demande">'),
-    'Le choix d\'impression doit séparer les ateliers locaux des plateformes d\'autoédition.');
+       str_contains($wizard,'add(0,sourceCard,pdfLabel,printRequest,provider)') &&
+       !str_contains($wizard,'id="wizard-provider"') &&
+       !str_contains($src,'class="paper-provider-upcoming"'),
+    'Le choix d\'impression doit séparer les ateliers locaux et l’autoédition, sans doublon ni fausse carte.');
 echo "Parcours papier, liens et import brouillon : OK\n";

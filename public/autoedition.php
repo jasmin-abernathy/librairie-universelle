@@ -67,8 +67,8 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <link rel="stylesheet" href="/assets/css/autoedition-tabs.css?v=20261018-2">
     <link rel="stylesheet" href="/assets/css/author-draft.css?v=20261018-3">
     <link rel="stylesheet" href="/assets/css/autoedition-paper.css?v=20261019-1">
-    <link rel="stylesheet" href="/assets/css/print-provider-flow.css?v=20261110-2">
-    <link rel="stylesheet" href="/assets/css/paper-wizard.css?v=20261110-1">
+    <link rel="stylesheet" href="/assets/css/print-provider-flow.css?v=20261110-3">
+    <link rel="stylesheet" href="/assets/css/paper-wizard.css?v=20261110-3">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -285,10 +285,6 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                                         <span class="paper-provider-detail">Broché A5, intérieur noir et blanc sur offset 80 g, première et quatrième de couverture séparées. 680 pages recto-verso maximum d’après les consignes reçues.</span>
                                         <span class="paper-provider-price" id="printer-corep-quote">Tarif indicatif selon la grille autorisée, si disponible.</span>
                                     </label>
-                                    <div class="paper-provider-upcoming" aria-label="Autres ateliers à l’étude">
-                                        <strong>D’autres imprimeurs locaux à venir</strong>
-                                        <span>La comparaison pourra s’enrichir lorsque leurs spécifications et les conditions d’affichage de leurs devis seront confirmées.</span>
-                                    </div>
                                 </div>
                             </section>
                             <section class="paper-provider-group paper-provider-group-pod" aria-labelledby="bookelis-path-title">
@@ -304,7 +300,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                                 </div>
                             </section>
                         </div>
-                        <p class="field-help">Ces deux parcours sont indépendants : aucun devis n’est garanti ni aucune commande transmise depuis la Librairie. Bookelis n’est pas présenté comme une imprimerie locale.</p>
+                        <p class="field-help">Les deux parcours sont indépendants. Pour l’impression locale, d’autres prestataires pourront être ajoutés après confirmation de leurs caractéristiques et tarifs. Aucun devis n’est garanti ni aucune commande transmise depuis la Librairie.</p>
                         <div class="paper-stock-choice">
                             <label for="print-paper-stock"><strong>Type de papier intérieur</strong></label>
                             <select id="print-paper-stock" name="print_paper_stock" aria-describedby="paper-stock-help">
@@ -540,7 +536,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 <script src="/assets/js/paper-barcode.js?v=20261018-1"></script>
 <script src="/assets/js/printer-kit.js?v=20261018-1"></script>
 <script src="/assets/js/printer-zip.js?v=20261018-1"></script>
-<script src="/assets/js/paper-wizard.js?v=20261110-2"></script>
+<script src="/assets/js/paper-wizard.js?v=20261110-3"></script>
 <script src="/assets/js/cover-spread.js?v=20261110-1"></script>
 <script src="/assets/js/printing-estimate.js?v=20261102-1"></script>
 </body>

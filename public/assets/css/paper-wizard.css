@@ -31,8 +31,6 @@
 #panel-paper .paper-wizard-price-cards>div{background:white;border:1px solid #cad9cc;border-radius:.75rem;padding:.85rem}
 #panel-paper .paper-wizard-price-cards span{display:block;font-size:.87rem;color:#3a5342}
 #panel-paper .paper-wizard-price-cards strong{display:block;font-size:1.5rem;margin-top:.2rem}
-#panel-paper .paper-wizard-provider-mirror{display:flex;flex-direction:column;gap:.5rem;background:#fff;padding:.8rem;border-radius:.65rem;margin:.5rem 0}
-#panel-paper .paper-wizard-provider-mirror select{max-width:100%}
 #panel-paper #paper-wizard-pagination-frame{position:absolute!important;display:block!important;width:840px;height:1120px;left:-20000px;top:0;border:0;visibility:hidden;pointer-events:none}
 #panel-paper .paper-wizard-screen .paper-provider-fieldset{margin:.5rem 0}
 #panel-paper .paper-wizard-screen .print-preview-row{margin:1rem 0}

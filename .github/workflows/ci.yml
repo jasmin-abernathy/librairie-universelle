@@ -77,6 +77,18 @@ jobs:
       - name: Paper author journey and mobile UX regression
         run: php tests/AutoeditionPaperFlowTest.php
 
+      - name: Screen geometry of print provider choices (320/375/430/1280)
+        run: node tests/PaperWizardResponsiveTest.cjs
+
+      - name: Print provider screenshots for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-provider-visual
+          path: test-artifacts/paper-provider/
+          if-no-files-found: ignore
+          retention-days: 2
+
       - name: Local draft privacy test
         run: node tests/AuthorDraftTest.cjs
 

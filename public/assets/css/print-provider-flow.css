@@ -29,8 +29,5 @@
 .paper-provider-group .paper-provider-grid{display:flex;flex-direction:column;gap:.8rem;margin:0}
 .paper-provider-group .paper-provider-card{flex:1}
 .paper-provider-card-pod:has(input:checked){background:#eef1fa;border-color:#486187;box-shadow:0 0 0 2px #48618721}
-.paper-provider-upcoming{border:1px dashed #a0b5a6;border-radius:10px;padding:.8rem;display:flex;flex-direction:column;gap:.35rem;background:#fbfdfb;line-height:1.45}
-.paper-provider-upcoming strong{font-size:.9rem;color:#345444}
-.paper-provider-upcoming span{font-size:.87rem;color:#4b5c50}
 #panel-paper .resource-section h4{margin:1.25rem 0 .6rem;font-size:1rem}
 @media(max-width:800px){.paper-provider-paths{grid-template-columns:minmax(0,1fr)}.paper-provider-group{padding:.8rem}}
