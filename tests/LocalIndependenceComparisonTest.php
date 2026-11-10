@@ -131,6 +131,18 @@ $check(str_contains($page,'83 ouvertures et 85 fermetures')
  && str_contains($page,'aucune obligation morale')===false
  && str_contains($page,"n'est donc pas une obligation morale"),
  'Rubrique sociale : faits documentés et nuances manquants.');
+$check(str_contains($page,'31 % des achats de livres imprimés en 1993')
+ && str_contains($page,'2 % des achats en 2002 à 20 % en 2025')
+ && str_contains($page,'435,1 millions en 2019 à 419,6 millions en 2025')
+ && str_contains($page,'10 % du marché français du livre en valeur')
+ && str_contains($page,'Les chiffres détaillés d\'Amazon ne sont pas publics.')
+ && str_contains($page,'https://www.sne.fr/economie/chiffres-cles/')
+ && str_contains($page,'https://www.senat.fr/rap/a20-651/a20-6510.html'),
+ 'Manque la perspective historique ou la précaution sur la part Amazon.');
+$workStart=strpos($page,'Cadences élevées, recours à l\'intérim');
+$surveillanceStart=strpos($page,'À cela s\'ajoute la surveillance des performances.');
+$check($workStart!==false && $surveillanceStart!==false && $workStart<$surveillanceStart,
+ 'Présenter les conditions de travail avant la surveillance / sanction CNIL.');
 foreach (['centrenationaldulivre.fr','questions.assemblee-nationale.fr','www.cnil.fr','www.conseil-etat.fr','www.culture.gouv.fr'] as $domain) {
  $check(str_contains($page,'href="https://'.$domain),'Source sociale absente : '.$domain);
 }
