@@ -47,7 +47,7 @@ function rightsLabel(string $status): string
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <meta name="description" content="Trouver une librairie indépendante près de chez vous à Metz et en Moselle, puis chercher une œuvre dans plusieurs catalogues identifiés. Sans IA ni profilage.">
+    <meta name="description" content="Trouvez une librairie près de vous à Metz, découvrez des livres indépendants et comparez vos droits, les coûts d'autoédition et les circuits locaux. Sans profilage.">
     <meta name="theme-color" content="#f7f3ea">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Trouver une librairie près de chez vous.">
@@ -55,6 +55,7 @@ function rightsLabel(string $status): string
     <title><?= e($config['name']) ?></title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
     <link rel="stylesheet" href="/assets/css/discovery.css?v=20261009-3">
+    <link rel="stylesheet" href="/assets/css/publier-local.css?v=20261110-1">
     <script src="/assets/js/app.js" defer></script>
     <script src="/assets/js/bookstores.js?v=20261009-2" defer></script>
     <script src="/assets/js/discovery.js?v=20261009-4" defer></script>
@@ -119,6 +120,29 @@ function rightsLabel(string $status): string
         <noscript>
             <p class="note">La recherche par distance nécessite JavaScript. L’annuaire et la recherche de livres restent accessibles avec JavaScript activé.</p>
         </noscript>
+    </section>
+
+    <section class="content-section home-local-benefits" aria-labelledby="home-local-title">
+        <p class="section-kicker">Librairies proches · livres indépendants</p>
+        <h2 id="home-local-title">Un livre peut circuler autrement qu'en passant par une grande plateforme.</h2>
+        <p>Pour les lecteurs, un libraire près de chez soi. Pour les auteurs, des fichiers conservés, une vente directe ou la possibilité de proposer leur livre aux librairies locales. La Librairie universelle aide à trouver ces chemins — <strong>sans garantir la disponibilité d'un ouvrage ni une place en rayon.</strong></p>
+        <div class="home-local-options">
+            <article>
+                <h3>Vous cherchez un livre ?</h3>
+                <p>Commencez par les librairies proches : le prix du livre neuf est réglementé en France, et un retrait sur place peut éviter des frais d'expédition.</p>
+                <a href="/#librairies">Chercher près de chez moi →</a>
+            </article>
+            <article>
+                <h3>Vous avez écrit un livre ?</h3>
+                <p>Préparez le papier ou l'EPUB, puis vendez en direct ou prenez contact avec des libraires. Vos droits d'auteur ne disparaissent pas avec le référencement.</p>
+                <a href="/diffuser-mon-livre.php#fiche-libraire">Présenter mon livre aux libraires →</a>
+            </article>
+            <article>
+                <h3>Et face à Amazon KDP ?</h3>
+                <p>Coût d'impression, rémunération, propriété intellectuelle et impact écologique : des chiffres, leurs limites et les situations où KDP est plus avantageux.</p>
+                <a href="/publier-et-lire-local.php">Comparer les possibilités →</a>
+            </article>
+        </div>
     </section>
 
     <section class="content-section catalog-search" aria-labelledby="catalog-search-title">
@@ -285,6 +309,7 @@ function rightsLabel(string $status): string
         <a href="/autoedition.php">Autoédition</a>
         <a href="/feedback.php">Donner un retour</a>
         <a href="/projet.php">Le projet</a>
+        <a href="/publier-et-lire-local.php">Droits et circuits locaux</a>
         <a href="/sans-ia.php">Sans IA</a>
     </div>
     <p>Prototype sans publicité, sans traqueur et sans moteur de recommandation opaque.</p>

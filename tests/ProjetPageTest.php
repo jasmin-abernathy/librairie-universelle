@@ -20,6 +20,7 @@ foreach ([
     '/prestations-auteurs.php',
     '/ebooks.php',
     '/sans-ia.php',
+    '/publier-et-lire-local.php',
     '79 € HT',
     '179 € HT',
     'stocks en direct',

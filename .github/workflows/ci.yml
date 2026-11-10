@@ -121,6 +121,9 @@ jobs:
       - name: Project presentation stays aligned with author workflow and real limitations
         run: php tests/ProjetPageTest.php
 
+      - name: Author rights, local bookstores, KDP euros and environmental honesty
+        run: php tests/LocalIndependenceComparisonTest.php
+
       - name: Verify locally hosted pagination engine matches upstream npm release
         run: |
           node --check public/assets/vendor/pagedjs/paged.polyfill.js

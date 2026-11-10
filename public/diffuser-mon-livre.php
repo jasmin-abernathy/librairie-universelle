@@ -27,6 +27,7 @@ header('Referrer-Policy: no-referrer');
         <div class="cta-row">
             <a class="button-link" href="#fiche-libraire">Préparer ma présentation</a>
             <a class="button-link secondary" href="/proposer-livre.php">Proposer la fiche de mon livre</a>
+            <a class="text-link" href="/publier-et-lire-local.php#librairies">Comprendre les circuits locaux</a>
         </div>
     </section>
 
@@ -58,6 +59,17 @@ header('Referrer-Policy: no-referrer');
             </article>
         </div>
         <p class="sales-truth"><strong>Une fiche publiée n’est pas une commande.</strong> La Librairie référence le livre après vérification, mais ne gère ni paiement, ni livraison, ni réservation. Les lecteurs s’adressent directement à l’auteur ou au vendeur ; les librairies négocient séparément leurs conditions avec lui.</p>
+    </section>
+
+    <section class="sales-after" id="parcours-librairies" aria-labelledby="parcours-local-title">
+        <p class="eyebrow">Démarcher des librairies locales</p>
+        <h2 id="parcours-local-title">Ce parcours n'est ni une vente directe, ni une distribution automatique.</h2>
+        <div class="sales-after-grid">
+            <div><h3>Choisir les bons établissements</h3><p>Utilisez l'<a href="/#librairies">annuaire de Metz et de Moselle</a>, regardez la spécialité de chaque librairie et adressez une proposition personnelle à quelques établissements pertinents.</p></div>
+            <div><h3>Décider ensemble des conditions</h3><p>Le libraire est libre de refuser ou d'accepter. Avant d'apporter des exemplaires, fixez la remise commerciale, la facturation, les délais, le dépôt-vente éventuel et les modalités de retour des invendus.</p></div>
+            <div><h3>Ne pas mélanger les commissions</h3><p>Le taux de 3 % concerne uniquement les <strong>ventes directes auteur–lecteur apportées par le catalogue</strong> après signature. Les ventes effectuées par une librairie relèvent des conditions négociées directement avec elle.</p></div>
+        </div>
+        <p><a class="text-link" href="/publier-et-lire-local.php#librairies">Parcours lecteurs et auteurs, droits et comparaison des circuits →</a></p>
     </section>
 
     <section id="fiche-libraire" class="sales-tool" aria-labelledby="fiche-libraire-title">
@@ -148,7 +160,7 @@ header('Referrer-Policy: no-referrer');
     </section>
 </main>
 <footer>
-    <div class="footer-links"><a href="/autoedition.php">Autoédition</a><a href="/projet.php">Le projet</a><a href="/feedback.php?kind=self_publishing">Donner un retour</a></div>
+    <div class="footer-links"><a href="/autoedition.php">Autoédition</a><a href="/projet.php">Le projet</a><a href="/publier-et-lire-local.php">Mes droits et les librairies</a><a href="/feedback.php?kind=self_publishing">Donner un retour</a></div>
     <p>Un réseau de proximité se construit avec les librairies, pas à leur place.</p>
 </footer>
 </body></html>

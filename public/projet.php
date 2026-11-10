@@ -38,8 +38,17 @@ function e_project(?string $value): string
         <div class="cta-row">
             <a class="button-link" href="/#librairies">Trouver une librairie proche</a>
             <a class="button-link secondary" href="/autoedition.php">Préparer mon livre</a>
+            <a class="text-link" href="/publier-et-lire-local.php">Les droits des auteurs et les coûts</a>
             <a class="text-link" href="#etat-du-projet">Où en est le projet ?</a>
         </div>
+    </section>
+
+    <section class="content-section" aria-labelledby="auteur-libre-local-title">
+        <p class="section-kicker">Une autre manière de publier</p>
+        <h2 id="auteur-libre-local-title">Un livre qui vous appartient. Des chemins pour le faire lire.</h2>
+        <p>Un auteur indépendant conserve ses droits sur son œuvre, sous réserve de ses autres contrats. Ici, les outils de préparation sont gratuits, le référencement direct papier ou EPUB est non exclusif, et la convention de <strong>3 %</strong> ne rémunère que les ventes réellement apportées. Les auteurs restent libres de proposer leurs ouvrages aux librairies proches et de choisir leur imprimeur.</p>
+        <p>Cette liberté ne signifie pas que l'impression locale coûte toujours moins cher ni qu'elle émet nécessairement moins de CO₂. Nous présentons <strong>des exemples en euros, les limites de la comparaison écologique et le parcours concret des librairies</strong> sur une page dédiée.</p>
+        <p><a class="button-link secondary" href="/publier-et-lire-local.php">Voir les droits, les chiffres et le parcours local</a></p>
     </section>
 
     <section class="content-section" aria-labelledby="why-local">
