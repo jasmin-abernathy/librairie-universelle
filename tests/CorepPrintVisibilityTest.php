@@ -6,7 +6,8 @@ $assert=static function(bool $ok,string $msg):void{
  if(!$ok){fwrite(STDERR,"Corep: ".$msg."\n");exit(1);}
 };
 $html=(string)file_get_contents(dirname(__DIR__).'/public/autoedition.php');
-$assert(str_contains($html,'Corep Metz — référence locale'),'La carte Corep Metz manque du parcours papier.');
+$assert(str_contains($html,'id="local-printers-title"') && str_contains($html,'<strong>Corep Metz</strong>'),
+  'La carte Corep Metz doit rester dans la rubrique des imprimeries locales.');
 $assert(str_contains($html,'https://www.corep.fr/fr/agence/corep-metz/'),'Adresse Corep manquante.');
 $kit=(string)file_get_contents(dirname(__DIR__).'/public/dossier-impression.php');
 $assert(str_contains($html,'id="paper-corep-step"') && str_contains($html,'href="#paper-corep-step"'),
