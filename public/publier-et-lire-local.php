@@ -32,6 +32,8 @@ $money = static fn(float $amount): string => number_format($amount, 2, ',', ' ')
     <title>Votre livre, vos droits, vos librairies — Librairie universelle</title>
     <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
     <link rel="stylesheet" href="/assets/css/publier-local.css?v=20261110-1">
+    <link rel="stylesheet" href="/assets/css/amazon-local.css?v=20261110-2">
+    <script src="/assets/js/amazon-local.js?v=20261110-2" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -154,6 +156,55 @@ $money = static fn(float $amount): string => number_format($amount, 2, ',', ' ')
         <?php endif; ?>
         <p><strong>Et une librairie locale ?</strong> Ce calcul de 3 % et de « reste sur vente directe » ne s'applique pas à une vente réalisée par une librairie. Son taux de remise, les modalités de dépôt-vente ou d'achat ferme, les retours et la facturation sont à convenir avec elle. Sans ces données, annoncer un « revenu auteur » chiffré serait trompeur.</p>
 
+
+        <section class="local-margin-tool" aria-labelledby="margin-tool-title" id="simulateur-marges">
+            <div class="local-margin-head">
+                <p class="section-kicker">Votre propre livre · valeurs modifiables</p>
+                <h3 id="margin-tool-title">Calculez avec vos devis, pas avec des prix inventés</h3>
+                <p>Le tableau précédent illustre un livre précis. Pour le vôtre, renseignez les prix <strong>réellement proposés</strong> par KDP et votre imprimeur, et la remise éventuellement négociée avec une librairie. Les résultats changent immédiatement, sans compte ni transmission de données.</p>
+            </div>
+            <form id="amazon-local-calculator" class="local-margin-form" novalidate>
+                <div class="local-margin-fields">
+                    <label for="compare-public-price">Prix public du livre neuf, TTC (€)
+                        <input id="compare-public-price" name="publicPrice" type="number" min="0.01" max="250" step="0.01" inputmode="decimal" value="15" required>
+                    </label>
+                    <label for="compare-kdp-print">Coût d'impression de votre livre chez KDP (€)
+                        <input id="compare-kdp-print" name="kdpPrint" type="number" min="0" max="250" step="0.01" inputmode="decimal" placeholder="Prix réel dans votre compte KDP" required>
+                    </label>
+                    <label for="compare-local-print">Coût d'impression local par exemplaire, HT (€)
+                        <input id="compare-local-print" name="localPrint" type="number" min="0" max="250" step="0.01" inputmode="decimal" placeholder="Votre devis, ramené à l'unité" required>
+                    </label>
+                    <label for="compare-bookstore-discount">Remise professionnelle accordée à la librairie (%)
+                        <input id="compare-bookstore-discount" name="discount" type="number" min="0" max="90" step="0.5" inputmode="decimal" placeholder="À négocier, aucune valeur imposée" required>
+                    </label>
+                </div>
+                <p class="local-small">Le prix public de 15 € est un <strong>exemple modifiable</strong>, pas un tarif conseillé. La remise n'est ni choisie ni prélevée par la Librairie universelle. Ces montants sont recalculés localement par votre navigateur, sans envoi ni conservation.</p>
+            </form>
+            <p id="amazon-comparison-status" role="status" aria-live="polite">Renseignez le coût KDP, le coût d'impression local et la remise libraire pour voir vos estimations.</p>
+            <div id="amazon-comparison-results" class="local-margin-results" hidden>
+                <article>
+                    <h4>Amazon.fr · vente KDP standard</h4>
+                    <strong id="compare-kdp-result" class="local-margin-amount">—</strong>
+                    <p id="compare-kdp-rule"></p>
+                    <small>Prix catalogue HT × 50 % ou 60 % − coût d'impression KDP.</small>
+                </article>
+                <article>
+                    <h4>Vente directe via notre catalogue</h4>
+                    <strong id="compare-direct-result" class="local-margin-amount">—</strong>
+                    <p id="compare-direct-rule"></p>
+                    <small>Prix HT − fabrication locale HT − 3 % du prix TTC, uniquement si notre convention prévoit une commission pour la vente concernée.</small>
+                </article>
+                <article>
+                    <h4>Vente à une librairie locale</h4>
+                    <strong id="compare-store-result" class="local-margin-amount">—</strong>
+                    <p id="compare-store-rule"></p>
+                    <small>Prix HT × (1 − remise négociée) − fabrication locale HT ; aucune commission de référencement présumée.</small>
+                </article>
+            </div>
+            <p class="local-small"><strong>Lecture des résultats :</strong> il s'agit de montants restant après les seuls coûts saisis, <strong>pas de bénéfices nets</strong>. Hypothèse : vente de livre broché sur Amazon.fr, TVA livre de 5,5 % en France métropolitaine, auteur ou éditeur pouvant déduire la TVA sur ses dépenses et prix local saisi hors taxe. Si vous ne récupérez pas la TVA, vos coûts réels seront différents. Les frais de livraison, de paiement, l'emballage, les retours, les invendus, le temps de travail, les cotisations et les impôts sont exclus. Les exemples ne remplacent pas un devis ni un conseil fiscal. La distribution étendue KDP (40 %) n'est pas simulée.</p>
+            <p class="local-small"><a href="https://kdp.amazon.com/fr_FR/help/topic/G201834330" target="_blank" rel="noopener noreferrer">Barème officiel KDP : 50 % ou 60 % et 40 % pour la distribution étendue</a> · <a href="/conditions-generales.php">Notre commission de référencement : conditions exactes</a></p>
+        </section>
+
         <h3>Et pour un EPUB à 6 € TTC ?</h3>
         <div class="local-table-scroll" role="region" aria-label="Comparaison numérique" tabindex="0">
             <table class="local-comparison-table">
@@ -197,6 +248,7 @@ $money = static fn(float $amount): string => number_format($amount, 2, ',', ' ')
         <p>Vérifications du 10 novembre 2026. Ces exemples utilisent les conditions publiées pour Amazon.fr, les données Corep autorisées lorsqu'elles sont encore dans leur période de réexamen et les conditions actuelles de la Librairie. Le scénario est illustratif, pas un devis ni une garantie de revenu.</p>
         <ul>
             <li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042814694" target="_blank" rel="noopener noreferrer">Code de la propriété intellectuelle, article L111-1</a> : droits de l'auteur dès la création.</li>
+            <li><a href="https://kdp.amazon.com/fr_FR/help/topic/G7BBN68RYX5UMDZF" target="_blank" rel="noopener noreferrer">Amazon KDP — exemplaires d'auteur revendables et épreuves non destinées à la vente</a>.</li>
             <li><a href="https://kdp.amazon.com/fr_FR/help/topic/G200672400" target="_blank" rel="noopener noreferrer">Amazon KDP — droits d'auteur</a>, <a href="https://kdp.amazon.com/fr_FR/help/topic/GD9PMU58BV24QFZ7" target="_blank" rel="noopener noreferrer">KDP Select</a>, <a href="https://kdp.amazon.com/fr_FR/help/topic/G201834170" target="_blank" rel="noopener noreferrer">ISBN gratuit ou personnel</a> et <a href="https://kdp.amazon.com/fr_FR/help/topic/GQTT4W3T5AYK7L45" target="_blank" rel="noopener noreferrer">distribution étendue</a>.</li>
             <li><a href="https://kdp.amazon.com/fr_FR/help/topic/G201834340" target="_blank" rel="noopener noreferrer">KDP — coûts d'impression</a>, <a href="https://kdp.amazon.com/fr_FR/help/topic/G201834330" target="_blank" rel="noopener noreferrer">redevances du broché</a> et <a href="https://kdp.amazon.com/fr_FR/help/topic/G200644210" target="_blank" rel="noopener noreferrer">redevances des ebooks</a>.</li>
             <li><a href="https://kdp.amazon.com/fr_FR/help/topic/GQTT4W3T5AYK7L45" target="_blank" rel="noopener noreferrer">KDP — distribution étendue</a> : absence de garantie de référencement ou de commande en librairie.</li>
