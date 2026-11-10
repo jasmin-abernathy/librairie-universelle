@@ -164,7 +164,7 @@ $check(str_contains($wizard,"unifiedUpload.accept='.pdf,.docx,.odt,.epub") &&
        str_contains($wizard,"unifiedUpload.addEventListener('change'") &&
        str_contains($wizard,'legacySourceLabel.hidden=true') &&
        str_contains($wizard,'pdfLabel.hidden=true') &&
-       str_contains($src,'/assets/js/paper-wizard.js?v=20261110-1'),
+       str_contains($src,'/assets/js/paper-wizard.js?v=20261110-2'),
     'Un seul sélecteur visible doit distribuer automatiquement le fichier vers le parseur PDF ou manuscrit.');
 $check(str_contains($wizard,'wizard-barcode-download') &&
        str_contains($wizard,'wizard-plan-bookstores') &&
