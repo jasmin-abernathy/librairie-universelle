@@ -53,7 +53,7 @@ $pages = [
     'index.php'=>'search', 'ebooks.php'=>'ebooks', 'autoedition.php'=>'autoedition',
     'diffuser-mon-livre.php'=>'diffusion','livres-auteurs.php'=>'authorbooks',
     'livre-auteur.php'=>'authorbooks','proposer-livre.php'=>'propose',
-    'projet.php'=>'projet','publier-et-lire-local.php'=>'libre-local','sans-ia.php'=>'sans-ia','conditions-generales.php'=>'conditions','work.php'=>'ebooks',
+    'projet.php'=>'projet','publier-et-lire-local.php'=>'libre-local','comparer-diffusion-livre.php'=>'libre-local','sans-ia.php'=>'sans-ia','conditions-generales.php'=>'conditions','work.php'=>'ebooks',
     'assistant-papier.php'=>'autoedition','dossier-impression.php'=>'autoedition',
     'prestations-auteurs.php'=>'autoedition','feedback.php'=>null,
     'export-pdfx.php'=>'autoedition',

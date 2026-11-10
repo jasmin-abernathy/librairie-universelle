@@ -140,7 +140,7 @@ function rightsLabel(string $status): string
             <article>
                 <h3>Et face à Amazon KDP ?</h3>
                 <p>Coût d'impression, rémunération, propriété intellectuelle et impact écologique : des chiffres, leurs limites et les situations où KDP est plus avantageux.</p>
-                <a href="/publier-et-lire-local.php">Comparer les possibilités →</a>
+                <a href="/comparer-diffusion-livre.php#chiffres">Comparer les possibilités →</a>
             </article>
         </div>
     </section>

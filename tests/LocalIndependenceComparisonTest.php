@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 $root=dirname(__DIR__);
 $read=static fn(string $path):string=>(string)file_get_contents($root.'/'.$path);
-$page=$read('public/publier-et-lire-local.php');
+$page=$read('public/comparer-diffusion-livre.php');
+$overview=$read('public/publier-et-lire-local.php');
+$combined=$page."\n".$overview;
 $home=$read('public/index.php');
 $project=$read('public/projet.php');
 $outreach=$read('public/diffuser-mon-livre.php');
@@ -39,7 +41,7 @@ foreach([
  'https://kdp.amazon.com/fr_FR/help/topic/G201834340',
  'https://www.ademe.fr/',
 ] as $needle){
- $check(str_contains($page,$needle),'Mention de transparence manquante : '.$needle);
+ $check(str_contains($combined,$needle),'Mention de transparence manquante : '.$needle);
 }
 $check(str_contains($page,"date('Y-m-d') <= (string)") &&
  str_contains($page,"$"."corepCurrent") &&
@@ -106,4 +108,35 @@ $check(str_contains($calculatorCss,'@media(max-width:620px)')
     'Responsive, focus clavier ou confidentialité du simulateur manquants.');
 $check(str_contains($page,'https://kdp.amazon.com/fr_FR/help/topic/G7BBN68RYX5UMDZF'),
     'Lien officiel sur les exemplaires auteur et les épreuves absent.');
-echo "Audit local : droits papier et EPUB, parcours librairies, marges KDP, devis Corep, prudence écologique OK\n";
+
+$guideCss=$read('public/assets/css/circuits-guide.css');
+$check(str_contains($overview,'id="circuits"') && str_contains($overview,'id="librairies"')
+ && str_contains($overview,'id="chiffres"') && str_contains($overview,'href="/comparer-diffusion-livre.php#droits-kdp"'),
+ 'Le parcours court doit conserver ses entrées et son lien KDP.');
+$check(!str_contains($overview,'id="amazon-local-calculator"') && !str_contains($overview,'amazon-local.js')
+ && !str_contains($overview,'id="ecologie"') && !str_contains($overview,'id="enjeux-sociaux"'),
+ 'Le parcours de découverte ne doit pas contenir les outils détaillés.');
+$check(str_contains($page,'id="droits-kdp"') && str_contains($page,'id="chiffres"')
+ && str_contains($page,'id="ecologie"') && str_contains($page,'id="enjeux-sociaux"')
+ && str_contains($page,'id="sources"') && str_contains($page,'class="local-guide-jump"'),
+ 'Guide : sommaire et rubriques essentielles manquants.');
+$check(str_contains($page,'id="exemple-papier"') && str_contains($page,'id="exemple-epub"')
+ && substr_count($page,'<summary>')===2 && str_contains($guideCss,'@media(max-width:640px)')
+ && str_contains($guideCss,':focus-visible'),
+ 'Guide : chiffres détaillés non repliables ou styles accessibles absents.');
+$check(str_contains($page,'83 ouvertures et 85 fermetures')
+ && str_contains($page,'3 200 librairies et 14 000 emplois')
+ && str_contains($page,"Amazon France Logistique de 32 millions d'euros")
+ && str_contains($page,'13 mai 2026')
+ && str_contains($page,'aucune obligation morale')===false
+ && str_contains($page,"n'est donc pas une obligation morale"),
+ 'Rubrique sociale : faits documentés et nuances manquants.');
+foreach (['centrenationaldulivre.fr','questions.assemblee-nationale.fr','www.cnil.fr','www.conseil-etat.fr','www.culture.gouv.fr'] as $domain) {
+ $check(str_contains($page,'href="https://'.$domain),'Source sociale absente : '.$domain);
+}
+$check(str_contains($overview,'href="/comparer-diffusion-livre.php#enjeux-sociaux"')
+ && str_contains($read('public/index.php'),'href="/comparer-diffusion-livre.php#chiffres"')
+ && str_contains($read('public/autoedition.php'),'/comparer-diffusion-livre.php#droits-kdp')
+ && str_contains($sitemap,"'/comparer-diffusion-livre.php'"),
+ 'Maillage du guide détaillé insuffisant.');
+echo "Audit local : guide séparé, chiffres, impact social, sources et parcours : OK\n";
