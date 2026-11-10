@@ -68,7 +68,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <link rel="stylesheet" href="/assets/css/author-draft.css?v=20261018-3">
     <link rel="stylesheet" href="/assets/css/autoedition-paper.css?v=20261019-1">
     <link rel="stylesheet" href="/assets/css/print-provider-flow.css?v=20261110-3">
-    <link rel="stylesheet" href="/assets/css/paper-wizard.css?v=20261110-3">
+    <link rel="stylesheet" href="/assets/css/paper-wizard.css?v=20261110-4">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>

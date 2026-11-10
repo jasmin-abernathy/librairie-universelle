@@ -196,6 +196,11 @@ $mixed=str_replace('LAST:[0 0 419.5276 595.2756]','LAST:[0 0 595.2756 841.8898]'
 $check(PdfNativeAnalyzer::parseGhostscript($mixed)['corep_eligible']===false,
     'Les PDF à formats mixtes ne peuvent pas être considérés comme compatibles Corep.');
 
+$responsiveCss=(string)file_get_contents(dirname(__DIR__).'/public/assets/css/paper-wizard.css');
+$check(str_contains($src,'/assets/css/paper-wizard.css?v=20261110-4')
+    && str_contains($responsiveCss,'#panel-paper .paper-provider-paths {width:100%}')
+    && str_contains($responsiveCss,'#panel-paper input:not([type=checkbox]):not([type=radio])'),
+    'Les fieldsets, grilles et champs du parcours papier doivent être contraints sur mobile.');
 $coverEditor=(string)file_get_contents(dirname(__DIR__).'/src/views/cover-spread-editor.php');
 $coverModule=(string)file_get_contents(dirname(__DIR__).'/public/assets/js/cover-spread.js');
 $check(str_contains($src,'id="print-paper-stock"') && str_contains($src,'data-bookelis-paper="1"') &&

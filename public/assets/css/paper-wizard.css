@@ -76,3 +76,28 @@
 #panel-paper #spread-download:disabled{opacity:.55;cursor:not-allowed}
 #panel-paper .paper-spread-editor .paper-wizard-help{line-height:1.55}
 @media(max-width:650px){#panel-paper .paper-spread-editor{padding:.75rem}#panel-paper .paper-spread-preview{padding:.25rem}}
+
+/* Les fieldsets et leurs grilles ne doivent pas imposer leur largeur min-content
+   au formulaire : mesuré à 320 px avec Chromium, sans overflow masqué. */
+#panel-paper,
+#panel-paper > fieldset,
+#panel-paper .paper-wizard,
+#panel-paper .paper-wizard-screen,
+#panel-paper .paper-provider-fieldset,
+#panel-paper .paper-provider-paths,
+#panel-paper .paper-provider-group,
+#panel-paper .paper-provider-card,
+#panel-paper .paper-wizard-progress {
+  box-sizing:border-box;
+  min-width:0;
+  max-width:100%;
+}
+#panel-paper,
+#panel-paper > fieldset,
+#panel-paper .paper-wizard,
+#panel-paper .paper-wizard-screen,
+#panel-paper .paper-provider-fieldset,
+#panel-paper .paper-provider-paths {width:100%}
+#panel-paper input:not([type=checkbox]):not([type=radio]),
+#panel-paper textarea,
+#panel-paper select {box-sizing:border-box;max-width:100%;min-width:0}
