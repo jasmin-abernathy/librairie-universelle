@@ -357,7 +357,7 @@
     refreshAdvice();
   };
   const providerMirror=create('label','paper-wizard-provider-mirror');
-  providerMirror.innerHTML='<strong>Choisir le prestataire pour le devis</strong><select id="wizard-provider"><option value="corep_metz">Corep Metz</option><option value="bookelis">Bookelis</option></select>';
+  providerMirror.innerHTML='<strong>Choisir le parcours d’impression</strong><select id="wizard-provider"><optgroup label="Imprimeries locales"><option value="corep_metz">Corep Metz</option></optgroup><optgroup label="Autoédition / impression à la demande"><option value="bookelis">Bookelis</option></optgroup></select>';
   pricePanel.insertBefore(providerMirror,pricePanel.firstElementChild?.nextSibling||null);
   const mirrorSelect=get('wizard-provider');
   const syncProvider=()=>{

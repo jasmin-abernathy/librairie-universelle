@@ -67,7 +67,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <link rel="stylesheet" href="/assets/css/autoedition-tabs.css?v=20261018-2">
     <link rel="stylesheet" href="/assets/css/author-draft.css?v=20261018-3">
     <link rel="stylesheet" href="/assets/css/autoedition-paper.css?v=20261019-1">
-    <link rel="stylesheet" href="/assets/css/print-provider-flow.css?v=20261102-1">
+    <link rel="stylesheet" href="/assets/css/print-provider-flow.css?v=20261110-2">
     <link rel="stylesheet" href="/assets/css/paper-wizard.css?v=20261110-1">
 </head>
 <body>
@@ -273,22 +273,38 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 <div id="print-layout-settings"<?= $printPreparationRequested ? '' : ' hidden' ?>>
                     <fieldset class="paper-provider-fieldset" id="paper-printer-step">
                         <legend>2. Choisir où imprimer votre livre</legend>
-                        <p>Choisissez votre imprimeur avant de générer l'intérieur : les dimensions modifient la pagination, donc le nombre de pages et le coût. Vous pourrez revenir sur ce choix sans réimporter votre manuscrit.</p>
-                        <div class="paper-provider-grid">
-                            <label class="paper-provider-card">
-                                <input type="radio" name="print_provider" value="corep_metz"<?= $selectedPrinter === 'corep_metz' ? ' checked' : '' ?>>
-                                <span class="paper-provider-title"><strong>Corep Metz</strong><small>Impression locale · A5 imposé</small></span>
-                                <span class="paper-provider-detail">Livre A5 broché, couverture recto et verso séparées. Au maximum 680 pages recto-verso sur papier 80 g (340 feuilles), selon Corep Metz.</span>
-                                <span class="paper-provider-price" id="printer-corep-quote">Tarif indicatif selon la grille autorisée, si disponible.</span>
-                            </label>
-                            <label class="paper-provider-card">
-                                <input type="radio" name="print_provider" value="bookelis"<?= $selectedPrinter === 'bookelis' ? ' checked' : '' ?>>
-                                <span class="paper-provider-title"><strong>Bookelis</strong><small>Impression à la demande · plusieurs formats</small></span>
-                                <span class="paper-provider-detail">Formats au choix, papier et couverture configurés chez Bookelis. La couverture finale doit suivre leur gabarit complet avec tranche.</span>
-                                <span class="paper-provider-price" id="printer-bookelis-quote">Devis dynamique dans le calculateur officiel (prix non récupérable ici).</span>
-                            </label>
+                        <p>Choisissez d’abord le <strong>mode de fabrication</strong> de votre livre. Le format et le papier déterminent la pagination et les fichiers de couverture nécessaires. Vous pourrez revenir sur ce choix sans réimporter votre manuscrit.</p>
+                        <div class="paper-provider-paths">
+                            <section class="paper-provider-group paper-provider-group-local" aria-labelledby="local-printers-title">
+                                <h3 id="local-printers-title">Imprimeries locales</h3>
+                                <p>Pour faire fabriquer un tirage auprès d’un atelier de la région, récupérer les livres localement et traiter directement avec l’imprimeur.</p>
+                                <div class="paper-provider-grid">
+                                    <label class="paper-provider-card">
+                                        <input type="radio" name="print_provider" value="corep_metz"<?= $selectedPrinter === 'corep_metz' ? ' checked' : '' ?>>
+                                        <span class="paper-provider-title"><strong>Corep Metz</strong><small>Atelier local · livre A5</small></span>
+                                        <span class="paper-provider-detail">Broché A5, intérieur noir et blanc sur offset 80 g, première et quatrième de couverture séparées. 680 pages maximum d’après les consignes reçues.</span>
+                                        <span class="paper-provider-price" id="printer-corep-quote">Tarif indicatif selon la grille autorisée, si disponible.</span>
+                                    </label>
+                                    <div class="paper-provider-upcoming" aria-label="Autres ateliers à l’étude">
+                                        <strong>D’autres imprimeurs locaux à venir</strong>
+                                        <span>La comparaison pourra s’enrichir lorsque leurs spécifications et les conditions d’affichage de leurs devis seront confirmées.</span>
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="paper-provider-group paper-provider-group-pod" aria-labelledby="bookelis-path-title">
+                                <h3 id="bookelis-path-title">Autoédition et impression à la demande</h3>
+                                <p>Pour gérer un projet sur une plateforme d’autoédition, avec ses propres choix de fabrication, son gabarit et, selon l’offre, des services de distribution.</p>
+                                <div class="paper-provider-grid">
+                                    <label class="paper-provider-card paper-provider-card-pod">
+                                        <input type="radio" name="print_provider" value="bookelis"<?= $selectedPrinter === 'bookelis' ? ' checked' : '' ?>>
+                                        <span class="paper-provider-title"><strong>Bookelis</strong><small>Plateforme d’autoédition · impression à la demande</small></span>
+                                        <span class="paper-provider-detail">Plusieurs formats et papiers, couverture complète à plat selon le gabarit officiel, puis dépôt des PDF sur le site Bookelis.</span>
+                                        <span class="paper-provider-price" id="printer-bookelis-quote">Devis à calculer chez Bookelis, sans tarif automatique dans la Librairie.</span>
+                                    </label>
+                                </div>
+                            </section>
                         </div>
-                        <p class="field-help">Aucun tarif n'est garanti ni aucune commande envoyée depuis la Librairie. Corep et Bookelis restent deux prestataires indépendants.</p>
+                        <p class="field-help">Ces deux parcours sont indépendants : aucun devis n’est garanti ni aucune commande transmise depuis la Librairie. Bookelis n’est pas présenté comme une imprimerie locale.</p>
                         <div class="paper-stock-choice">
                             <label for="print-paper-stock"><strong>Type de papier intérieur</strong></label>
                             <select id="print-paper-stock" name="print_paper_stock" aria-describedby="paper-stock-help">
@@ -479,12 +495,17 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                     </div>
                 </div>
                 <div class="resource-section" aria-labelledby="printers-title">
-                    <h3 id="printers-title">Besoin d’un imprimeur ou d’impression à la demande ?</h3>
-                    <p>Ces liens sont fournis comme ressources pratiques, <strong>sans partenariat ni classement sponsorisé</strong>. Comparez les coûts, formats, conditions de distribution, propriété des ISBN et exemplaires tests avant de choisir.</p>
+                    <h3 id="printers-title">À qui confier l’impression de son livre ?</h3>
+                    <p>Ressources pratiques, <strong>sans partenariat commercial ni classement sponsorisé</strong>. Les ateliers locaux et les plateformes nationales d’autoédition remplissent des fonctions différentes.</p>
+                    <h4>Imprimerie locale à Metz</h4>
                     <div class="resource-grid">
-                        <a class="resource-card" href="https://www.corep.fr/fr/agence/corep-metz/" target="_blank" rel="noopener noreferrer"><strong>Corep Metz — référence locale</strong><span>Conseils techniques reçus et autorisation de publier une grille A5 indicative. Devis et BAT à confirmer directement ↗</span></a>
-                        <a class="resource-card" href="https://www.bookelis.com/imprimer-un-livre/" target="_blank" rel="noopener noreferrer"><strong>Bookelis</strong><span>Impression à la demande et petites quantités ↗</span></a>
-                        <a class="resource-card" href="https://www.coollibri.com/auto-edition-livre" target="_blank" rel="noopener noreferrer"><strong>CoolLibri</strong><span>Impression en France, dès de petites quantités ↗</span></a>
+                        <a class="resource-card" href="https://www.corep.fr/fr/agence/corep-metz/" target="_blank" rel="noopener noreferrer"><strong>Corep Metz</strong><span>Atelier local, retrait possible. Conseils techniques reçus ; devis et BAT à confirmer directement ↗</span></a>
+                    </div>
+                    <p class="field-help">Un autre imprimeur local pourra être ajouté après confirmation de ses conditions techniques et commerciales.</p>
+                    <h4>Plateformes d’impression et d’autoédition</h4>
+                    <div class="resource-grid">
+                        <a class="resource-card" href="https://www.bookelis.com/imprimer-un-livre/" target="_blank" rel="noopener noreferrer"><strong>Bookelis</strong><span>Autoédition, impression à la demande, plusieurs formats et services de diffusion ↗</span></a>
+                        <a class="resource-card" href="https://www.coollibri.com/auto-edition-livre" target="_blank" rel="noopener noreferrer"><strong>CoolLibri</strong><span>Impression de livres en petites quantités, avec commande en ligne ↗</span></a>
                         <a class="resource-card" href="https://www.bod.fr/livre/publier-un-livre" target="_blank" rel="noopener noreferrer"><strong>BoD — Books on Demand</strong><span>Impression à la demande et services de diffusion ↗</span></a>
                     </div>
                 </div>
@@ -519,7 +540,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 <script src="/assets/js/paper-barcode.js?v=20261018-1"></script>
 <script src="/assets/js/printer-kit.js?v=20261018-1"></script>
 <script src="/assets/js/printer-zip.js?v=20261018-1"></script>
-<script src="/assets/js/paper-wizard.js?v=20261110-1"></script>
+<script src="/assets/js/paper-wizard.js?v=20261110-2"></script>
 <script src="/assets/js/cover-spread.js?v=20261110-1"></script>
 <script src="/assets/js/printing-estimate.js?v=20261102-1"></script>
 </body>

@@ -46,3 +46,7 @@ L’aperçu montre les plis et coupes par des guides rouges **non imprimés** ; 
 Corep conserve le parcours déjà validé : première et quatrième séparées, sans tranche, papier offset 80 g. Le module n’invente aucun coefficient pour les ateliers. Les coefficients cités à titre d’exemple par Bookelis sont explicitement fictifs et ne sont pas utilisés.
 
 Sources techniques : https://www.bookelis.com/conseil/12-faire-belle-couverture-de-livre-qualite-professionnelle/ et https://livres.bookelis.com/faq?category_id=1 . Vérifications : `node tests/CoverSpreadTest.cjs` et `php tests/AutoeditionPaperFlowTest.php`.
+
+## Catégories de fabrication distinctes (10 novembre 2026)
+
+Le premier écran du parcours papier affiche désormais **Imprimeries locales** et **Autoédition / impression à la demande** séparément. Corep Metz figure dans les ateliers locaux ; une carte non sélectionnable annonce simplement l’ajout possible d’autres imprimeurs après validation de leurs caractéristiques et de leurs tarifs. **Bookelis n’est plus présenté comme une imprimerie locale** : sa propre carte décrit une plateforme d’autoédition, son dépôt PDF et ses gabarits. Le sélecteur compact du wizard conserve les deux valeurs techniques `corep_metz` et `bookelis` sous deux `optgroup` distincts. Aucun nouveau prestataire ne reçoit implicitement une autorisation de publier ses prix.

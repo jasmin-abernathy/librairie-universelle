@@ -18,3 +18,19 @@
 #print-estimate-pages{min-width:7rem;max-width:11rem}
 #paper-bookelis-cover-step .button-link{margin-top:.5rem}
 @media(max-width:740px){.paper-provider-grid{grid-template-columns:1fr}.paper-provider-fieldset{padding:.8rem}.paper-provider-card{padding:.85rem}}
+
+/* Les ateliers proches et les plateformes d'autoédition ne sont pas une même catégorie. */
+.paper-provider-paths{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem;margin:1rem 0}
+.paper-provider-group{min-width:0;padding:1rem;border-radius:12px;border:1px solid #a9c7b1;background:#f0f7f1}
+.paper-provider-group-pod{border-color:#b6bdd1;background:#f5f6fa}
+.paper-provider-group>h3{font-size:1.08rem;line-height:1.35;color:#244c36;margin:0 0 .4rem}
+.paper-provider-group-pod>h3{color:#334567}
+.paper-provider-group>p{font-size:.89rem;line-height:1.5;color:#3b4b42;margin:0 0 1rem}
+.paper-provider-group .paper-provider-grid{display:flex;flex-direction:column;gap:.8rem;margin:0}
+.paper-provider-group .paper-provider-card{flex:1}
+.paper-provider-card-pod:has(input:checked){background:#eef1fa;border-color:#486187;box-shadow:0 0 0 2px #48618721}
+.paper-provider-upcoming{border:1px dashed #a0b5a6;border-radius:10px;padding:.8rem;display:flex;flex-direction:column;gap:.35rem;background:#fbfdfb;line-height:1.45}
+.paper-provider-upcoming strong{font-size:.9rem;color:#345444}
+.paper-provider-upcoming span{font-size:.87rem;color:#4b5c50}
+#panel-paper .resource-section h4{margin:1.25rem 0 .6rem;font-size:1rem}
+@media(max-width:800px){.paper-provider-paths{grid-template-columns:minmax(0,1fr)}.paper-provider-group{padding:.8rem}}

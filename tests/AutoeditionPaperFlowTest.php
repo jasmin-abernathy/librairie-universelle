@@ -227,4 +227,13 @@ try {
     PrintSettings::normalize(['print_provider'=>'bookelis','print_paper_stock'=>'couche115','print_trim_size'=>'a4']);
     $check(false,'Le papier couché 115 g a été accepté en A4 chez Bookelis.');
 } catch (InvalidArgumentException $error) { /* attendu */ }
+
+$check(str_contains($src,'id="local-printers-title"') &&
+       str_contains($src,'id="bookelis-path-title"') &&
+       str_contains($src,'paper-provider-group-local') &&
+       str_contains($src,'paper-provider-group-pod') &&
+       str_contains($src,'Un autre imprimeur local pourra être ajouté') &&
+       str_contains($wizard,'<optgroup label="Imprimeries locales">') &&
+       str_contains($wizard,'<optgroup label="Autoédition / impression à la demande">'),
+    'Le choix d\'impression doit séparer les ateliers locaux des plateformes d\'autoédition.');
 echo "Parcours papier, liens et import brouillon : OK\n";
