@@ -163,49 +163,72 @@ async function run(){
     console.log('Bookelis '+width+' px : guide et import accessibles, export verrouillé, sans débordement.');
   }
 
-  // Nouvelle page des droits, des trois circuits de vente et de la comparaison
-  // économique et écologique. Le tableau peut défiler localement sur mobile,
-  // mais il ne doit jamais étirer le document entier.
+  // Après séparation UX : la présentation doit rester courte et la page de
+  // comparaison contient le calculateur, les tarifs, l'impact social et écologique.
   await send('Page.navigate',{url:'http://127.0.0.1:8239/publier-et-lire-local.php'});
   await waitFor(async()=>evaluate(
-    "Boolean(document.querySelector('#local-argument-title') && document.querySelector('#economics-title') && document.querySelector('#ecologie-title') && document.querySelector('#librairies'))"
-  ),'nouvelle page local et droits',18000);
+    "Boolean(document.querySelector('#local-argument-title') && document.querySelector('#circuits') && document.querySelector('#librairies') && !document.querySelector('#amazon-local-calculator'))"
+  ),'page courte droits et librairies',18000);
   for(const width of [320,375,430,1280]){
-    await send('Emulation.setDeviceMetricsOverride',{
-      width,height:900,deviceScaleFactor:1,mobile:width<800
-    });
-    await sleep(170);
+    await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<800});
+    await sleep(180);
     const state=await evaluate("(()=>{"+
       "const section=document.querySelector('.local-bookstore-paths');"+
       "const options=document.querySelector('.local-channel-grid');"+
-      "const table=document.querySelector('.local-table-scroll');"+
       "const page=document.querySelector('.local-argument-page');"+
-      "const a=section.getBoundingClientRect(),b=options.getBoundingClientRect();"+
-      "const c=table.getBoundingClientRect(),d=page.getBoundingClientRect();"+
-      "const n=document.querySelectorAll('.local-channel-grid>article').length;"+
+      "const box=e=>{const b=e.getBoundingClientRect();return {left:b.left,right:b.right}};"+
       "return {scroll:document.documentElement.scrollWidth-document.documentElement.clientWidth,"+
-      "rights:!!document.querySelector('#droits'),eco:!!document.querySelector('#ecologie'),"+
-      "store:!!document.querySelector('#librairies'),channels:n,"+
-      "boxes:[{left:a.left,right:a.right},{left:b.left,right:b.right},{left:c.left,right:c.right},{left:d.left,right:d.right}],"+
-      "tableScroll:table.scrollWidth>table.clientWidth};})()");
-    assert(state.rights&&state.eco&&state.store&&state.channels===3,
-      'La page doit afficher les droits, les libraires et les trois circuits de vente.');
-    assert(state.scroll<=3,'Débordement global de la page locale à '+width+' px : '+JSON.stringify(state));
+      "rights:!!document.querySelector('#droits'),store:!!document.querySelector('#librairies'),"+
+      "channels:options.children.length,calculator:!!document.querySelector('#amazon-local-calculator'),"+
+      "boxes:[box(section),box(options),box(page)]};})()");
+    assert(state.rights&&state.store&&state.channels===3&&!state.calculator,
+      'Page courte : parcours de librairies ou séparation des outils incorrecte.');
+    assert(state.scroll<=3,'Débordement de la page courte à '+width+' px : '+JSON.stringify(state));
     assert(state.boxes.every(b=>b.left>=-3&&b.right<=width+3),
-      'Section ou tableau déborde du viewport à '+width+' px : '+JSON.stringify(state));
-    if(width<640)assert(state.tableScroll,'Le tableau doit défiler dans son conteneur sur mobile.');
-    await evaluate("document.querySelector('.local-argument-hero').scrollIntoView({block:'start',behavior:'instant'})");
-    await sleep(60);
+      'Grille du parcours court hors viewport à '+width+' px : '+JSON.stringify(state));
     if([320,430,1280].includes(width)){
-      const image=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
-      fs.writeFileSync(path.join(out,'droits-local-'+width+'.png'),Buffer.from(image.data,'base64'));
-      await evaluate("document.querySelector('#chiffres').scrollIntoView({block:'start',behavior:'instant'})");
+      await evaluate("document.querySelector('.local-argument-hero').scrollIntoView({block:'start',behavior:'instant'})");
       await sleep(60);
-      const tableShot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
-      fs.writeFileSync(path.join(out,'comparaison-euros-'+width+'.png'),Buffer.from(tableShot.data,'base64'));
+      const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+      fs.writeFileSync(path.join(out,'droits-local-'+width+'.png'),Buffer.from(shot.data,'base64'));
     }
-    console.log('Droits et local '+width+' px : navigation, tableaux et colonnes sans débordement.');
+    console.log('Parcours court '+width+' px : trois circuits et librairies, sans débordement.');
   }
+
+  await send('Page.navigate',{url:'http://127.0.0.1:8239/comparer-diffusion-livre.php'});
+  await waitFor(async()=>evaluate(
+    "Boolean(document.querySelector('#detail-title') && document.querySelector('#amazon-local-calculator') && document.querySelector('#enjeux-sociaux') && document.querySelector('#ecologie'))"
+  ),'guide détaillé KDP et enjeux sociaux',18000);
+  for(const width of [320,375,430,1280]){
+    await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<800});
+    await sleep(180);
+    await evaluate("document.querySelector('#exemple-papier').open=true");
+    await sleep(80);
+    const state=await evaluate("(()=>{"+
+      "const form=document.querySelector('#amazon-local-calculator');"+
+      "const social=document.querySelector('.local-social-grid');"+
+      "const table=document.querySelector('#exemple-papier .local-table-scroll');"+
+      "const page=document.querySelector('.local-detail-page');"+
+      "const box=e=>{const b=e.getBoundingClientRect();return {left:b.left,right:b.right}};"+
+      "return {scroll:document.documentElement.scrollWidth-document.documentElement.clientWidth,"+
+      "links:document.querySelectorAll('.local-guide-jump a').length,"+
+      "sources:!!document.querySelector('#sources'),social:!!document.querySelector('#enjeux-sociaux'),"+
+      "boxes:[box(form),box(social),box(table),box(page)],tableScroll:table.scrollWidth>table.clientWidth};})()");
+    assert(state.sources&&state.social&&state.links>=4,
+      'Guide : sommaire, sources ou rubrique sociale absents.');
+    assert(state.scroll<=3,'Débordement global du guide à '+width+' px : '+JSON.stringify(state));
+    assert(state.boxes.every(b=>b.left>=-3&&b.right<=width+3),
+      'Formulaire, section sociale ou tableau hors viewport à '+width+' px : '+JSON.stringify(state));
+    if(width<640)assert(state.tableScroll,'Le tableau Corep doit défiler localement sur mobile.');
+    if([320,430,1280].includes(width)){
+      await evaluate("document.querySelector('#simulateur-marges').scrollIntoView({block:'start',behavior:'instant'})");
+      await sleep(60);
+      const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+      fs.writeFileSync(path.join(out,'comparaison-euros-'+width+'.png'),Buffer.from(shot.data,'base64'));
+    }
+    console.log('Guide détaillé '+width+' px : calculateur, table et impact social accessibles.');
+  }
+
 }
 async function main(){
   try{await run();}finally{

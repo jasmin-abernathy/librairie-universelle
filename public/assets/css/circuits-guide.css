@@ -1,0 +1,33 @@
+/* Parcours court et guide approfondi, sans icônes ou dépendances ajoutées. */
+.local-overview-note{margin:1.25rem 0;padding:1rem 1.1rem;border:1px solid #cbdccc;border-radius:.8rem;background:#f4f8f3;line-height:1.7;max-width:850px}
+.local-overview-teaser{padding:clamp(1rem,3vw,1.8rem);border:1px solid #bfd0c2;background:#f4f8f3;border-radius:1rem}
+.local-overview-teaser h2{margin:.5rem 0}
+.local-overview-teaser p{max-width:850px;line-height:1.7}
+.local-guide-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem 1rem;margin-top:1.1rem}
+.local-guide-actions a{box-sizing:border-box;min-height:44px;white-space:normal;text-align:center}
+.local-detail-hero{padding-bottom:1rem}
+.local-detail-hero h1{font-size:clamp(2.1rem,5vw,3.8rem)!important}
+.local-back-link{display:inline-flex;align-items:center;min-height:44px;font-weight:700;text-underline-offset:3px;margin-bottom:.6rem}
+.local-back-link::before{content:"←";margin-right:.5rem}
+.local-guide-jump{display:flex;flex-wrap:wrap;gap:.6rem;padding:1rem 0 1.25rem;margin-bottom:1rem;border-bottom:1px solid var(--line)}
+.local-guide-jump a{display:inline-flex;min-height:44px;box-sizing:border-box;align-items:center;justify-content:center;border:1px solid #b6caba;border-radius:999px;padding:.5rem .95rem;background:#f4f8f3;text-decoration:none;font-weight:700;line-height:1.35;color:var(--ink)}
+.local-guide-jump a:hover{background:#e5eee4}
+.local-guide-details{min-width:0;border:1px solid #c1d0c5;border-radius:.95rem;background:var(--surface);margin:1rem 0;overflow:hidden}
+.local-guide-details summary{padding:1rem 1.1rem;min-height:44px;box-sizing:border-box;cursor:pointer;font-size:1.05rem;font-weight:750;line-height:1.5;color:var(--ink);background:#f3f8f3}
+.local-guide-details[open] summary{border-bottom:1px solid #c1d0c5}
+.local-guide-details-content{padding:1rem;min-width:0;max-width:100%;overflow-wrap:anywhere}
+.local-guide-details-content .local-table-scroll{max-width:100%}
+.local-guide-finish{border-top:1px solid var(--line)}
+.local-guide-jump a:focus-visible,.local-guide-details summary:focus-visible,.local-guide-actions a:focus-visible,.local-back-link:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+@media(max-width:640px){.local-guide-actions{flex-direction:column;align-items:stretch}.local-guide-actions>.button-link,.local-guide-actions>.text-link{width:100%;justify-content:center;padding:.8rem}.local-guide-jump{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.local-guide-jump a{min-width:0;padding:.6rem;text-align:center}.local-guide-details-content{padding:.8rem}}
+
+/* Impact social : lecture aérée après les outils financiers. */
+.local-social-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1.25rem 0}
+.local-social-grid article{min-width:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:.9rem;padding:1.15rem;background:var(--surface)}
+.local-social-grid article h3{font-size:1.1rem;line-height:1.35;margin:.1rem 0 .55rem}
+.local-social-grid article p{line-height:1.65;margin:.4rem 0 1rem}
+.local-social-grid article a{margin-top:auto;line-height:1.5;font-weight:700;text-underline-offset:3px}
+.local-social-evidence{padding:1.15rem;border:1px solid #b6ccba;border-radius:.9rem;background:#f2f8f2}
+.local-social-evidence h3{margin:.1rem 0 .6rem;font-size:1.1rem}
+.local-social-evidence p{line-height:1.7}
+@media(max-width:920px){.local-social-grid{grid-template-columns:1fr}}

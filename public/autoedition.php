@@ -183,7 +183,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 
             <fieldset>
                 <legend>3. ISBN</legend>
-                <p class="field-help">Vous pouvez déposer le dossier avant d’avoir tous vos ISBN. En revanche, chaque manifestation commercialisée séparément doit être identifiée correctement avant publication.</p>
+                <p class="field-help">Vous pouvez déposer le dossier avant d’avoir tous vos ISBN. En revanche, chaque manifestation commercialisée séparément doit être identifiée correctement avant publication. <a href="/comparer-diffusion-livre.php#droits-kdp">Vous utilisez Amazon KDP ? Comprendre l'ISBN et la vente ailleurs</a>.</p>
                 <div class="resource-card important-resource">
                     <div>
                         <strong>Vous n’avez pas encore d’ISBN ?</strong>
