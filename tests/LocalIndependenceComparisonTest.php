@@ -66,7 +66,7 @@ $check(str_contains($page,'0,75 € fixe + 120 × 0,012 €')
 $check(str_contains($page,'70 %')
  && str_contains($page,'35 %')
  && str_contains($page,'avant frais de livraison numérique KDP')
- && str_contains($page,'montant restant à l\'auteur ou vendeur'),
+ && str_contains($page,'Montant restant à l\'auteur ou vendeur'),
  'EPUB : conditions et limites des deux taux KDP manquantes.');
 $check(str_contains($outreach,'id="parcours-librairies"')
  && str_contains($outreach,'remise commerciale')
