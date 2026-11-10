@@ -93,12 +93,20 @@ async function run(){
     "const radios=[...document.querySelectorAll('input[name=\"print_provider\"]')];"+
     "return {viewport:document.documentElement.clientWidth,hscroll:document.documentElement.scrollWidth-document.documentElement.clientWidth,"+
     "wizard:visible(document.querySelector('#paper-wizard')),local:visible(a),pod:visible(b),"+
-    "localBox:box(a),podBox:box(b),cards:radios.length,duplicateSelector:!!document.querySelector('#wizard-provider')};"+
+    "localBox:box(a),podBox:box(b),cards:radios.length,duplicateSelector:!!document.querySelector('#wizard-provider'),"+
+    "offenders:[...document.querySelectorAll('body *')].filter(e=>{const r=e.getBoundingClientRect();return r.right>document.documentElement.clientWidth+6&&r.left>=0&&getComputedStyle(e).display!=='none'&&getComputedStyle(e).visibility!=='hidden'}).sort((x,y)=>y.getBoundingClientRect().right-x.getBoundingClientRect().right).slice(0,15).map(e=>({tag:e.tagName.toLowerCase(),id:e.id,cls:String(e.className).slice(0,90),left:Math.round(e.getBoundingClientRect().left),right:Math.round(e.getBoundingClientRect().right),width:Math.round(e.getBoundingClientRect().width)}))};"+
   "})()";
   for(const width of [320,375,430,1280]){
     await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<800});
     await sleep(200);
     const state=await evaluate(describe);
+    if(width===320)console.log('DIAGNOSTIC_MOBILE='+JSON.stringify(state));
+    await evaluate("document.querySelector('.paper-provider-paths').scrollIntoView({block:'start',behavior:'instant'})");
+    await sleep(80);
+    if([320,430,1280].includes(width)){
+      const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+      fs.writeFileSync(path.join(out,'selection-'+width+'.png'),Buffer.from(shot.data,'base64'));
+    }
     assert(state.wizard&&state.local&&state.pod,'Les deux parcours doivent être visibles à '+width+' px');
     assert.equal(state.cards,2,'Un choix radio unique par prestataire est attendu.');
     assert.equal(state.duplicateSelector,false,'Sélecteur redondant détecté.');
@@ -108,12 +116,6 @@ async function run(){
       'Cartes hors largeur à '+width+' px : '+JSON.stringify(state));
     if(width<800)assert(state.localBox.bottom<=state.podBox.top+4,'Groupes mobiles non empilés');
     else assert(Math.abs(state.localBox.top-state.podBox.top)<5,'Groupes desktop non alignés');
-    await evaluate("document.querySelector('.paper-provider-paths').scrollIntoView({block:'start',behavior:'instant'})");
-    await sleep(100);
-    if([320,430,1280].includes(width)){
-      const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
-      fs.writeFileSync(path.join(out,'selection-'+width+'.png'),Buffer.from(shot.data,'base64'));
-    }
     console.log('UI '+width+' px : cartes visibles et sans débordement');
   }
   const bookelis=await evaluate("(()=>{const radio=document.querySelector('input[name=\"print_provider\"][value=\"bookelis\"]');"+
