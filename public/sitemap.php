@@ -15,9 +15,9 @@ try {
     $base = 'https://librairie.lepotager.org';
     $pages = [
         '/', '/ebooks.php', '/livres-auteurs.php',
-        '/autoedition.php', '/diffuser-mon-livre.php',
+        '/autoedition.php', '/diffuser-mon-livre.php', '/amazon-et-librairies.php',
         '/prestations-auteurs.php', '/assistant-papier.php', '/dossier-impression.php',
-        '/projet.php', '/sans-ia.php', '/conditions-generales.php',
+        '/projet.php', '/publier-et-lire-local.php', '/sans-ia.php', '/conditions-generales.php',
     ];
     $entries = [];
     foreach ($pages as $path) {

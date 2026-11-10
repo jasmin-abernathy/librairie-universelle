@@ -1,0 +1,15 @@
+/* Comparaison Amazon / diffusion locale : composants indépendants, mobile et accessibilité. */
+.amazon-local-page{overflow-wrap:anywhere}
+.amazon-local-page .page-hero{max-width:960px}
+.amazon-local-page .amazon-calculator{margin:1.2rem 0}
+.amazon-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:1.15rem;row-gap:.2rem}
+.amazon-form-grid label{min-width:0}
+.amazon-form-grid input{box-sizing:border-box;min-width:0;min-height:44px;font:inherit;line-height:1.35}
+.amazon-form-grid .optional{font-weight:400}
+.amazon-result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1.1rem 0}
+.amazon-result-grid .sales-step{min-width:0}
+.amazon-result-amount{font-size:clamp(1.55rem,3vw,2.1rem);font-weight:850;color:var(--ink);font-variant-numeric:tabular-nums;margin:.3rem 0}
+.amazon-local-page .amazon-sources ul{line-height:1.9;padding-left:1.3rem}
+.amazon-local-page a:focus-visible,.amazon-local-page input:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+@media(max-width:850px){.amazon-result-grid{grid-template-columns:1fr}}
+@media(max-width:620px){.amazon-form-grid{grid-template-columns:1fr}.amazon-local-page .page-hero{padding-top:1.4rem}}

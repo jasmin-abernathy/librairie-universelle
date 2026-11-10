@@ -1,0 +1,16 @@
+'use strict';
+const assert=require('node:assert/strict');
+const calc=require('../public/assets/js/amazon-local.js');
+const p=calc.estimate({publicPrice:'18',kdpPrint:'4.50',localPrint:'5.50',discount:'30'});
+assert.equal(p.kdpRate,0.6);
+assert.ok(Math.abs(p.beforeTax-18/1.055)<1e-9);
+assert.ok(Math.abs(p.commission-0.54)<1e-9);
+assert.ok(Math.abs(p.kdp-(18/1.055*0.6-4.5))<1e-9);
+assert.ok(Math.abs(p.direct-(18/1.055-5.5-0.54))<1e-9);
+assert.ok(Math.abs(p.bookstore-(18/1.055*0.7-5.5))<1e-9);
+assert.equal(calc.estimate({publicPrice:10,kdpPrint:1,localPrint:1,discount:0}).kdpRate,0.5);
+assert.equal(calc.estimate({publicPrice:10.54,kdpPrint:1,localPrint:1,discount:0}).kdpRate,0.6);
+assert.throws(()=>calc.estimate({publicPrice:'18',kdpPrint:'',localPrint:'5',discount:'30'}));
+assert.throws(()=>calc.estimate({publicPrice:'18',kdpPrint:1,localPrint:2,discount:100}));
+assert.throws(()=>calc.estimate({publicPrice:0,kdpPrint:1,localPrint:2,discount:10}));
+console.log('Calcul comparatif Amazon et diffusion locale : OK');
