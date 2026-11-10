@@ -282,7 +282,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                                     <label class="paper-provider-card">
                                         <input type="radio" name="print_provider" value="corep_metz"<?= $selectedPrinter === 'corep_metz' ? ' checked' : '' ?>>
                                         <span class="paper-provider-title"><strong>Corep Metz</strong><small>Atelier local · livre A5</small></span>
-                                        <span class="paper-provider-detail">Broché A5, intérieur noir et blanc sur offset 80 g, première et quatrième de couverture séparées. 680 pages maximum d’après les consignes reçues.</span>
+                                        <span class="paper-provider-detail">Broché A5, intérieur noir et blanc sur offset 80 g, première et quatrième de couverture séparées. 680 pages recto-verso maximum d’après les consignes reçues.</span>
                                         <span class="paper-provider-price" id="printer-corep-quote">Tarif indicatif selon la grille autorisée, si disponible.</span>
                                     </label>
                                     <div class="paper-provider-upcoming" aria-label="Autres ateliers à l’étude">
