@@ -68,7 +68,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <link rel="stylesheet" href="/assets/css/author-draft.css?v=20261018-3">
     <link rel="stylesheet" href="/assets/css/autoedition-paper.css?v=20261019-1">
     <link rel="stylesheet" href="/assets/css/print-provider-flow.css?v=20261102-1">
-    <link rel="stylesheet" href="/assets/css/paper-wizard.css?v=20261108-2">
+    <link rel="stylesheet" href="/assets/css/paper-wizard.css?v=20261110-1">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -289,6 +289,18 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                             </label>
                         </div>
                         <p class="field-help">Aucun tarif n'est garanti ni aucune commande envoyée depuis la Librairie. Corep et Bookelis restent deux prestataires indépendants.</p>
+                        <div class="paper-stock-choice">
+                            <label for="print-paper-stock"><strong>Type de papier intérieur</strong></label>
+                            <select id="print-paper-stock" name="print_paper_stock" aria-describedby="paper-stock-help">
+                                <option value="offset80">Offset blanc 80 g — Corep ou Bookelis</option>
+                                <option value="olin90" data-bookelis-paper="1">Olin Regular blanc 90 g — Bookelis</option>
+                                <option value="bouffant80" data-bookelis-paper="1">Bouffant blanc 80 g — Bookelis</option>
+                                <option value="recycle90" data-bookelis-paper="1">Recyclé Cyclus Offset 90 g — Bookelis</option>
+                                <option value="couche115" data-bookelis-paper="1" data-sizes="small">Couché demi-mat 115 g — Bookelis, petits formats</option>
+                                <option value="couche150" data-bookelis-paper="1" data-sizes="large">Couché demi-mat 150 g — Bookelis, grands formats</option>
+                            </select>
+                            <p class="field-help" id="paper-stock-help">Le grammage ne suffit pas à connaître l’épaisseur du dos. Choisissez d’abord le papier ; l’imprimeur précisera son épaisseur réelle.</p>
+                        </div>
                     </fieldset>
                     <div class="form-grid two-columns">
                         <label>Format fini du livre
@@ -382,9 +394,10 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 </div>
                 <div data-printer-only="bookelis" class="paper-provider-specific resource-card paper-step-card" id="paper-bookelis-cover-step" hidden>
                     <div><h3>4. Préparer une couverture Bookelis complète</h3>
-                        <p>Bookelis demande un fichier <strong>à plat : quatrième + tranche + première</strong>. Notre assistant de couverture Corep produit deux faces séparées et ne suffit donc pas pour leur dépôt.</p>
-                        <p>Après votre aperçu PDF, relevez le <strong>nombre réel de pages</strong>, puis renseignez chez Bookelis le format, le papier et la reliure pour obtenir le <strong>gabarit officiel</strong>. Assemblez ensuite la couverture sur ce gabarit. Ne calculez pas la largeur de tranche au hasard.</p>
+                        <p>Bookelis demande un fichier <strong>à plat : quatrième + tranche + première</strong>. Le nouveau calculateur ci-dessous peut assembler une couverture à partir du format, du papier, du nombre de pages et des illustrations de l’auteur.</p>
+                        <p>Après votre aperçu PDF, relevez le <strong>nombre réel de pages</strong> et obtenez la cote du dos auprès de Bookelis, ou l’épaisseur réelle d’une feuille. Le calculateur crée un PDF de travail. Comparez-le ensuite au <strong>gabarit officiel</strong> avant impression.</p>
                         <a class="button-link secondary" href="https://livres.bookelis.com/generation-couverture" target="_blank" rel="noopener noreferrer">Obtenir le gabarit officiel Bookelis ↗</a>
+                        <?php require dirname(__DIR__) . '/src/views/cover-spread-editor.php'; ?>
                     </div>
                 </div>
                 <div class="form-grid two-columns" data-printer-only="corep_metz">
@@ -506,7 +519,8 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 <script src="/assets/js/paper-barcode.js?v=20261018-1"></script>
 <script src="/assets/js/printer-kit.js?v=20261018-1"></script>
 <script src="/assets/js/printer-zip.js?v=20261018-1"></script>
-<script src="/assets/js/paper-wizard.js?v=20261108-2"></script>
+<script src="/assets/js/paper-wizard.js?v=20261110-1"></script>
+<script src="/assets/js/cover-spread.js?v=20261110-1"></script>
 <script src="/assets/js/printing-estimate.js?v=20261102-1"></script>
 </body>
 </html>

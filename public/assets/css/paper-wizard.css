@@ -59,3 +59,22 @@
 #panel-paper #paper-book-upload:focus-visible{outline:3px solid #246644;outline-offset:3px}
 #panel-paper .paper-wizard-upload-feedback{font-weight:650;color:#2e5940;line-height:1.45}
 #panel-paper .paper-wizard-unified-upload[hidden]{display:none!important}
+
+/* Papier choisi avant la pagination, puis couverture à plat Bookelis. */
+#panel-paper .paper-stock-choice{margin:1rem 0;padding:1rem;border-radius:.9rem;background:#eff6f0;border:1px solid #b5c9b8}
+#panel-paper .paper-stock-choice label{display:block;margin:0 0 .35rem}
+#panel-paper .paper-stock-choice select{min-height:46px;max-width:100%;width:100%;padding:.55rem;border:1px solid #9cad9e;border-radius:.55rem;background:#fff;color:inherit;font:inherit}
+#panel-paper .paper-stock-choice .field-help{margin:.5rem 0 0}
+#panel-paper .paper-spread-editor{margin:1.1rem 0 0;padding:1rem;border-radius:.95rem;background:#f4f7f4;border:1px solid #bed0c2;min-width:0}
+#panel-paper .paper-spread-editor h3{margin:0 0 .7rem}
+#panel-paper .paper-spread-editor label{display:block;margin:.65rem 0;font-weight:600;min-width:0}
+#panel-paper .paper-spread-editor input:not([type=color]),#panel-paper .paper-spread-editor textarea{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin-top:.35rem;padding:.65rem;border:1px solid #99aea0;border-radius:.55rem;font:inherit}
+#panel-paper .paper-spread-editor input[type=color]{display:block;width:4.5rem;height:2.6rem;margin-top:.4rem}
+#panel-paper .paper-spread-editor .paper-wizard-price-inputs{margin:.45rem 0;align-items:end}
+#panel-paper .paper-spread-dimensions{font-weight:700;margin:1rem 0 .5rem;color:#22583a;line-height:1.5}
+#panel-paper .paper-spread-preview{background:#e6e8e5;overflow:auto;max-width:100%;border:1px dashed #8da393;border-radius:.65rem;padding:.7rem}
+#panel-paper .paper-spread-preview svg{display:block;width:100%;height:auto;max-height:420px;object-fit:contain;box-shadow:0 2px 8px #0002}
+#panel-paper #spread-download{margin-top:.8rem;max-width:100%;white-space:normal}
+#panel-paper #spread-download:disabled{opacity:.55;cursor:not-allowed}
+#panel-paper .paper-spread-editor .paper-wizard-help{line-height:1.55}
+@media(max-width:650px){#panel-paper .paper-spread-editor{padding:.75rem}#panel-paper .paper-spread-preview{padding:.25rem}}

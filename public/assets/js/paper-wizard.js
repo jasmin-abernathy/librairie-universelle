@@ -74,7 +74,9 @@
   // Les deux champs historiques restent actifs pour les routes existantes,
   // mais un seul sélecteur les alimente dans les navigateurs compatibles.
   if (intro) intro.hidden=true;
-  add(0,sourceCard,pdfLabel,printRequest);
+  // L'imprimeur et le type de papier se choisissent dès l'import : avant la pagination.
+  // Le PDF déjà maquetté passe directement à la couverture après ce choix.
+  add(0,sourceCard,pdfLabel,printRequest,provider);
   if (printRequest) {printRequest.hidden=true;const control=get('print-preparation-requested');control.checked=true;control.dispatchEvent(new Event('change',{bubbles:true}));}
   let unifiedUpload=null;
   let unifiedFeedback=null;
@@ -158,8 +160,8 @@
     '<div class="paper-wizard-price-inputs"><label>Titre du livre<input id="wizard-kit-title" maxlength="180" autocomplete="off" required placeholder="Titre figurant en couverture"></label>'+
     '<label>Nom de l’auteur ou de l’autrice<input id="wizard-kit-author" maxlength="180" autocomplete="off" required placeholder="Nom figurant en couverture"></label></div>'+
     '<label id="wizard-final-interior-label">Intérieur PDF final (après mise en page)<input type="file" id="wizard-final-interior" accept=".pdf,application/pdf"></label>'+
-    '<label id="wizard-bookelis-cover-label">Couverture Bookelis complète à plat (4e + tranche + 1re) en PDF<input type="file" id="wizard-bookelis-full-cover" accept=".pdf,application/pdf"></label>'+
-    '<p class="paper-wizard-help">Corep utilise la première et la quatrième séparées, à joindre dans l’étape couverture. Bookelis exige sa couverture complète à plat selon son gabarit officiel : ce fichier ne peut pas être fabriqué sans le gabarit correspondant.</p>'+
+    '<label id="wizard-bookelis-cover-label">Ou fournir votre propre couverture complète Bookelis (PDF prioritaire sur celui généré)<input type="file" id="wizard-bookelis-full-cover" accept=".pdf,application/pdf"></label>'+
+    '<p class="paper-wizard-help">Corep utilise toujours deux faces séparées. Pour Bookelis, le PDF à plat peut être généré à l’étape Couverture à partir des mesures du papier. Il sera repris automatiquement dans ce kit, sauf si vous importez votre propre PDF. Vérifiez les dimensions sur le gabarit officiel avant commande.</p>'+
     '<button type="button" id="wizard-build-kit" class="paper-wizard-primary">Télécharger le kit ZIP</button>'+
     '<p id="wizard-kit-feedback" aria-live="polite" role="status">Les PDF devront être validés par l’imprimeur. Un ZIP n’est pas un BAT ni une commande.</p>';
   add(4,kitBuilder);
@@ -192,6 +194,7 @@
         schema:'librairie-print-kit-v2',created_at:new Date().toISOString(),
         title,author,isbn13:isbnVal?window.PaperBarcode.digits(isbnVal):null,
         provider:pr,format:size(),pages:count,quantity:qty,
+        interior_paper:form.querySelector('#print-paper-stock')?.value||'offset80',
         cover_type:form.querySelector('select[name="print_binding"]')?.value||'paperback',
         public_price_ttc:form.querySelector('input[name="paper_price"]')?.value||null,
         barcode_mode:form.querySelector('input[name="wizard_barcode_mode"]:checked')?.value||'generate',
@@ -215,7 +218,8 @@
           'Aucun accord national ou prix garanti. Les documents sont à vérifier par l’atelier.'
         ].join('\n');
       }else{
-        const cover=await validatePdf(get('wizard-bookelis-full-cover').files?.[0]);
+        const cover=await validatePdf(get('wizard-bookelis-full-cover').files?.[0]
+          || window.LibrairieCoverSpread?.getGeneratedPdf?.());
         files.push({name:'couverture-complete-bookelis.pdf',blob:cover});
         instructions=[
           'BOOKELIS — IMPRESSION ET CONTROLE','',

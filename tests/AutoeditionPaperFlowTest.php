@@ -164,7 +164,7 @@ $check(str_contains($wizard,"unifiedUpload.accept='.pdf,.docx,.odt,.epub") &&
        str_contains($wizard,"unifiedUpload.addEventListener('change'") &&
        str_contains($wizard,'legacySourceLabel.hidden=true') &&
        str_contains($wizard,'pdfLabel.hidden=true') &&
-       str_contains($src,'/assets/js/paper-wizard.js?v=20261108-2'),
+       str_contains($src,'/assets/js/paper-wizard.js?v=20261110-1'),
     'Un seul sélecteur visible doit distribuer automatiquement le fichier vers le parseur PDF ou manuscrit.');
 $check(str_contains($wizard,'wizard-barcode-download') &&
        str_contains($wizard,'wizard-plan-bookstores') &&
@@ -195,4 +195,36 @@ $check(PdfNativeAnalyzer::parseGhostscript($oversize)['corep_eligible']===false,
 $mixed=str_replace('LAST:[0 0 419.5276 595.2756]','LAST:[0 0 595.2756 841.8898]',$sample);
 $check(PdfNativeAnalyzer::parseGhostscript($mixed)['corep_eligible']===false,
     'Les PDF à formats mixtes ne peuvent pas être considérés comme compatibles Corep.');
+
+$coverEditor=(string)file_get_contents(dirname(__DIR__).'/src/views/cover-spread-editor.php');
+$coverModule=(string)file_get_contents(dirname(__DIR__).'/public/assets/js/cover-spread.js');
+$check(str_contains($src,'id="print-paper-stock"') && str_contains($src,'data-bookelis-paper="1"') &&
+    str_contains($src,'src/views/cover-spread-editor.php') &&
+    str_contains($src,'/assets/js/cover-spread.js?v=20261110-1'),
+    'Le choix du papier et le générateur de couverture complète doivent être présents dans le formulaire.');
+$check(str_contains($wizard,'add(0,sourceCard,pdfLabel,printRequest,provider)') &&
+    str_contains($wizard,"window.LibrairieCoverSpread?.getGeneratedPdf?.()") &&
+    str_contains($wizard,"interior_paper:form.querySelector('#print-paper-stock')"),
+    'Le papier doit être choisi avant la pagination et le PDF à plat réutilisé dans le ZIP.');
+$check(str_contains($coverEditor,'id="spread-leaf-mm"') &&
+    str_contains($coverEditor,'id="spread-spine-mm"') &&
+    str_contains($coverEditor,'id="spread-preview"') &&
+    str_contains($coverEditor,'id="spread-download"') &&
+    str_contains($coverModule,'pdfFromJpeg'),
+    'Le calculateur doit demander une cote papier réelle et proposer un aperçu et un PDF.');
+$check(str_contains($coverEditor,'gabarit officiel') &&
+    str_contains($coverModule,"binding.value!=='paperback'"),
+    'Les couvertures Bookelis rigides et les paramètres prépresse ne doivent pas être simulés comme validés.');
+$paperSettings=PrintSettings::normalize(['print_provider'=>'bookelis','print_paper_stock'=>'bouffant80']);
+$check($paperSettings['paper_stock']==='bouffant80' &&
+    PrintSettings::normalize(['print_provider'=>'corep_metz'])['paper_stock']==='offset80',
+    'Les profils papier doivent être conservés.');
+try {
+    PrintSettings::normalize(['print_provider'=>'corep_metz','print_paper_stock'=>'bouffant80']);
+    $check(false,'Un papier Bookelis non proposé chez Corep a été accepté.');
+} catch (InvalidArgumentException $error) { /* attendu */ }
+try {
+    PrintSettings::normalize(['print_provider'=>'bookelis','print_paper_stock'=>'couche115','print_trim_size'=>'a4']);
+    $check(false,'Le papier couché 115 g a été accepté en A4 chez Bookelis.');
+} catch (InvalidArgumentException $error) { /* attendu */ }
 echo "Parcours papier, liens et import brouillon : OK\n";

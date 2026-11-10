@@ -25,6 +25,7 @@ final class PrintSettings
         }
         $trimSize = trim((string) ($input['print_trim_size'] ?? 'a5'));
         $binding = trim((string) ($input['print_binding'] ?? 'paperback'));
+        $paperStock = trim((string) ($input['print_paper_stock'] ?? 'offset80'));
         $chapterStart = trim((string) ($input['print_chapter_start'] ?? 'right'));
         $pageNumberPosition = trim((string) ($input['print_page_number_position'] ?? 'outside'));
         $frontMatterNumbering = trim((string) ($input['print_front_matter_numbering'] ?? 'roman'));
@@ -34,6 +35,17 @@ final class PrintSettings
         $sizes = $provider === 'corep_metz' ? ['a5'] : array_keys(self::BOOKELIS_SIZES);
         if (!in_array($trimSize, $sizes, true)) {
             throw new InvalidArgumentException('Format indisponible pour cet imprimeur.');
+        }
+        $allowedPapers = $provider === 'corep_metz'
+            ? ['offset80'] : ['offset80','olin90','bouffant80','recycle90','couche115','couche150'];
+        if (!in_array($paperStock, $allowedPapers, true)) {
+            throw new InvalidArgumentException('Type de papier indisponible chez cet imprimeur.');
+        }
+        if ($provider === 'bookelis') {
+            $small = in_array($trimSize, ['a5','130x180','156x234'], true);
+            if (($small && $paperStock === 'couche150') || (!$small && $paperStock === 'couche115')) {
+                throw new InvalidArgumentException('Papier couché indisponible pour ce format Bookelis.');
+            }
         }
         if (!in_array($binding, ['paperback', 'hardcover'], true)) {
             throw new InvalidArgumentException('Type de reliure invalide.');
@@ -70,6 +82,7 @@ final class PrintSettings
             'provider' => $provider,
             'trim_size' => $trimSize,
             'binding' => $binding,
+            'paper_stock' => $paperStock,
             'toc_enabled' => !empty($input['print_toc_enabled']) ? 1 : 0,
             'chapter_start' => $chapterStart,
             'page_number_position' => $pageNumberPosition,

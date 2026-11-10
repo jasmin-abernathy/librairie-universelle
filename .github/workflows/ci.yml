@@ -121,6 +121,9 @@ jobs:
       - name: Printer handoff package tests
         run: node tests/PrinterKitTest.cjs
 
+      - name: Dimensions physiques et PDF de couverture complète
+        run: node tests/CoverSpreadTest.cjs
+
       - name: PDF/X security and configuration tests
         run: php tests/PdfXExportTest.php
 
