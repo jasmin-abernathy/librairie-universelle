@@ -1,0 +1,19 @@
+/* Simulation KDP / catalogue / librairies : cohérente avec les styles locaux. */
+.local-margin-tool{margin:2rem 0;padding:clamp(1rem,2.5vw,1.6rem);border:1px solid var(--line);border-radius:1rem;background:var(--surface);min-width:0}
+.local-margin-tool h3{font-size:clamp(1.28rem,2.5vw,1.7rem);margin:.25rem 0 .8rem}
+.local-margin-tool p{line-height:1.65}
+.local-margin-head{max-width:850px}
+.local-margin-form{margin:1rem 0;max-width:100%}
+.local-margin-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.85rem 1rem}
+.local-margin-fields label{display:flex;flex-direction:column;gap:.45rem;font:inherit;font-weight:700;line-height:1.4;min-width:0}
+.local-margin-fields input{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:.75rem .85rem;background:#fff;color:var(--ink);border:1px solid #82978a;border-radius:.65rem;font:inherit;line-height:1.35;font-weight:400}
+.local-margin-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1.15rem 0}
+.local-margin-results>article{padding:1.15rem;background:#f5faf5;border:1px solid #bed2c2;border-radius:.85rem;min-width:0}
+.local-margin-results h4{font-size:1.06rem;margin:.15rem 0 .75rem;line-height:1.4}
+.local-margin-results .local-margin-amount{font-size:clamp(1.6rem,3vw,2.15rem);font-variant-numeric:tabular-nums;display:block;overflow-wrap:anywhere;color:#204c36}
+.local-margin-results p{font-weight:700;margin:.55rem 0;line-height:1.45}
+.local-margin-results small{font-size:.88rem;color:#4d5d52;line-height:1.55;display:block}
+#amazon-comparison-status{margin:.9rem 0;padding:.7rem .9rem;background:#eef4ed;border-radius:.6rem;color:#344b38}
+.local-margin-tool :focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+@media(max-width:850px){.local-margin-results{grid-template-columns:1fr}}
+@media(max-width:620px){.local-margin-fields{grid-template-columns:1fr}.local-margin-tool{padding:1rem}}

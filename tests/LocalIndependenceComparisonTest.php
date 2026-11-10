@@ -90,4 +90,20 @@ $check(!str_contains($page,'amazon.com/dp/')
  && !str_contains($page,'émissions évitées par livre')
  && !str_contains($page,'plus écologique qu\'Amazon'),
  'Ne pas publier de publicité Amazon ou de résultat carbone inventé.');
+$calculator=$read('public/assets/js/amazon-local.js');
+$calculatorCss=$read('public/assets/css/amazon-local.css');
+$check(str_contains($page,'id="simulateur-marges"') && str_contains($page,'id="amazon-local-calculator"')
+    && str_contains($page,'id="amazon-comparison-status"') && str_contains($page,'id="amazon-comparison-results"'),
+    'Simulateur de comparaison des circuits absent ou inaccessible.');
+$check(str_contains($page,'/assets/css/amazon-local.css?v=20261110-2')
+    && str_contains($page,'/assets/js/amazon-local.js?v=20261110-2')
+    && str_contains($calculator,'priceExVat=publicPrice/1.055')
+    && str_contains($calculator,'commission=publicPrice*0.03'),
+    'Assets du simulateur ou formules TVA / commission absentes.');
+$check(str_contains($calculatorCss,'@media(max-width:620px)')
+    && str_contains($calculatorCss,':focus-visible')
+    && str_contains($page,'sans compte ni transmission de données'),
+    'Responsive, focus clavier ou confidentialité du simulateur manquants.');
+$check(str_contains($page,'https://kdp.amazon.com/fr_FR/help/topic/G7BBN68RYX5UMDZF'),
+    'Lien officiel sur les exemplaires auteur et les épreuves absent.');
 echo "Audit local : droits papier et EPUB, parcours librairies, marges KDP, devis Corep, prudence écologique OK\n";

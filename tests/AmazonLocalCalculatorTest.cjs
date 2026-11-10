@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {estimate}=require('../public/assets/js/amazon-local.js');
+const v=estimate({publicPrice:15,kdpPrint:2.19,localPrint:5.5,discount:30});
+assert.equal(v.kdpRate,.6);
+assert.ok(Math.abs(v.kdp-(.6*15/1.055-2.19))<1e-9);
+assert.ok(Math.abs(v.direct-(15/1.055-5.5-.45))<1e-9);
+assert.ok(Math.abs(v.bookstore-(15/1.055*.7-5.5))<1e-9);
+assert.equal(estimate({publicPrice:10,kdpPrint:1,localPrint:1,discount:0}).kdpRate,.5);
+assert.equal(estimate({publicPrice:10.54,kdpPrint:1,localPrint:1,discount:0}).kdpRate,.6);
+assert.throws(()=>estimate({publicPrice:15,kdpPrint:'',localPrint:5,discount:30}),/Renseignez/);
+assert.throws(()=>estimate({publicPrice:15,kdpPrint:1,localPrint:5,discount:100}),/Vérifiez/);
+assert.throws(()=>estimate({publicPrice:'',kdpPrint:1,localPrint:5,discount:30}),/Renseignez/);
+assert.throws(()=>estimate({publicPrice:0,kdpPrint:1,localPrint:5,discount:30}),/Vérifiez/);
+console.log('Simulation des marges KDP / vente directe / librairie : OK');

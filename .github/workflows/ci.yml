@@ -124,6 +124,9 @@ jobs:
       - name: Author rights, local bookstores, KDP euros and environmental honesty
         run: php tests/LocalIndependenceComparisonTest.php
 
+      - name: KDP and local bookstore margins calculator
+        run: node tests/AmazonLocalCalculatorTest.cjs
+
       - name: Verify locally hosted pagination engine matches upstream npm release
         run: |
           node --check public/assets/vendor/pagedjs/paged.polyfill.js
