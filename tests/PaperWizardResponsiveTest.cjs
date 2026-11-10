@@ -132,7 +132,7 @@ async function run(){
     "const count=document.querySelector('#print-estimate-pages');"+
     "count.value='120';count.dispatchEvent(new Event('input',{bubbles:true}));"+
     "document.querySelectorAll('.paper-wizard-screen').forEach(e=>e.hidden=true);"+
-    "const screen=document.querySelector('#paper-wizard-screen-2');if(screen)screen.hidden=false;"+
+    "const screen=document.querySelector('#paper-wizard-step-2');if(screen)screen.hidden=false;"+
     "const section=document.querySelector('#paper-bookelis-cover-step');if(section)section.hidden=false;"+
     "return {screen:!!screen,section:!!section,pages:document.querySelector('#bookelis-guide-pages')?.textContent,"+
     "template:!!document.querySelector('#bookelis-template-pdf'),"+
