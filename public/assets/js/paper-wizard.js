@@ -160,8 +160,8 @@
     '<div class="paper-wizard-price-inputs"><label>Titre du livre<input id="wizard-kit-title" maxlength="180" autocomplete="off" required placeholder="Titre figurant en couverture"></label>'+
     '<label>Nom de l’auteur ou de l’autrice<input id="wizard-kit-author" maxlength="180" autocomplete="off" required placeholder="Nom figurant en couverture"></label></div>'+
     '<label id="wizard-final-interior-label">Intérieur PDF final (après mise en page)<input type="file" id="wizard-final-interior" accept=".pdf,application/pdf"></label>'+
-    '<label id="wizard-bookelis-cover-label">Ou fournir votre propre couverture complète Bookelis (PDF prioritaire sur celui généré)<input type="file" id="wizard-bookelis-full-cover" accept=".pdf,application/pdf"></label>'+
-    '<p class="paper-wizard-help">Corep utilise toujours deux faces séparées. Pour Bookelis, le PDF à plat peut être généré à l’étape Couverture à partir des mesures du papier. Il sera repris automatiquement dans ce kit, sauf si vous importez votre propre PDF. Vérifiez les dimensions sur le gabarit officiel avant commande.</p>'+
+    '<label id="wizard-bookelis-cover-label">Ou fournir votre propre couverture Bookelis complète déjà préparée (PDF prioritaire sur celui généré)<input type="file" id="wizard-bookelis-full-cover" accept=".pdf,application/pdf"></label>'+
+    '<p class="paper-wizard-help">Corep reçoit deux faces séparées. Pour Bookelis, l’import du gabarit officiel PDF est obligatoire à l’étape Couverture, même si vous fournissez votre propre couverture finale. Le kit vérifie cette étape avant le ZIP.</p>'+
     '<button type="button" id="wizard-build-kit" class="paper-wizard-primary">Télécharger le kit ZIP</button>'+
     '<p id="wizard-kit-feedback" aria-live="polite" role="status">Les PDF devront être validés par l’imprimeur. Un ZIP n’est pas un BAT ni une commande.</p>';
   add(4,kitBuilder);
@@ -218,17 +218,26 @@
           'Aucun accord national ou prix garanti. Les documents sont à vérifier par l’atelier.'
         ].join('\n');
       }else{
+        if(!window.LibrairieCoverSpread?.hasValidTemplate?.())
+          throw Error('Bookelis : importez et validez le gabarit PDF officiel à l’étape Couverture avant de créer le kit.');
+        const officialTemplate=window.LibrairieCoverSpread.getTemplateDimensions?.();
+        if(!officialTemplate)throw Error('Les dimensions du gabarit Bookelis ne sont plus valides.');
+        manifest.bookelis_template_dimensions_mm={
+          total_width:officialTemplate.totalWidthMm,
+          total_height:officialTemplate.totalHeightMm,
+          spine:officialTemplate.spineMm
+        };
         const cover=await validatePdf(get('wizard-bookelis-full-cover').files?.[0]
           || window.LibrairieCoverSpread?.getGeneratedPdf?.());
         files.push({name:'couverture-complete-bookelis.pdf',blob:cover});
         instructions=[
           'BOOKELIS — IMPRESSION ET CONTROLE','',
-          '1. Ouvrez https://livres.bookelis.com/imprimer et choisissez le même format.',
-          '2. Renseignez '+count+' pages et '+qty+' exemplaires et choisissez le papier, la couleur et la couverture.',
-          '3. Chargez interieur.pdf puis couverture-complete-bookelis.pdf.',
-          '4. La couverture fournie doit suivre le gabarit officiel généré pour CES paramètres : https://livres.bookelis.com/generation-couverture',
-          '5. Vérifiez les fonds perdus (8 mm sur couverture ; 5 mm sur intérieur avec visuels jusqu’au bord), les polices, le code-barres et le prix.',
-          '6. Comparez le tarif officiel, contrôlez l’épreuve et confirmez la commande chez Bookelis.',
+          '1. Les paramètres du PDF intérieur ont été reportés dans l’aide du parcours : '+count+' pages, format '+size()+'.',
+          '2. Le gabarit PDF officiel doit être généré à https://livres.bookelis.com/generation-couverture avec les mêmes choix de papier, impression, commercialisation, pelliculage et reliure.',
+          '3. Le gabarit importé mesurait '+officialTemplate.totalWidthMm+' x '+officialTemplate.totalHeightMm+' mm, tranche '+officialTemplate.spineMm+' mm.',
+          '4. Dans le parcours de publication Bookelis, transmettez interieur.pdf (corps de texte) puis couverture-complete-bookelis.pdf (étape 4).',
+          '5. Vérifiez CMJN, traits de coupe, fonds perdus (8 mm sur couverture), code-barres et prix : ce fichier PDF RVB reste un document de travail.',
+          '6. Comparez le tarif officiel, contrôlez l’épreuve et confirmez éventuellement la commande chez Bookelis.',
           'Aucun tarif Bookelis n’a été inventé ni transféré automatiquement depuis la Librairie.'
         ].join('\n');
       }

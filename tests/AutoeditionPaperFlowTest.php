@@ -164,7 +164,7 @@ $check(str_contains($wizard,"unifiedUpload.accept='.pdf,.docx,.odt,.epub") &&
        str_contains($wizard,"unifiedUpload.addEventListener('change'") &&
        str_contains($wizard,'legacySourceLabel.hidden=true') &&
        str_contains($wizard,'pdfLabel.hidden=true') &&
-       str_contains($src,'/assets/js/paper-wizard.js?v=20261110-3'),
+       str_contains($src,'/assets/js/paper-wizard.js?v=20261110-4'),
     'Un seul sélecteur visible doit distribuer automatiquement le fichier vers le parseur PDF ou manuscrit.');
 $check(str_contains($wizard,'wizard-barcode-download') &&
        str_contains($wizard,'wizard-plan-bookstores') &&
@@ -197,7 +197,7 @@ $check(PdfNativeAnalyzer::parseGhostscript($mixed)['corep_eligible']===false,
     'Les PDF à formats mixtes ne peuvent pas être considérés comme compatibles Corep.');
 
 $responsiveCss=(string)file_get_contents(dirname(__DIR__).'/public/assets/css/paper-wizard.css');
-$check(str_contains($src,'/assets/css/paper-wizard.css?v=20261110-4')
+$check(str_contains($src,'/assets/css/paper-wizard.css?v=20261110-5')
     && str_contains($responsiveCss,'#panel-paper .paper-provider-paths {width:100%}')
     && str_contains($responsiveCss,'#panel-paper input:not([type=checkbox]):not([type=radio])'),
     'Les fieldsets, grilles et champs du parcours papier doivent être contraints sur mobile.');
@@ -205,21 +205,35 @@ $coverEditor=(string)file_get_contents(dirname(__DIR__).'/src/views/cover-spread
 $coverModule=(string)file_get_contents(dirname(__DIR__).'/public/assets/js/cover-spread.js');
 $check(str_contains($src,'id="print-paper-stock"') && str_contains($src,'data-bookelis-paper="1"') &&
     str_contains($src,'src/views/cover-spread-editor.php') &&
-    str_contains($src,'/assets/js/cover-spread.js?v=20261110-1'),
+    str_contains($src,'/assets/js/cover-spread.js?v=20261110-2'),
     'Le choix du papier et le générateur de couverture complète doivent être présents dans le formulaire.');
 $check(str_contains($wizard,'add(0,sourceCard,pdfLabel,printRequest,provider)') &&
     str_contains($wizard,"window.LibrairieCoverSpread?.getGeneratedPdf?.()") &&
     str_contains($wizard,"interior_paper:form.querySelector('#print-paper-stock')"),
     'Le papier doit être choisi avant la pagination et le PDF à plat réutilisé dans le ZIP.');
-$check(str_contains($coverEditor,'id="spread-leaf-mm"') &&
-    str_contains($coverEditor,'id="spread-spine-mm"') &&
+$check(str_contains($coverEditor,'id="bookelis-template-pdf"') &&
+    str_contains($coverEditor,'id="bookelis-guide-pages"') &&
+    str_contains($coverEditor,'id="bookelis-commercialisation"') &&
+    str_contains($coverEditor,'id="bookelis-ink"') &&
+    str_contains($coverEditor,'id="bookelis-lamination"') &&
     str_contains($coverEditor,'id="spread-preview"') &&
     str_contains($coverEditor,'id="spread-download"') &&
-    str_contains($coverModule,'pdfFromJpeg'),
-    'Le calculateur doit demander une cote papier réelle et proposer un aperçu et un PDF.');
-$check(str_contains($coverEditor,'gabarit officiel') &&
-    str_contains($coverModule,"binding.value!=='paperback'"),
-    'Les couvertures Bookelis rigides et les paramètres prépresse ne doivent pas être simulés comme validés.');
+    str_contains($coverModule,'dimensionsFromTemplate') &&
+    !str_contains($coverEditor,'id="spread-leaf-mm"') &&
+    !str_contains($coverEditor,'id="spread-spine-mm"'),
+    'Bookelis doit demander son PDF officiel et aider à remplir son formulaire, sans calcul manuel du dos.');
+$bookelisEndpoint=(string)file_get_contents(dirname(__DIR__).'/public/analyser-gabarit-bookelis.php');
+$check(str_contains($bookelisEndpoint,'Csrf::validate') &&
+    str_contains($bookelisEndpoint,'is_uploaded_file') &&
+    str_contains($bookelisEndpoint,'PdfNativeAnalyzer::inspect') &&
+    str_contains($bookelisEndpoint,"'pages'=>1") &&
+    str_contains($coverModule,'getTemplateDimensions') &&
+    str_contains($coverModule,'hasValidTemplate') &&
+    str_contains($wizard,'hasValidTemplate?.()') &&
+    str_contains($wizard,'bookelis_template_dimensions_mm'),
+    'Un gabarit PDF à une seule page doit être vérifié avant de créer le PDF ou le kit Bookelis.');
+$check(str_contains($coverEditor,'CMJN') && str_contains($coverModule,"binding.value!=='paperback'"),
+    'Les limites RVB et des couvertures cartonnées doivent rester explicites.');
 $paperSettings=PrintSettings::normalize(['print_provider'=>'bookelis','print_paper_stock'=>'bouffant80']);
 $check($paperSettings['paper_stock']==='bouffant80' &&
     PrintSettings::normalize(['print_provider'=>'corep_metz'])['paper_stock']==='offset80',

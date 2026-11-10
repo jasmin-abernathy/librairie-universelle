@@ -68,7 +68,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
     <link rel="stylesheet" href="/assets/css/author-draft.css?v=20261018-3">
     <link rel="stylesheet" href="/assets/css/autoedition-paper.css?v=20261019-1">
     <link rel="stylesheet" href="/assets/css/print-provider-flow.css?v=20261110-3">
-    <link rel="stylesheet" href="/assets/css/paper-wizard.css?v=20261110-4">
+    <link rel="stylesheet" href="/assets/css/paper-wizard.css?v=20261110-5">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -406,9 +406,7 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
                 </div>
                 <div data-printer-only="bookelis" class="paper-provider-specific resource-card paper-step-card" id="paper-bookelis-cover-step" hidden>
                     <div><h3>4. Préparer une couverture Bookelis complète</h3>
-                        <p>Bookelis demande un fichier <strong>à plat : quatrième + tranche + première</strong>. Le nouveau calculateur ci-dessous peut assembler une couverture à partir du format, du papier, du nombre de pages et des illustrations de l’auteur.</p>
-                        <p>Après votre aperçu PDF, relevez le <strong>nombre réel de pages</strong> et obtenez la cote du dos auprès de Bookelis, ou l’épaisseur réelle d’une feuille. Le calculateur crée un PDF de travail. Comparez-le ensuite au <strong>gabarit officiel</strong> avant impression.</p>
-                        <a class="button-link secondary" href="https://livres.bookelis.com/generation-couverture" target="_blank" rel="noopener noreferrer">Obtenir le gabarit officiel Bookelis ↗</a>
+                        <p>Bookelis demande une couverture complète à plat : <strong>quatrième + tranche + première</strong>. Après la génération du PDF intérieur, l’assistant affiche les valeurs à reporter sur Bookelis, puis <strong>exige l’import de son gabarit PDF officiel</strong> avant de permettre l’export de couverture.</p>
                         <?php require dirname(__DIR__) . '/src/views/cover-spread-editor.php'; ?>
                     </div>
                 </div>
@@ -536,8 +534,8 @@ if ($publicPrintGrids === [] && (string) ($config['moselle_base_url'] ?? '') ===
 <script src="/assets/js/paper-barcode.js?v=20261018-1"></script>
 <script src="/assets/js/printer-kit.js?v=20261018-1"></script>
 <script src="/assets/js/printer-zip.js?v=20261018-1"></script>
-<script src="/assets/js/paper-wizard.js?v=20261110-3"></script>
-<script src="/assets/js/cover-spread.js?v=20261110-1"></script>
+<script src="/assets/js/paper-wizard.js?v=20261110-4"></script>
+<script src="/assets/js/cover-spread.js?v=20261110-2"></script>
 <script src="/assets/js/printing-estimate.js?v=20261102-1"></script>
 </body>
 </html>

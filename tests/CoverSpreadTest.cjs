@@ -42,4 +42,22 @@ assert.ok(asText.includes('/MediaBox [0 0 912.756 640.630]'), 'dimensions PDF ph
 assert.ok(asText.includes('/Width 3804 /Height 2670'));
 assert.ok(asText.endsWith('%%EOF\n'),'PDF terminé normalement');
 assert.throws(()=>cover.pdfFromJpeg(Uint8Array.of(1,2,3),320,220,200,200));
-console.log('Couverture à plat : choix papier, dimensions, sécurité texte et PDF contrôlés.');
+
+const official=cover.dimensionsFromTemplate({
+  totalWidthMm:318.5,totalHeightMm:226,trimWidth:148,trimHeight:210,pages:120
+});
+assert.equal(official.spineMm,6.5,'Gabarit A5 120 pages : tranche de 6,5 mm');
+assert.equal(official.totalWidthMm,318.5);
+assert.equal(official.totalHeightMm,226);
+assert.equal(official.method,'mesures du gabarit PDF importé');
+assert.throws(()=>cover.dimensionsFromTemplate({
+  totalWidthMm:318.5,totalHeightMm:226,trimWidth:130,trimHeight:180,pages:120
+}),/Hauteur incompatible/);
+assert.throws(()=>cover.dimensionsFromTemplate({
+  totalWidthMm:318.5,totalHeightMm:226,trimWidth:148,trimHeight:210,pages:0
+}),/pages/);
+assert.throws(()=>cover.dimensionsFromTemplate({
+  totalWidthMm:304,totalHeightMm:226,trimWidth:148,trimHeight:210,pages:120
+}),/Largeur incompatible/);
+
+console.log('Couverture à plat : gabarit Bookelis requis, géométrie et PDF contrôlés.');
