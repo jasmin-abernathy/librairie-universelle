@@ -125,6 +125,42 @@ async function run(){
   assert(bookelis.checked&&bookelis.options>=3&&bookelis.enabled&&bookelis.corepEnabled,
     'Sélection Bookelis ou options papier incorrectes.');
   console.log('Sélection Bookelis : options papier accessibles, Corep préservé');
+
+  // Cette vérification se limite à présenter l'étape Couverture après injection
+  // d'un total de pages de test ; elle ne simule ni un PDF interior ni un upload réel.
+  const shown=await evaluate("(()=>{"+
+    "const count=document.querySelector('#print-estimate-pages');"+
+    "count.value='120';count.dispatchEvent(new Event('input',{bubbles:true}));"+
+    "document.querySelectorAll('.paper-wizard-screen').forEach(e=>e.hidden=true);"+
+    "const screen=document.querySelector('#paper-wizard-screen-2');if(screen)screen.hidden=false;"+
+    "const section=document.querySelector('#paper-bookelis-cover-step');if(section)section.hidden=false;"+
+    "return {screen:!!screen,section:!!section,pages:document.querySelector('#bookelis-guide-pages')?.textContent,"+
+    "template:!!document.querySelector('#bookelis-template-pdf'),"+
+    "exportDisabled:document.querySelector('#spread-download')?.disabled}})()");
+  assert(shown.screen&&shown.section&&shown.template&&shown.exportDisabled,
+    'Couverture Bookelis : import du gabarit et verrouillage de l’export requis.');
+  assert.equal(shown.pages,'120 pages','Aide Bookelis doit afficher la pagination calculée.');
+  for(const width of [320,430,1280]){
+    await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<800});
+    await sleep(150);
+    const state=await evaluate("(()=>{const box=document.querySelector('.bookelis-guide');"+
+      "const file=document.querySelector('.bookelis-template-import');"+
+      "const visible=e=>e&&getComputedStyle(e).display!=='none'&&e.getClientRects().length>0;"+
+      "const a=box.getBoundingClientRect(),b=file.getBoundingClientRect();"+
+      "return {hscroll:document.documentElement.scrollWidth-document.documentElement.clientWidth,"+
+      "guide:visible(box),upload:visible(file),guideLeft:a.left,guideRight:a.right,"+
+      "uploadLeft:b.left,uploadRight:b.right,disabled:document.querySelector('#spread-download').disabled}})()");
+    await evaluate("document.querySelector('.bookelis-guide').scrollIntoView({block:'start',behavior:'instant'})");
+    await sleep(70);
+    const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+    fs.writeFileSync(path.join(out,'bookelis-guide-'+width+'.png'),Buffer.from(shot.data,'base64'));
+    assert(state.guide&&state.upload&&state.disabled,
+      'Guide et import obligatoire visibles, export verrouillé à '+width+' px.');
+    assert(state.hscroll<=3&&state.guideLeft>=-3&&state.guideRight<=width+3&&
+      state.uploadLeft>=-3&&state.uploadRight<=width+3,
+      'Débordement du guide Bookelis à '+width+' px : '+JSON.stringify(state));
+    console.log('Bookelis '+width+' px : guide et import accessibles, export verrouillé, sans débordement.');
+  }
 }
 async function main(){
   try{await run();}finally{
