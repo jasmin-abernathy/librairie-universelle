@@ -317,3 +317,32 @@ CREATE TABLE IF NOT EXISTS seller_agreements (
     signature_reference TEXT NOT NULL,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+
+-- Enquête indépendante sur les lecteurs et librairies (2026).
+-- Identifiants de reprise hachés ; aucune donnée de contact nominative.
+CREATE TABLE IF NOT EXISTS reader_survey_sessions (
+    id TEXT PRIMARY KEY,
+    token_hash TEXT NOT NULL UNIQUE,
+    source TEXT NOT NULL DEFAULT 'direct',
+    answers_json TEXT NOT NULL DEFAULT '{}',
+    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','completed')),
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    completed_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_reader_survey_status ON reader_survey_sessions(status, completed_at);
+CREATE INDEX IF NOT EXISTS idx_reader_survey_updated ON reader_survey_sessions(updated_at);
+
+CREATE TABLE IF NOT EXISTS bookseller_survey_sessions (
+    id TEXT PRIMARY KEY,
+    token_hash TEXT NOT NULL UNIQUE,
+    source TEXT NOT NULL DEFAULT 'direct',
+    answers_json TEXT NOT NULL DEFAULT '{}',
+    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','completed')),
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    completed_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_bookseller_survey_status ON bookseller_survey_sessions(status, completed_at);
+CREATE INDEX IF NOT EXISTS idx_bookseller_survey_updated ON bookseller_survey_sessions(updated_at);

@@ -1,0 +1,51 @@
+/* Enquêtes 2026 — design autonome, léger, utilisable au clavier et sur mobile */
+.reader-survey{--survey-ink:#26332c;--survey-green:#426b55;--survey-light:#eff4ee;--survey-cream:#f7f3ed;--survey-line:#d9dfd7;--survey-muted:#526359;background:var(--survey-cream);color:var(--survey-ink)}
+.reader-survey .survey-shell{width:min(calc(100% - 28px),860px);margin:36px auto 75px}
+.reader-survey .survey-card{background:#fffefa;border:1px solid var(--survey-line);border-radius:22px;padding:clamp(20px,4vw,40px);box-shadow:0 14px 38px rgba(35,43,39,.065);margin-bottom:22px}
+.reader-survey [hidden]{display:none!important}
+.reader-survey .survey-kicker{font-size:.78rem;letter-spacing:.075em;text-transform:uppercase;font-weight:750;color:var(--survey-green);margin:0 0 10px}
+.reader-survey .survey-card h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,5vw,3.25rem);letter-spacing:-.025em;line-height:1.13;margin:0 0 18px}
+.reader-survey .survey-card h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.5rem,4vw,2.1rem);line-height:1.2;margin:0 0 15px}
+.reader-survey .survey-card p,.reader-survey .survey-card li{line-height:1.6}
+.reader-survey .survey-lead{font-size:clamp(1rem,2.5vw,1.16rem);line-height:1.65;color:#3c5044}
+.reader-survey .survey-facts{margin:20px 0;padding-left:23px}
+.reader-survey .survey-privacy{border:1px solid #ced9cd;background:#f3f7f1;border-radius:16px;padding:19px;margin:23px 0}
+.reader-survey .survey-privacy h2{font-family:inherit;font-size:1.05rem;font-weight:750;margin:0 0 7px}
+.reader-survey .survey-privacy p{font-size:.9rem;margin:8px 0}
+.reader-survey .survey-consent{display:flex;align-items:flex-start;gap:12px;padding:12px 0;font-weight:600;cursor:pointer;line-height:1.5}
+.reader-survey input[type="radio"],.reader-survey input[type="checkbox"]{margin:4px 0 0;width:20px;height:20px;flex:none;accent-color:var(--survey-green)}
+.reader-survey .survey-honeypot{position:absolute;left:-9999px;overflow:hidden;width:1px;height:1px}
+.reader-survey .survey-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:24px 0 0}
+.reader-survey .survey-button,.reader-survey .survey-link{appearance:none;font-family:inherit;font-size:1rem;font-weight:700;line-height:1.25;border-radius:12px;min-height:46px;padding:12px 18px;cursor:pointer}
+.reader-survey .survey-button{display:inline-flex;justify-content:center;align-items:center;border:1px solid var(--survey-green);background:var(--survey-green);color:white;text-decoration:none}
+.reader-survey .survey-button.secondary{border-color:var(--survey-line);background:white;color:var(--survey-ink)}
+.reader-survey .survey-button:hover:not(:disabled){filter:brightness(.93)}
+.reader-survey .survey-button:disabled{opacity:.48;cursor:not-allowed}
+.reader-survey .survey-link{background:transparent;border:0;color:#81493b;text-decoration:underline;margin:20px 0 0;padding-left:0}
+.reader-survey .survey-button:focus-visible,.reader-survey .survey-link:focus-visible,.reader-survey .survey-option:focus-within,.reader-survey textarea:focus-visible,.reader-survey .survey-role:focus-visible{outline:3px solid #af6856;outline-offset:3px}
+.reader-survey .survey-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:.84rem;color:var(--survey-muted);margin-bottom:12px;flex-wrap:wrap}
+.reader-survey progress{width:100%;height:11px;border:none;border-radius:999px;background:#e4e9e1;overflow:hidden;margin-bottom:24px}
+.reader-survey progress::-webkit-progress-bar{background:#e4e9e1;border-radius:999px}
+.reader-survey progress::-webkit-progress-value{background:var(--survey-green);border-radius:999px}
+.reader-survey progress::-moz-progress-bar{background:var(--survey-green);border-radius:999px}
+.reader-survey .survey-options{border:0;margin:18px 0 0;padding:0;display:grid;gap:11px}
+.reader-survey .survey-option{display:flex;align-items:center;gap:12px;min-height:48px;border:1px solid var(--survey-line);border-radius:12px;padding:13px 15px;background:#fff;line-height:1.4;cursor:pointer;box-sizing:border-box}
+.reader-survey .survey-option:has(input:checked){background:#ecf4ed;border-color:#739c81}
+.reader-survey .survey-option input{margin-top:0}
+.reader-survey .survey-option span{min-width:0}
+.reader-survey .survey-help{font-size:.91rem;color:var(--survey-muted)}
+.reader-survey .survey-error{color:#8b302b;background:#fff0ed;border:1px solid #e0b4ad;padding:12px;border-radius:10px}
+.reader-survey .survey-free-label{display:block;margin:16px 0 8px;font-weight:700}
+.reader-survey textarea{box-sizing:border-box;width:100%;max-width:100%;min-width:0;border:1px solid #a8b2a7;background:white;color:var(--survey-ink);font:inherit;font-size:1rem;line-height:1.5;border-radius:12px;padding:12px;resize:vertical}
+.reader-survey .survey-footer{width:min(calc(100% - 28px),860px);margin:0 auto 35px;font-size:.87rem;color:var(--survey-muted)}
+.reader-survey .survey-roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:26px}
+.reader-survey .survey-role{display:flex;flex-direction:column;gap:10px;min-height:190px;padding:22px;border:1px solid var(--survey-line);border-radius:17px;text-decoration:none;color:var(--survey-ink);background:white}
+.reader-survey .survey-role:hover{border-color:#759b82;background:#f5f9f4}
+.reader-survey .survey-role strong{font-family:Georgia,"Times New Roman",serif;font-size:1.5rem;line-height:1.2}
+.reader-survey .survey-role span{line-height:1.5;font-size:.98rem}
+.reader-survey .survey-role .survey-role-tag{font-size:.75rem;font-weight:750;text-transform:uppercase;letter-spacing:.08em;color:var(--survey-green)}
+.reader-survey .survey-back{display:inline-flex;margin:0 0 20px;color:var(--survey-green);font-size:.92rem}
+.reader-survey .survey-notice{padding:12px 15px;border-radius:12px;background:#eef3ec;font-size:.9rem}
+.reader-survey .sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+@media(max-width:640px){.reader-survey .survey-shell{margin:18px auto 40px}.reader-survey .survey-card{border-radius:17px;padding:20px}.reader-survey .survey-roles{grid-template-columns:1fr}.reader-survey .survey-role{min-height:135px}.reader-survey .survey-actions .survey-button{flex:1 1 auto}.reader-survey .survey-meta{font-size:.8rem}}
+@media(prefers-reduced-motion:reduce){.reader-survey *, .reader-survey *::before,.reader-survey *::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}

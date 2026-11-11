@@ -307,7 +307,7 @@ function rightsLabel(string $status): string
     <div class="footer-links">
         <a href="/ebooks.php">Ebooks</a>
         <a href="/autoedition.php">Autoédition</a>
-        <a href="/feedback.php">Donner un retour</a>
+        <a href="/enquete.php">Enquête 2026</a><a href="/feedback.php">Donner un retour</a>
         <a href="/projet.php">Le projet</a>
         <a href="/publier-et-lire-local.php">Droits et circuits locaux</a>
         <a href="/sans-ia.php">Sans IA</a>

@@ -67,6 +67,14 @@ $latestFeedback = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC, 
         <p>Les auteurs ne proposent que des fiches descriptives, sans manuscrit ni paiement.</p>
     </section>
     <section class="content-section">
+        <h2>Enquête 2026 — lecteurs et libraires</h2>
+        <p>Les deux questionnaires possèdent leurs propres exports CSV et JSON, protégés par le même accès administrateur.</p>
+        <div class="cta-row">
+            <a class="button-link secondary" href="/enquete-lecteurs.php?admin=1">Réponses des lecteurs</a>
+            <a class="button-link secondary" href="/enquete-libraires.php?admin=1">Réponses des libraires</a>
+        </div>
+    </section>
+    <section class="content-section">
         <h2>Dernières synchronisations</h2>
         <?php if ($latestSyncs === []): ?><p>Aucune synchronisation journalisée pour l’instant.</p><?php else: ?>
             <div class="table-wrap"><table><thead><tr><th>Source</th><th>Début</th><th>Statut</th><th>Ajouts</th><th>Ignorés</th><th>Conflits</th><th>Erreur</th></tr></thead><tbody>

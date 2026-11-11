@@ -101,6 +101,9 @@ jobs:
       - name: PDF agreement secure download and seller identity
         run: php tests/SellerAgreementPdfTest.php
 
+      - name: Survey entry, role separation and privacy constraints
+        run: php tests/SurveyEntryTest.php
+
       - name: Shared site navigation, ordering and mobile styles
         run: php tests/SiteNavigationTest.php
 
