@@ -18,7 +18,7 @@ function reader_json(int $status, array $body): never {
 }
 function reader_rules(): array {
     return [
-        'age_band'=>['one',['18_24','25_34','35_49','50_64','65_75','76_plus']],
+        'age_band'=>['one',['under_15','15_17','18_24','25_34','35_49','50_64','65_75','76_plus']],
         'territory'=>['one',['rural','small','medium','large','unknown']],
         'read_frequency'=>['one',['daily','weekly','monthly','rarely','never']],
         'formats'=>['many',['paper','ebook','audio','none']],
@@ -131,7 +131,7 @@ if (isset($_GET['admin'])) {
     }
     $active=(int)$pdo->query("SELECT COUNT(*) FROM reader_survey_sessions WHERE status='active'")->fetchColumn();
     ?><!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,follow"><title>Enquête lecteurs — administration</title><link rel="stylesheet" href="/assets/css/reader-survey.css?v=20261111-1"></head><body class="reader-survey"><main class="survey-shell"><section class="survey-card"><p class="survey-kicker">Administration protégée</p><h1>Enquête lecteurs · 2026</h1><p><?= count($rows) ?> réponses terminées, <?= $active ?> brouillons.</p><div class="survey-actions"><a class="survey-button" href="?admin=1&amp;export=json">Exporter JSON</a><a class="survey-button secondary" href="?admin=1&amp;export=csv">Exporter CSV</a><a class="survey-button secondary" href="/">Accueil</a></div><p class="survey-help">Les exports excluent l’identifiant de reprise et les réponses inachevées.</p></section></main></body></html><?php
+<meta name="robots" content="noindex,follow"><title>Enquête lecteurs — administration</title><link rel="stylesheet" href="/assets/css/reader-survey.css?v=20261111-2"></head><body class="reader-survey"><main class="survey-shell"><section class="survey-card"><p class="survey-kicker">Administration protégée</p><h1>Enquête lecteurs · 2026</h1><p><?= count($rows) ?> réponses terminées, <?= $active ?> brouillons.</p><div class="survey-actions"><a class="survey-button" href="?admin=1&amp;export=json">Exporter JSON</a><a class="survey-button secondary" href="?admin=1&amp;export=csv">Exporter CSV</a><a class="survey-button secondary" href="/">Accueil</a></div><p class="survey-help">Les exports excluent l’identifiant de reprise et les réponses inachevées.</p></section></main></body></html><?php
     exit;
 }
 
@@ -148,16 +148,35 @@ if (isset($_GET['api'])) {
     if (!is_array($input)) reader_json(400,['error'=>'JSON invalide.']);
     $action=(string)$_GET['api'];
     if ($action==='start') {
-        if (($input['consent']??false)!==true || ($input['adult']??false)!==true || !empty($input['website'])) {
-            reader_json(400,['error'=>'Confirmez votre accord et votre majorité.']);
+        if (($input['consent']??false)!==true || !empty($input['website'])) {
+            reader_json(400,['error'=>'Confirmez votre accord pour participer.']);
+        }
+        $ageBand=$input['age_band']??null;
+        if (!is_string($ageBand) || !in_array($ageBand,reader_rules()['age_band'][1],true)) {
+            reader_json(422,['error'=>'Choisissez votre tranche d’âge.']);
+        }
+        $under15=($ageBand==='under_15');
+        if ($under15 && ($input['guardian_consent']??false)!==true) {
+            reader_json(400,['error'=>'Un parent ou responsable légal doit donner son accord avec vous pour participer avant 15 ans.']);
         }
         $source=(string)($input['source']??'direct');
         if (!in_array($source,['direct','linkedin','librairie','mediatheque','association','reddit','autre'],true)) $source='direct';
         $token=bin2hex(random_bytes(32));
         $id=bin2hex(random_bytes(16));
-        $stmt=$pdo->prepare("INSERT INTO reader_survey_sessions(id,token_hash,source) VALUES(?,?,?)");
-        $stmt->execute([$id,hash('sha256',$token),$source]);
-        reader_json(200,['token'=>$token,'status'=>'active','answers'=>new stdClass()]);
+        $initialAnswers=json_encode(['age_band'=>$ageBand],JSON_UNESCAPED_UNICODE);
+        $pdo->beginTransaction();
+        try {
+            $stmt=$pdo->prepare("INSERT INTO reader_survey_sessions(id,token_hash,source,answers_json) VALUES(?,?,?,?)");
+            $stmt->execute([$id,hash('sha256',$token),$source,$initialAnswers]);
+            $consent=$pdo->prepare('INSERT INTO reader_survey_consents(session_id,guardian_agreed) VALUES(?,?)');
+            $consent->execute([$id,$under15?1:0]);
+            $pdo->commit();
+        } catch (Throwable $e) {
+            if ($pdo->inTransaction()) $pdo->rollBack();
+            error_log('Reader survey consent start failed: '.$e->getMessage());
+            reader_json(500,['error'=>'Impossible de démarrer le questionnaire.']);
+        }
+        reader_json(200,['token'=>$token,'status'=>'active','answers'=>['age_band'=>$ageBand]]);
     }
     $token=(string)($input['token']??'');
     $row=reader_find($pdo,$token);
@@ -174,6 +193,17 @@ if (isset($_GET['api'])) {
         $answers=reader_clean_answers($input['answers']??null);
     } catch (InvalidArgumentException $e) {
         reader_json(422,['error'=>$e->getMessage()]);
+    }
+    $initial=json_decode((string)$row['answers_json'],true)??[];
+    if (isset($initial['age_band']) && ($answers['age_band']??null)!==$initial['age_band']) {
+        reader_json(422,['error'=>'La tranche d’âge ne peut pas être changée après le début. Effacez cette participation pour recommencer.']);
+    }
+    if (($answers['age_band']??null)==='under_15') {
+        $consent=$pdo->prepare('SELECT guardian_agreed FROM reader_survey_consents WHERE session_id=?');
+        $consent->execute([$row['id']]);
+        if ((int)$consent->fetchColumn()!==1) {
+            reader_json(422,['error'=>'Accord d’un parent manquant : recommencez avec son aide.']);
+        }
     }
     if ($action==='finish') {
         if (!reader_required_ok($answers)) reader_json(422,['error'=>'Certaines questions obligatoires sont sans réponse.']);
@@ -202,8 +232,8 @@ if (!in_array($source,['direct','linkedin','librairie','mediatheque','associatio
 <meta name="theme-color" content="#f7f3ed">
 <title>Enquête lecteurs 2026 — Librairie universelle</title>
 <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
-<link rel="stylesheet" href="/assets/css/reader-survey.css?v=20261111-1">
-<script src="/assets/js/reader-survey.js?v=20261111-1" defer></script>
+<link rel="stylesheet" href="/assets/css/reader-survey.css?v=20261111-2">
+<script src="/assets/js/reader-survey.js?v=20261111-2" defer></script>
 </head>
 <body class="reader-survey" data-source="<?= reader_h($source) ?>">
 <a class="skip-link" href="#main">Aller au questionnaire</a>
@@ -214,10 +244,26 @@ if (!in_array($source,['direct','linkedin','librairie','mediatheque','associatio
 <p class="survey-kicker">Enquête indépendante · 2014–2026</p>
 <h1>Où, comment et pourquoi achetez-vous vos livres ?</h1>
 <p class="survey-lead">Douze ans après une première enquête de fin d’études, je m’intéresse aux habitudes de lecture et à la place des librairies indépendantes. Vos réponses aideront à formuler des recommandations concrètes.</p>
-<p><strong>Environ 5 à 7 minutes.</strong> Il n’est pas nécessaire d’acheter en librairie pour répondre : les réponses des personnes qui achètent exclusivement ailleurs sont particulièrement utiles.</p>
+<p>Ce questionnaire est ouvert aux personnes de tout âge, avec accord d’un parent ou responsable légal en dessous de 15 ans.</p><p><strong>Environ 5 à 7 minutes.</strong> Il n’est pas nécessaire d’acheter en librairie pour répondre : les réponses des personnes qui achètent exclusivement ailleurs sont particulièrement utiles.</p>
 <ul class="survey-facts"><li>Sans compte, sans adresse e-mail et sans publicité.</li><li>Questions comparables à celles de 2014 et nouvelles questions sur les services attendus.</li><li>Progression enregistrée : vous pouvez revenir terminer plus tard depuis ce navigateur.</li></ul>
-<div class="survey-privacy"><h2>Vos données</h2><p>Cette enquête recueille votre tranche d’âge, vos pratiques déclarées et, si vous le souhaitez, une courte remarque libre. Aucun nom, courriel ou adresse précise n’est demandé. Un code aléatoire enregistré sur votre appareil permet de reprendre ou supprimer votre contribution. Les résultats seront analysés de manière agrégée pour la seconde édition de l’étude. Les réponses vieilles de plus de douze mois sont purgées lors des accès à l’enquête ; vous pouvez aussi supprimer votre contribution depuis ce navigateur.</p><p>La participation est facultative. Vous pouvez interrompre ou effacer votre réponse depuis le questionnaire. Responsable : Jasmin Lévêque — <a href="mailto:jleveque@lepotager.org">jleveque@lepotager.org</a>.</p></div>
-<label class="survey-consent"><input id="survey-adult" type="checkbox"> J’ai 18 ans ou plus.</label>
+<div class="survey-privacy"><h2>Vos données</h2><p>Cette enquête recueille votre tranche d’âge, vos pratiques déclarées et, si vous le souhaitez, une courte remarque libre. Aucun nom, courriel ou adresse précise n’est demandé. Un code aléatoire enregistré sur votre appareil permet de reprendre ou supprimer votre contribution. Les résultats seront analysés de manière agrégée pour la seconde édition de l’étude. L’accord du parent, lorsque requis, est conservé sous forme de déclaration sans identité. Les réponses vieilles de plus de douze mois sont purgées lors des accès à l’enquête ; vous pouvez aussi supprimer votre contribution depuis ce navigateur.</p><p>La participation est facultative. Vous pouvez interrompre ou effacer votre réponse depuis le questionnaire. Responsable : Jasmin Lévêque — <a href="mailto:jleveque@lepotager.org">jleveque@lepotager.org</a>.</p></div>
+<div class="survey-age-field">
+<label for="survey-age-band"><strong>Votre tranche d’âge</strong></label>
+<select id="survey-age-band" required>
+<option value="">Choisissez…</option>
+<option value="under_15">Moins de 15 ans</option>
+<option value="15_17">15 à 17 ans</option>
+<option value="18_24">18 à 24 ans</option>
+<option value="25_34">25 à 34 ans</option>
+<option value="35_49">35 à 49 ans</option>
+<option value="50_64">50 à 64 ans</option>
+<option value="65_75">65 à 75 ans</option>
+<option value="76_plus">76 ans et plus</option>
+</select></div>
+<div id="survey-guardian-fields" class="survey-guardian" hidden>
+<p>Si tu as moins de 15 ans, demande à un parent ou responsable légal de t’accompagner pour donner aussi son accord. Aucun justificatif d’identité n’est demandé.</p>
+<label class="survey-consent"><input id="survey-guardian-consent" type="checkbox"> Je suis un parent ou responsable légal de cette personne et j’autorise sa participation à cette enquête.</label>
+</div>
 <label class="survey-consent"><input id="survey-consent" type="checkbox"> J’accepte de participer à cette enquête selon les conditions présentées ci-dessus.</label>
 <label class="survey-honeypot" aria-hidden="true">Site personnel <input id="survey-website" type="text" tabindex="-1" autocomplete="off"></label>
 <p id="survey-intro-error" class="survey-error" role="alert" hidden></p>

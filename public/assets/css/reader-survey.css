@@ -49,3 +49,8 @@
 .reader-survey .sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 @media(max-width:640px){.reader-survey .survey-shell{margin:18px auto 40px}.reader-survey .survey-card{border-radius:17px;padding:20px}.reader-survey .survey-roles{grid-template-columns:1fr}.reader-survey .survey-role{min-height:135px}.reader-survey .survey-actions .survey-button{flex:1 1 auto}.reader-survey .survey-meta{font-size:.8rem}}
 @media(prefers-reduced-motion:reduce){.reader-survey *, .reader-survey *::before,.reader-survey *::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+.reader-survey .survey-age-field{display:grid;gap:8px;margin:20px 0}
+.reader-survey .survey-age-field select{box-sizing:border-box;width:100%;max-width:385px;min-height:48px;border:1px solid #a8b2a7;border-radius:12px;padding:11px;background:#fff;color:var(--survey-ink);font:inherit}
+.reader-survey .survey-age-field select:focus-visible{outline:3px solid #af6856;outline-offset:3px}
+.reader-survey .survey-guardian{background:#f3f7f1;border:1px solid #ced9cd;border-radius:14px;padding:16px;margin:16px 0}

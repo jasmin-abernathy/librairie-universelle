@@ -24,7 +24,7 @@ $src=$source!=='direct'?'?src='.rawurlencode($source):'';
 <p class="survey-kicker">Étude 2026 · Douze ans après</p>
 <h1>Comment achetons-nous les livres aujourd’hui ?</h1>
 <p class="survey-lead">En 2014, j’ai interrogé des lecteurs et des libraires sur les changements du marché du livre. Je renouvelle aujourd’hui cette enquête pour comprendre les habitudes d’achat, les besoins des librairies et les solutions qui pourraient réellement les aider.</p>
-<p>Deux questionnaires indépendants, sans compte et sans publicité. <strong>Choisissez celui qui vous correspond :</strong></p>
+<p>Deux questionnaires indépendants, sans compte et sans publicité. Le parcours lecteurs est accessible à tous les âges, avec l’accord d’un parent pour les moins de 15 ans. <strong>Choisissez celui qui vous correspond :</strong></p>
 <div class="survey-roles">
 <a class="survey-role" href="/enquete-lecteurs.php<?= htmlspecialchars($src,ENT_QUOTES,'UTF-8') ?>">
 <span class="survey-role-tag">Pour les particuliers</span>

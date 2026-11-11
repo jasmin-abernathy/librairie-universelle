@@ -42,3 +42,20 @@ foreach ([['public/enquete-lecteurs.php','public/assets/js/reader-survey.js'],['
     if(!str_contains($backend,'?admin=1')||!str_contains($backend,'export=json')||!str_contains($backend,'export=csv'))$fail('Export manquant : '.$php);
 }
 echo "Enquête 2026 : deux parcours cohérents, liens, schéma SQLite, validation, export et suppression OK.\n";
+
+// Régression : pas de seuil arbitraire à 18 ans, consentement conjoint pour les moins de 15 ans.
+$readerBackend=$read('public/enquete-lecteurs.php');
+$readerFrontend=$read('public/assets/js/reader-survey.js');
+foreach (['under_15','15_17','18_24'] as $value) {
+    $asserted=str_contains($readerBackend,"'".$value."'") && str_contains($readerFrontend,"'".$value."'");
+    if (!$asserted) $fail('Tranche d’âge manquante : '.$value);
+}
+if (str_contains($readerBackend,'survey-adult') || str_contains($readerFrontend,'survey-adult')) $fail('Ancien verrou 18+ encore présent.');
+if (!str_contains($readerBackend,"$"."input['guardian_consent']") || !str_contains($readerFrontend,'survey-guardian-consent')) $fail('Accord parental absent.');
+if (!str_contains($readerBackend,'reader_survey_consents')) $fail('Trace de consentement absente.');
+$check=$pdo->query("SELECT name FROM sqlite_master WHERE type='table' AND name='reader_survey_consents'");
+if (!$check->fetchColumn()) $fail('Table des consentements absente.');
+$pdo->exec("INSERT INTO reader_survey_sessions(id,token_hash,source,answers_json) VALUES('child','".str_repeat('e',64)."','direct','{\"age_band\":\"under_15\"}')");
+$pdo->exec("INSERT INTO reader_survey_consents(session_id,guardian_agreed) VALUES('child',1)");
+$pdo->exec("DELETE FROM reader_survey_sessions WHERE id='child'");
+if ((int)$pdo->query("SELECT COUNT(*) FROM reader_survey_consents WHERE session_id='child'")->fetchColumn()!==0) $fail('Trace non supprimée avec la session.');

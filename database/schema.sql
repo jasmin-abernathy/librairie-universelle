@@ -346,3 +346,11 @@ CREATE TABLE IF NOT EXISTS bookseller_survey_sessions (
 );
 CREATE INDEX IF NOT EXISTS idx_bookseller_survey_status ON bookseller_survey_sessions(status, completed_at);
 CREATE INDEX IF NOT EXISTS idx_bookseller_survey_updated ON bookseller_survey_sessions(updated_at);
+
+-- Consentement déclaré et minimisé ; la suppression de la session supprime cette trace.
+CREATE TABLE IF NOT EXISTS reader_survey_consents (
+  session_id TEXT PRIMARY KEY REFERENCES reader_survey_sessions(id) ON DELETE CASCADE,
+  guardian_agreed INTEGER NOT NULL DEFAULT 0 CHECK(guardian_agreed IN (0,1)),
+  participant_agreed INTEGER NOT NULL DEFAULT 1 CHECK(participant_agreed=1),
+  consent_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

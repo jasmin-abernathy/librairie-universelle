@@ -44,3 +44,7 @@ L'enquête originale de janvier 2014 comporte 405 réponses actuellement dans le
 L'enquête de 2014 auprès des libraires avait deux réponses. Ne pas en faire une série statistique ; elle a servi de retour qualitatif sur la difficulté à recruter ces professionnels et à poser d'abord la question du support numérique.
 
 Le sondage 2026 n'est pas une évaluation de l'utilisation de Librairie universelle et ne doit pas servir à profiler les visiteurs du catalogue.
+
+## Participation des mineurs
+
+Le parcours lecteurs ne se limite pas aux 18 ans et plus : catégories `under_15` et `15_17`, puis adultes. Pour un jeune de moins de 15 ans, l'interface sollicite l'accord du jeune et de son parent/titulaire de l'autorité parentale avant de créer la session. Une trace déclarative sans données nominatives est stockée dans `reader_survey_consents` et supprimée en cascade avec la réponse. Pour les 15–17 ans, le consentement autonome est prévu en tant que participation à un service en ligne au regard de l'article 45 de la loi Informatique et Libertés. Cela ne constitue pas une majorité numérique générale ; si ce projet est formellement qualifié de recherche scientifique et fondé sur le consentement, vérifier les exigences spécifiques auprès de la CNIL. Le formulaire ne vérifie pas l'identité du parent et ne prétend pas le faire. Références : CNIL, « Recommandation 4 » ; article 45 de la loi Informatique et Libertés.

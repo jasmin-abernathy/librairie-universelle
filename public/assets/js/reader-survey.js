@@ -6,7 +6,7 @@ let token='', answers={}, position=0, busy=false;
 try { token=localStorage.getItem(KEY)||''; } catch (_) {}
 const source=document.body.dataset.source||'direct';
 const Q=[
- {id:'age_band',title:'Dans quelle tranche d’âge vous situez-vous ?',type:'one',hint:'Pour comparer le profil des répondants à celui de 2014.',options:[['18_24','18 à 24 ans'],['25_34','25 à 34 ans'],['35_49','35 à 49 ans'],['50_64','50 à 64 ans'],['65_75','65 à 75 ans'],['76_plus','76 ans et plus']]},
+ {id:'age_band',title:'Dans quelle tranche d’âge vous situez-vous ?',type:'one',hint:'Pour comparer le profil des répondants à celui de 2014.',options:[['under_15','Moins de 15 ans'],['15_17','15 à 17 ans'],['18_24','18 à 24 ans'],['25_34','25 à 34 ans'],['35_49','35 à 49 ans'],['50_64','50 à 64 ans'],['65_75','65 à 75 ans'],['76_plus','76 ans et plus']]},
  {id:'territory',title:'Vous habitez plutôt…',type:'one',hint:'Aucune adresse précise n’est demandée.',options:[['rural','Dans une commune rurale'],['small','Dans une petite ville'],['medium','Dans une ville moyenne'],['large','Dans une grande ville ou métropole'],['unknown','Je ne sais pas']]},
  {id:'read_frequency',title:'À quelle fréquence lisez-vous des livres ?',type:'one',hint:'Question comparable à celle de 2014.',options:[['daily','Tous les jours ou presque'],['weekly','Plusieurs fois par semaine'],['monthly','Quelques fois par mois'],['rarely','Rarement'],['never','Jamais']]},
  {id:'formats',title:'Quels formats de livres lisez-vous ou écoutez-vous ?',type:'many',hint:'Plusieurs réponses possibles.',options:[['paper','Livres imprimés'],['ebook','Livres numériques / ebooks'],['audio','Livres audio'],['none','Aucun actuellement']]},
@@ -58,7 +58,7 @@ function render(){
  }
  $('survey-question-content').innerHTML=html;
  $('survey-question-content').addEventListener('change',handleChoice,{once:true});
- $('survey-prev').disabled=position===0;
+ $('survey-prev').disabled=position<=1 && !!answers.age_band;
  $('survey-next').textContent=position===questions.length-1?'Terminer et envoyer':'Continuer';
  error('survey-question-error','');
  $('survey-save-status').textContent='Réponses enregistrées progressivement';
@@ -104,18 +104,33 @@ async function move(forward){
     show('survey-complete');return;
   }
   await api('save',{answers});
-  position=forward?Math.min(position+1,visible().length-1):Math.max(0,position-1);
+  position=forward?Math.min(position+1,visible().length-1):Math.max(answers.age_band?1:0,position-1);
   render();
   $('survey-questions').scrollIntoView({block:'start',behavior:'instant'});
  }catch(e){error('survey-question-error',e.message);$('survey-save-status').textContent='Non enregistré';}
  finally{busy=false;$('survey-next').disabled=false;}
 }
+const ageSelect=$('survey-age-band');
+const guardianBox=$('survey-guardian-fields');
+const guardianConsent=$('survey-guardian-consent');
+function updateGuardian(){
+ const under15=ageSelect.value==='under_15';
+ guardianBox.hidden=!under15;
+ if(!under15)guardianConsent.checked=false;
+}
+ageSelect.addEventListener('change',()=>{updateGuardian();error('survey-intro-error','');});
+updateGuardian();
 async function start(){
  if(busy)return;
- if(!$('survey-adult').checked||!$('survey-consent').checked){error('survey-intro-error','Merci de confirmer votre majorité et votre accord pour participer.');return;}
+ const age=ageSelect.value;
+ if(!age){error('survey-intro-error','Indiquez votre tranche d’âge.');ageSelect.focus();return;}
+ if(!$('survey-consent').checked){error('survey-intro-error','Confirmez votre accord pour participer.');return;}
+ if(age==='under_15'&&!guardianConsent.checked){error('survey-intro-error','Demandez aussi l’accord d’un parent ou responsable légal.');return;}
  busy=true;$('survey-start').disabled=true;
- try{const r=await api('start',{adult:true,consent:true,website:$('survey-website').value,source}); token=r.token;safeStore(token);answers={};position=0;show('survey-questions');render();}
- catch(e){error('survey-intro-error',e.message);}
+ try{
+   const r=await api('start',{age_band:age,guardian_consent:age==='under_15'&&guardianConsent.checked,consent:true,website:$('survey-website').value,source});
+   token=r.token;safeStore(token);answers={age_band:age};position=1;show('survey-questions');render();
+ }catch(e){error('survey-intro-error',e.message);}
  finally{busy=false;$('survey-start').disabled=false;}
 }
 async function resume(){
