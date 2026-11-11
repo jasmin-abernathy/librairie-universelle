@@ -354,3 +354,29 @@ CREATE TABLE IF NOT EXISTS reader_survey_consents (
   participant_agreed INTEGER NOT NULL DEFAULT 1 CHECK(participant_agreed=1),
   consent_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+
+-- Une édition ou une fiche auteur peut présenter plusieurs distributeurs.
+-- Aucune association n'est créée sans lien exact, observé et vérifié.
+CREATE TABLE IF NOT EXISTS distribution_links (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    edition_id INTEGER REFERENCES editions(id) ON DELETE CASCADE,
+    author_book_id INTEGER REFERENCES author_book_listings(id) ON DELETE CASCADE,
+    platform TEXT NOT NULL,
+    channel TEXT NOT NULL CHECK(channel IN ('independent_portal','bookseller','publisher','author','other')),
+    medium TEXT NOT NULL CHECK(medium IN ('paper','ebook','audio','other')),
+    url TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'checked' CHECK(status IN ('checked','hidden')),
+    checked_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CHECK ((edition_id IS NOT NULL AND author_book_id IS NULL)
+        OR (edition_id IS NULL AND author_book_id IS NOT NULL))
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_distribution_edition_url
+    ON distribution_links(edition_id,url) WHERE edition_id IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS ux_distribution_author_url
+    ON distribution_links(author_book_id,url) WHERE author_book_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_distribution_edition_status
+    ON distribution_links(edition_id,status);
+CREATE INDEX IF NOT EXISTS idx_distribution_author_status
+    ON distribution_links(author_book_id,status);

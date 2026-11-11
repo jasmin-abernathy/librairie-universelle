@@ -6,6 +6,7 @@ $id=filter_var($_GET['id']??null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1
 $item=$id?$service->visible((int)$id,'',1):[];
 if(!$item){http_response_code(404);header('X-Robots-Tag: noindex');header('Content-Type: text/html; charset=UTF-8');echo '<!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><title>Livre introuvable</title></head><main><h1>Fiche introuvable</h1><p>Ce livre n’est pas publié ou n’existe plus.</p><a href="/livres-auteurs.php">Retour aux livres d’auteurs</a></main></html>';exit;}
 $book=$item[0];
+$distributionLinks=(new DistributionLinks($pdo))->forAuthorBook((int)$book['id']);
 $e=static fn(mixed $v):string=>htmlspecialchars((string)$v,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');
 $price=number_format((int)$book['price_cents']/100,2,',',' ').' €';
 $ebookPrice=number_format((int)($book['ebook_price_cents'] ?? $book['price_cents'])/100,2,',',' ').' €';
@@ -40,6 +41,17 @@ $format=['paper'=>'Papier','ebook'=>'Numérique','both'=>'Papier et numérique']
 <?php if($book['seller_url']): ?><p><a class="button-link" href="<?= $e($book['seller_url']) ?>" target="_blank" rel="noopener noreferrer nofollow">Ouvrir la page du vendeur ↗</a></p><?php endif; ?>
 <?php if($book['public_email']): ?><p><a href="mailto:<?= $e($book['public_email']) ?>">Écrire à l’auteur ou au vendeur</a></p><?php endif; ?>
 <p class="field-help">Achat, paiement, accès au fichier EPUB, expédition, rétractation éventuelle et réclamations se traitent directement avec le vendeur. La Librairie ne perçoit pas le paiement et ne garantit ni les prix ni la disponibilité. <a href="/conditions-generales.php">Conditions générales</a>.</p>
-</aside></section></main>
+</aside></section>
+<?php if($distributionLinks): ?>
+<section class="content-section"><h2>Également disponible ailleurs</h2>
+<p>Plusieurs circuits peuvent distribuer un même livre. Ces fiches ont été vérifiées à la date indiquée, sans garantie de prix, de stock ni d’accord avec la plateforme.</p>
+<ul>
+<?php foreach($distributionLinks as $dest): ?>
+<li><strong><?= $e($dest['platform']) ?></strong> — <?= $e($dest['medium']) ?> · vérifié le <?= $e(substr($dest['checked_at'],0,10)) ?>
+<a href="<?= $e($dest['url']) ?>" target="_blank" rel="noopener noreferrer">Consulter la fiche sur la plateforme ↗</a></li>
+<?php endforeach; ?>
+</ul></section>
+<?php endif; ?>
+</main>
 <footer><div class="footer-links"><a href="/livres-auteurs.php">Livres indépendants</a><a href="/proposer-livre.php">Proposer mon livre</a></div></footer>
 </body></html>

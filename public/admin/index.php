@@ -33,7 +33,7 @@ $latestFeedback = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC, 
 <body>
 <header class="site-header">
     <a class="brand" href="/admin/">🛠️ <span>Administration <small>alpha</small></span></a>
-    <nav class="site-nav"><a href="/admin/livres-auteurs.php">Fiches d’auteurs</a><a href="/admin/submissions.php">Archives de dépôts</a><a href="/" target="_blank" rel="noopener noreferrer">Voir le site ↗</a></nav>
+    <nav class="site-nav"><a href="/admin/livres-auteurs.php">Fiches d’auteurs</a><a href="/admin/distribution-links.php">Rattachements multicanaux</a><a href="/admin/submissions.php">Archives de dépôts</a><a href="/" target="_blank" rel="noopener noreferrer">Voir le site ↗</a></nav>
 </header>
 <main>
     <section class="page-hero compact">
@@ -65,6 +65,11 @@ $latestFeedback = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC, 
             <article><strong><?= (int)$listingCounts['hidden'] ?></strong><span>Masquées</span></article>
         </div>
         <p>Les auteurs ne proposent que des fiches descriptives, sans manuscrit ni paiement.</p>
+    </section>
+    <section class="content-section">
+        <h2>Un livre, plusieurs distributeurs</h2>
+        <p>Ajouter les véritables liens de vente ou de consultation d’une édition ou d’une fiche auteur, sans inventer de disponibilité ou de partenariat.</p>
+        <a class="button-link secondary" href="/admin/distribution-links.php">Gérer les rattachements</a>
     </section>
     <section class="content-section">
         <h2>Enquête 2026 — lecteurs et libraires</h2>

@@ -7,6 +7,7 @@ declare(strict_types=1);
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 $record = $id ? WorkCatalog::find($pdo, (int) $id) : null;
 $localAvailability = [];
+$distributionLinks=$record===null?[]:(new DistributionLinks($pdo))->forWork((int)$record['work']['id']);
 
 if ($record === null) {
     http_response_code(404);
@@ -211,6 +212,29 @@ $localRows = localAvailabilityRows($localAvailability);
                 <p class="source-policy"><strong>Pourquoi le DRM est affiché par vendeur :</strong> une même édition numérique peut être livrée avec des protections différentes selon la plateforme. Le site ne déduit donc jamais un DRM global à partir du seul ISBN.</p>
             <?php endif; ?>
         </section>
+
+
+        <?php if ($distributionLinks !== []): ?>
+        <section class="access-section" aria-labelledby="distribution-links-title">
+            <div class="section-heading">
+                <h2 id="distribution-links-title">Retrouver ce livre sur plusieurs plateformes</h2>
+                <span><?= count($distributionLinks) ?> lien<?= count($distributionLinks)>1?'s':'' ?> vérifié<?= count($distributionLinks)>1?'s':'' ?></span>
+            </div>
+            <p>Ces liens renvoient aux fiches de livres effectivement contrôlées. Les stocks, prix, possibilités d'achat et délais restent à vérifier directement sur chaque plateforme ; un lien n'implique pas de partenariat.</p>
+            <div class="offer-list">
+            <?php foreach ($distributionLinks as $destination): ?>
+                <article class="offer-card">
+                    <div>
+                        <p class="work-kind"><?= e($destination['platform']) ?></p>
+                        <h3><?= e($destination['medium']==='paper'?'Livre papier':($destination['medium']==='ebook'?'Livre numérique':($destination['medium']==='audio'?'Livre audio':'Autre format'))) ?></h3>
+                        <p><?= $destination['isbn13']?'ISBN '.e($destination['isbn13']).' · ':'' ?>Lien contrôlé le <?= e(substr($destination['checked_at'],0,10)) ?>.</p>
+                    </div>
+                    <a class="primary-link" href="<?= e($destination['url']) ?>" target="_blank" rel="noopener noreferrer">Voir chez <?= e($destination['platform']) ?> ↗</a>
+                </article>
+            <?php endforeach; ?>
+            </div>
+        </section>
+        <?php endif; ?>
 
         <?php if ($config['moselle_base_url'] !== ''): ?>
         <section class="access-section" aria-labelledby="moselle-title">

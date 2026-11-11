@@ -158,3 +158,14 @@ Le site ne transforme jamais une ancienne observation en promesse actuelle.
 4. vérifier les règles de bénéficiaire/librairie choisie ;
 5. ajouter les stocks locaux uniquement lorsqu’une donnée fiable existe ;
 6. construire un panier seulement après validation des contrats et du parcours offre.
+
+
+## Liens multicanaux vérifiés manuellement (novembre 2026)
+
+Le modèle original `works -> editions -> offers -> sources` autorise déjà plusieurs offres pour une édition. Le complément `distribution_links` rattache **plusieurs fiches publiques exactes** à une édition ou, indépendamment, à une `author_book_listing` déjà publiée. Un lien n'est pas une offre commerciale vérifiée au sens des prix et stocks ; il ne devient jamais une offre `offers` par simple saisie.
+
+Gestion : `/admin/distribution-links.php` (Basic Auth + jeton CSRF). L'administrateur ouvre et vérifie chaque lien HTTPS vers le bon livre et le bon format, puis le soumet. La base refuse les doublons par cible et URL. Les liens peuvent être masqués immédiatement, sans réécrire les fiches ni modifier les autres offres. Les anciennes lignes masquées ne sont pas réactivées automatiquement.
+
+Affichage : `/work.php?id=…` pour les éditions bibliographiques et `/livre-auteur.php?id=…` pour les livres proposés et publiés par leurs auteurs. Aucun prix, stock, droit de réservation, accord de partenariat ou adhésion à un réseau n'est inféré à partir d'un lien. Pas de liens externes préremplis en l'absence de vérification ; pas de deep link synthétique basé sur l'ISBN sans autorisation.
+
+Étape ultérieure : partenaires structurés via `OfferSource` (déjà implémenté) avec contrat, EAN/ISBN, prix, fraîcheur et stocks selon les droits accordés. Une connexion à une place de marché n'empêche pas le référencement sur les autres ; aucun partenaire par défaut.

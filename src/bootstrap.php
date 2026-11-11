@@ -13,6 +13,7 @@ require_once __DIR__ . '/GallicaImporter.php';
 require_once __DIR__ . '/Isbn.php';
 require_once __DIR__ . '/OfferSource.php';
 require_once __DIR__ . '/OfferImporter.php';
+require_once __DIR__ . '/DistributionLinks.php';
 require_once __DIR__ . '/MoselleAvailabilityClient.php';
 require_once __DIR__ . '/Csrf.php';
 require_once __DIR__ . '/UploadValidator.php';

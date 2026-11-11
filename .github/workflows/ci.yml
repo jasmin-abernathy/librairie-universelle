@@ -167,6 +167,9 @@ jobs:
       - name: Federated discovery parsers and cache
         run: php tests/DiscoverySourcesTest.php
 
+      - name: Multiple distributors per book
+        run: php tests/DistributionLinksTest.php
+
       - name: SQLite schema and corpus smoke test
         run: |
           rm -f data/app.sqlite
