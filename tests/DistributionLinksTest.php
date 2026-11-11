@@ -27,7 +27,7 @@ foreach([
  $base+['platform'=>'Doublon','url'=>'https://example.org/produit/9782070360024'],
  $base+['platform'=>'Local','url'=>'http://localhost/livre'],
  $base+['platform'=>'IP','url'=>'https://127.0.0.1/livre'],
- $base+['platform'=>'Partenariat imaginaire','url'=>'https://example.org/other','verified'=>'0'],
+ array_merge($base,['platform'=>'Partenariat imaginaire','url'=>'https://example.org/other','verified'=>'0']),
  ['scope'=>'author_book','book_id'=>6,'platform'=>'Un vendeur','channel'=>'author','medium'=>'paper','url'=>'https://auteur.example.org/secret','verified'=>'1']
 ] as $input){
  $caught=false;
