@@ -11,7 +11,7 @@ $src=$source!=='direct'?'?src='.rawurlencode($source):'';
 <link rel="canonical" href="https://librairie.lepotager.org/enquete.php">
 <meta name="description" content="Étude indépendante 2026 sur les habitudes d'achat de livres et l'activité des librairies. Choisissez le questionnaire qui vous correspond.">
 <meta name="theme-color" content="#f7f3ed">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <title>Enquête sur les livres et les librairies — 2026</title>
 <link rel="stylesheet" href="/assets/css/app.css?v=20261104-nav2">
 <link rel="stylesheet" href="/assets/css/reader-survey.css?v=20261111-1">

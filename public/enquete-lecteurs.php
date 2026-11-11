@@ -130,7 +130,7 @@ if (isset($_GET['admin'])) {
         exit;
     }
     $active=(int)$pdo->query("SELECT COUNT(*) FROM reader_survey_sessions WHERE status='active'")->fetchColumn();
-    ?><!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    ?><!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,follow"><title>Enquête lecteurs — administration</title><link rel="stylesheet" href="/assets/css/reader-survey.css?v=20261111-1"></head><body class="reader-survey"><main class="survey-shell"><section class="survey-card"><p class="survey-kicker">Administration protégée</p><h1>Enquête lecteurs · 2026</h1><p><?= count($rows) ?> réponses terminées, <?= $active ?> brouillons.</p><div class="survey-actions"><a class="survey-button" href="?admin=1&amp;export=json">Exporter JSON</a><a class="survey-button secondary" href="?admin=1&amp;export=csv">Exporter CSV</a><a class="survey-button secondary" href="/">Accueil</a></div><p class="survey-help">Les exports excluent l’identifiant de reprise et les réponses inachevées.</p></section></main></body></html><?php
     exit;
 }
