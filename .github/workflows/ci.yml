@@ -358,7 +358,7 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'CoolLibri'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Books on Demand'
           curl --fail --silent http://127.0.0.1:8080/feedback.php | grep 'Qu’est-ce qui coince ?'
-          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/admin/)" = "503"
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/admin/)" = "303"
           curl --fail --silent http://127.0.0.1:8080/projet.php | grep 'id="project-title"'
           curl --fail --silent http://127.0.0.1:8080/sans-ia.php | grep 'Pas d’IA pour décider ce que vous devriez lire.'
 
@@ -430,7 +430,7 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'CoolLibri'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Books on Demand'
           curl --fail --silent http://127.0.0.1:8080/feedback.php | grep 'Qu’est-ce qui coince ?'
-          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/admin/)" = "503"
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/admin/)" = "303"
           curl --fail --silent http://127.0.0.1:8080/projet.php | grep 'id="project-title"'
           curl --fail --silent http://127.0.0.1:8080/sans-ia.php | grep 'Pas d’IA pour décider ce que vous devriez lire.'
 
@@ -502,6 +502,6 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'CoolLibri'
           curl --fail --silent http://127.0.0.1:8080/autoedition.php | grep 'Books on Demand'
           curl --fail --silent http://127.0.0.1:8080/feedback.php | grep 'Qu’est-ce qui coince ?'
-          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/admin/)" = "503"
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/admin/)" = "303"
           curl --fail --silent http://127.0.0.1:8080/projet.php | grep 'id="project-title"'
           curl --fail --silent http://127.0.0.1:8080/sans-ia.php | grep 'Pas d’IA pour décider ce que vous devriez lire.'
