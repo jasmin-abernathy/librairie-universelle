@@ -405,3 +405,23 @@ CREATE TABLE IF NOT EXISTS editorial_interviews (
     consent_at TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_editorial_interviews_status ON editorial_interviews(status,updated_at);
+
+
+-- Administration humaine du site : inscriptions publiques désactivées.
+-- Le premier compte requiert un lien temporaire généré côté serveur.
+CREATE TABLE IF NOT EXISTS admin_accounts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL COLLATE NOCASE UNIQUE,
+    password_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_login_at TEXT
+);
+CREATE TABLE IF NOT EXISTS admin_setup_tokens (
+    token_hash TEXT PRIMARY KEY,
+    expires_at INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS admin_login_attempts (
+    id TEXT PRIMARY KEY,
+    failures INTEGER NOT NULL DEFAULT 0,
+    last_failure INTEGER NOT NULL
+);

@@ -33,7 +33,7 @@ $latestFeedback = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC, 
 <body>
 <header class="site-header">
     <a class="brand" href="/admin/">🛠️ <span>Administration <small>alpha</small></span></a>
-    <nav class="site-nav"><a href="/admin/livres-auteurs.php">Fiches d’auteurs</a><a href="/admin/distribution-links.php">Rattachements multicanaux</a><a href="/admin/submissions.php">Archives de dépôts</a><a href="/admin/interviews.php">Entretiens écrits</a><a href="/" target="_blank" rel="noopener noreferrer">Voir le site ↗</a></nav>
+    <nav class="site-nav"><a href="/admin/livres-auteurs.php">Fiches d’auteurs</a><a href="/admin/distribution-links.php">Rattachements multicanaux</a><a href="/admin/submissions.php">Archives de dépôts</a><a href="/admin/interviews.php">Entretiens écrits</a><a href="/" target="_blank" rel="noopener noreferrer">Voir le site ↗</a><form method="post" action="/admin/deconnexion.php"><input type="hidden" name="csrf" value="<?= e(Csrf::token()) ?>"><button type="submit">Se déconnecter</button></form></nav>
 </header>
 <main>
     <section class="page-hero compact">

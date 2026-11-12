@@ -87,7 +87,7 @@ $answers=Interview::answers($row);
 <a class="skip-link" href="#main">Aller au contenu</a>
 <header class="site-header">
 <a class="brand" href="/admin/">🛠️ Administration</a>
-<nav class="site-nav"><a href="/admin/">Tableau de bord</a><a href="/" target="_blank" rel="noopener noreferrer">Site public</a></nav>
+<nav class="site-nav"><a href="/admin/">Tableau de bord</a><a href="/" target="_blank" rel="noopener noreferrer">Site public</a><form method="post" action="/admin/deconnexion.php"><input type="hidden" name="csrf" value="<?= ei_e(Csrf::token()) ?>"><button type="submit">Se déconnecter</button></form></nav>
 </header>
 <main id="main" class="interview-shell admin-interview">
 <section class="interview-card">
