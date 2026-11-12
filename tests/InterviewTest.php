@@ -85,6 +85,15 @@ try {
     Interview::saveAnswer($pdo,$row,2,'Une réponse libre','back');
     $row=Interview::find($pdo,Interview::CECILE_ID);
     if ((int)$row['cursor']!==1 || Interview::answers($row)['2']!=='Une réponse libre') throw new RuntimeException('Retour/sauvegarde échoué.');
+    // A transmitted interview must never accept delayed autosave requests.
+    $pdo->exec("UPDATE editorial_interviews SET status='submitted' WHERE id='cecile-bory-saillant-2026'");
+    $submittedRow=Interview::find($pdo,Interview::CECILE_ID);
+    $blocked=false;
+    try {
+        Interview::saveDraft($pdo,$submittedRow,(int)$submittedRow['cursor'],
+            'Brouillon tardif',Interview::draftFingerprint($submittedRow,(int)$submittedRow['cursor']));
+    } catch (RuntimeException $e) { $blocked=true; }
+    if (!$blocked) throw new RuntimeException('Autosave a modifié un entretien transmis.');
     $pdo->exec("UPDATE editorial_interviews SET status='closed', token_version=token_version+1 WHERE id='cecile-bory-saillant-2026'");
     $row=Interview::find($pdo,Interview::CECILE_ID);
     if (Interview::canOpen($row,$config,$params['k']??'')) throw new RuntimeException('Ancien lien encore actif.');
