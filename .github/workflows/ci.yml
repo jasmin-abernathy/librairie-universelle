@@ -170,6 +170,9 @@ jobs:
       - name: Multiple distributors per book
         run: php tests/DistributionLinksTest.php
 
+      - name: Private editorial interview access and questionnaire
+        run: php tests/InterviewTest.php
+
       - name: SQLite schema and corpus smoke test
         run: |
           rm -f data/app.sqlite
