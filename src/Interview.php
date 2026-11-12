@@ -199,7 +199,7 @@ final class Interview
         return hash('sha256', $answer);
     }
 
-    public static function saveAnswer(PDO $pdo, array $row, int $cursor, string $answer, string $direction): void
+    public static function saveAnswer(PDO $pdo, array $row, int $cursor, string $answer, string $direction, ?string $fingerprint = null): void
     {
         $questions = self::questions();
         if (!in_array($row['status'], ['invited','in_progress'], true)
@@ -207,6 +207,9 @@ final class Interview
             || !isset($questions[$cursor])
             || !in_array($direction, ['next', 'back'], true)) {
             throw new RuntimeException('Cette étape ne peut plus être modifiée. Rechargez la page.');
+        }
+        if ($fingerprint !== null && !hash_equals(self::draftFingerprint($row, $cursor), $fingerprint)) {
+            throw new RuntimeException('Cette réponse a changé dans un autre onglet. Rechargez la page.');
         }
         $answer = trim(str_replace("\r", '', $answer));
         if (strlen($answer) > 18000) throw new RuntimeException('Réponse trop longue : 18 000 octets au maximum.');
@@ -217,8 +220,8 @@ final class Interview
         $answers[(string)$cursor] = $answer;
         $next = $direction === 'next' ? $cursor+1 : max(0, $cursor-1);
         $stmt = $pdo->prepare("UPDATE editorial_interviews SET answers_json=?,cursor=?,status='in_progress',
-            updated_at=CURRENT_TIMESTAMP WHERE id=? AND cursor=? AND status IN ('invited','in_progress')");
-        $stmt->execute([json_encode($answers, JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR),$next,$row['id'],$cursor]);
+            updated_at=CURRENT_TIMESTAMP WHERE id=? AND cursor=? AND answers_json=? AND status IN ('invited','in_progress')");
+        $stmt->execute([json_encode($answers, JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR),$next,$row['id'],$cursor,$row['answers_json']]);
         if ($stmt->rowCount() !== 1) throw new RuntimeException('Modification concurrente : rechargez la page.');
     }
 }
