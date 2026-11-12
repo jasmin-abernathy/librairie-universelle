@@ -174,7 +174,7 @@ if (!$authenticated && isset($_SESSION['interview_pause_notice'][$row['id']])) {
         <input type="hidden" name="cursor" value="<?= $cursor ?>">
         <input type="hidden" name="fingerprint" id="interview-answer-fingerprint" value="<?= itw_e(Interview::draftFingerprint($row, $cursor)) ?>">
         <label for="answer" class="interview-question"><?= itw_e($step['question']) ?></label>
-        <textarea id="answer" name="answer" rows="9" maxlength="18000" <?= $step['required']?'required':'' ?> autocomplete="off"><?= itw_e($unsavedAnswer ?? (string)($answers[(string)$cursor] ?? '')) ?></textarea>
+        <textarea id="answer" name="answer" rows="9" maxlength="18000" data-unsaved="<?= $unsavedAnswer !== null ? 'true' : 'false' ?>" <?= $step['required']?'required':'' ?> autocomplete="off"><?= itw_e($unsavedAnswer ?? (string)($answers[(string)$cursor] ?? '')) ?></textarea>
         <p id="interview-save-status" class="interview-save-status" role="status" aria-live="polite">Votre réponse sera enregistrée lorsque vous utiliserez un bouton.</p>
         <?php if (!$step['required']): ?><p class="interview-hint">Question facultative : vous pouvez laisser ce champ vide.</p><?php endif; ?>
         <?php if (isset($questions[$cursor+1])): ?><p class="interview-next">Ensuite : <?= itw_e($questions[$cursor+1]['question']) ?></p><?php endif; ?>
