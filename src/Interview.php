@@ -85,6 +85,77 @@ final class Interview
         return isset($query['k']) && hash_equals((string)$query['k'], $key);
     }
 
+
+    /** Opening a private link is insufficient: the invited mailbox must verify a code. */
+    public static function sessionAuthorized(array $row): bool
+    {
+        Csrf::token();
+        $session = $_SESSION['editorial_interview_auth'][$row['id']] ?? null;
+        if (!is_array($session)
+            || (int)($session['version'] ?? 0) !== (int)$row['token_version']
+            || (int)($session['until'] ?? 0) < time()) return false;
+        $_SESSION['editorial_interview_auth'][$row['id']]['until'] = time()+1800;
+        return true;
+    }
+
+    public static function sendCode(PDO $pdo, array $row, array $config): void
+    {
+        if (!in_array($row['status'], ['invited','in_progress'], true)) {
+            throw new RuntimeException('Cet entretien ne peut plus recevoir de code.');
+        }
+        if (!filter_var($row['recipient_email'], FILTER_VALIDATE_EMAIL)) {
+            throw new RuntimeException('Adresse de destination non configurée.');
+        }
+        $now = time();
+        if ($now - (int)$row['otp_last_sent_at'] < 60) {
+            throw new RuntimeException('Un code vient déjà d’être demandé. Réessayez dans une minute.');
+        }
+        $newWindow = $now - (int)$row['otp_window_start'] > 3600;
+        $count = $newWindow ? 0 : (int)$row['otp_sent_count'];
+        if ($count >= 5) throw new RuntimeException('Trop de demandes. Réessayez plus tard.');
+        $code = sprintf('%06d', random_int(0, 999999));
+        $secret = (string)$config['admin_token'];
+        $hash = hash_hmac('sha256', $row['id'].':'.$row['token_version'].':'.$code, $secret);
+        $subject = 'Code de verification - Librairie universelle';
+        $body = "Bonjour,\n\nVoici votre code pour accéder à votre entretien écrit : "
+            .$code."\n\nIl est valable dix minutes et ne doit pas être partagé.\n\n"
+            ."Librairie universelle / Le Potager du Web";
+        $headers = ['From' => 'jleveque@lepotager.org', 'Reply-To' => 'jleveque@lepotager.org',
+                    'Content-Type' => 'text/plain; charset=UTF-8'];
+        // A true return value indicates local handoff to the mail server, not inbox delivery.
+        if (!mail((string)$row['recipient_email'], $subject, $body, $headers)) {
+            throw new RuntimeException('Le service d’envoi de codes est indisponible.');
+        }
+        $stmt = $pdo->prepare("UPDATE editorial_interviews SET otp_hash=?,otp_expires_at=?,
+            otp_attempts=0,otp_last_sent_at=?,otp_window_start=?,otp_sent_count=?,
+            updated_at=CURRENT_TIMESTAMP WHERE id=? AND token_version=?");
+        $stmt->execute([$hash,$now+600,$now,$newWindow?$now:(int)$row['otp_window_start'],
+                        $count+1,$row['id'],$row['token_version']]);
+    }
+
+    public static function verifyCode(PDO $pdo, array $row, array $config, string $code): bool
+    {
+        if (!in_array($row['status'], ['invited','in_progress'], true)
+            || !preg_match('/\\A[0-9]{6}\\z/D',$code)
+            || (int)$row['otp_expires_at'] < time()
+            || (int)$row['otp_attempts'] >= 5
+            || !is_string($row['otp_hash']) || $row['otp_hash'] === '') return false;
+        $hash = hash_hmac('sha256',
+            $row['id'].':'.$row['token_version'].':'.$code, (string)$config['admin_token']);
+        $stmt = $pdo->prepare("UPDATE editorial_interviews SET otp_attempts=otp_attempts+1,
+            otp_hash=CASE WHEN ? THEN NULL ELSE otp_hash END,
+            otp_expires_at=CASE WHEN ? THEN 0 ELSE otp_expires_at END
+            WHERE id=? AND otp_hash=? AND otp_expires_at>=? AND otp_attempts<5");
+        $match = hash_equals((string)$row['otp_hash'],$hash);
+        $stmt->execute([$match?1:0,$match?1:0,$row['id'],$row['otp_hash'],time()]);
+        if (!$match || $stmt->rowCount()!==1) return false;
+        Csrf::token();
+        $_SESSION['editorial_interview_auth'][$row['id']] = [
+            'version' => (int)$row['token_version'], 'until' => time()+1800
+        ];
+        return true;
+    }
+
     public static function saveAnswer(PDO $pdo, array $row, int $cursor, string $answer, string $direction): void
     {
         $questions = self::questions();
