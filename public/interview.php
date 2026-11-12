@@ -98,7 +98,7 @@ $authenticated = Interview::sessionAuthorized($row);
 </head>
 <body>
 <a class="skip-link" href="#main">Aller à l’entretien</a>
-<header class="site-header"><span class="brand">📚 Librairie universelle <small>· Entretien privé</small></span></header>
+<header class="site-header interview-header"><span class="brand">📚 Librairie universelle <small>· Entretien privé</small></span></header>
 <main id="main" class="interview-shell">
 <section class="interview-card">
 <p class="eyebrow">Enquête 2014–2026 · entretien écrit</p>
