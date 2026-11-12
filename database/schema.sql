@@ -380,3 +380,22 @@ CREATE INDEX IF NOT EXISTS idx_distribution_edition_status
     ON distribution_links(edition_id,status);
 CREATE INDEX IF NOT EXISTS idx_distribution_author_status
     ON distribution_links(author_book_id,status);
+
+
+-- Entretiens éditoriaux privés. La base et les réponses sont hors dépôt Git.
+-- Le lien invité est calculé depuis le secret d'administration sans stocker de jeton brut.
+CREATE TABLE IF NOT EXISTS editorial_interviews (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    recipient_name TEXT NOT NULL,
+    recipient_email TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','invited','in_progress','submitted','closed')),
+    token_version INTEGER NOT NULL DEFAULT 1,
+    cursor INTEGER NOT NULL DEFAULT 0,
+    answers_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    submitted_at TEXT,
+    consent_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_editorial_interviews_status ON editorial_interviews(status,updated_at);
