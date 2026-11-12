@@ -27,6 +27,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!Csrf::validate($_POST['csrf'] ?? null)) {
             throw new RuntimeException('Formulaire expiré. Rechargez cette page.');
         }
+        if (!Interview::sessionAuthorized($row)) {
+            $authAction = (string)($_POST['action'] ?? '');
+            if ($authAction === 'send_code') {
+                Interview::sendCode($pdo, $row, $config);
+            } elseif ($authAction === 'verify_code') {
+                if (!Interview::verifyCode($pdo, $row, $config, trim((string)($_POST['code'] ?? '')))) {
+                    throw new RuntimeException('Code incorrect ou expiré. Demandez un nouveau code si nécessaire.');
+                }
+                // The PHP session identifier is rotated after the second authentication factor.
+                session_regenerate_id(true);
+            } else {
+                throw new RuntimeException('Vérifiez d’abord votre adresse e-mail.');
+            }
+        } else {
         $requested = (int)($_POST['cursor'] ?? -1);
         if ($requested !== (int)$row['cursor']) throw new RuntimeException('Étape modifiée. Rechargez la page.');
         $action = (string)($_POST['action'] ?? '');
@@ -55,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             throw new RuntimeException('Action inconnue.');
         }
+        }
         header('Location: '.(string)($_SERVER['REQUEST_URI'] ?? '/interview.php'),true,303);
         exit;
     } catch (RuntimeException $exception) {
@@ -67,6 +82,7 @@ $cursor = min($count,max(0,(int)$row['cursor']));
 $step = $questions[$cursor] ?? null;
 $done = $row['status'] === 'submitted';
 $csrf = Csrf::token();
+$authenticated = Interview::sessionAuthorized($row);
 ?>
 <!doctype html>
 <html lang="fr">
@@ -90,7 +106,20 @@ $csrf = Csrf::token();
 <p>Bonjour Cécile, et merci d’avoir accepté de revenir sur notre échange de 2014. Ce nouvel entretien prolonge mon mémoire sur les librairies indépendantes et la révolution numérique du livre. Il porte sur les choix réellement faits depuis, les conditions économiques et les perspectives du métier.</p>
 <p>Une question à la fois, dans l’ordre ; vos réponses sont enregistrées à chaque étape. Vous pouvez revenir en arrière, passer les questions facultatives et reprendre avec ce même lien. <strong>Rien n’est publié automatiquement.</strong></p>
 <?php if ($error !== ''): ?><p class="interview-error" role="alert"><?= itw_e($error) ?></p><?php endif; ?>
-<?php if ($done): ?>
+<?php if (!$authenticated): ?>
+    <h2>Accéder à votre entretien</h2>
+    <p>Pour préserver la confidentialité de vos réponses, un code à six chiffres est envoyé uniquement à l’adresse professionnelle enregistrée par la rédaction. Ce code est valable dix minutes.</p>
+    <form method="post">
+        <input type="hidden" name="csrf" value="<?= itw_e($csrf) ?>">
+        <button type="submit" name="action" value="send_code">Recevoir un code par e-mail</button>
+    </form>
+    <form method="post">
+        <input type="hidden" name="csrf" value="<?= itw_e($csrf) ?>">
+        <label for="code">Votre code de vérification</label>
+        <input id="code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required>
+        <button type="submit" name="action" value="verify_code">Ouvrir l’entretien</button>
+    </form>
+<?php elseif ($done): ?>
     <h2>Merci pour cet entretien !</h2>
     <p>Vos réponses ont été transmises à la rédaction et le formulaire est verrouillé. Une version éditée pourra vous être proposée pour relecture avant toute publication.</p>
 <?php elseif ($step !== null): ?>
