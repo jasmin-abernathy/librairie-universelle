@@ -26,6 +26,7 @@ require_once __DIR__ . '/CatalogOfferVisibility.php';
 require_once __DIR__ . '/EbookStorefront.php';
 require_once __DIR__ . '/FeedbackService.php';
 require_once __DIR__ . '/AdminAuth.php';
+require_once __DIR__ . '/Interview.php';
 require_once __DIR__ . '/SyncLog.php';
 
 $pdo = Database::connect($config);
