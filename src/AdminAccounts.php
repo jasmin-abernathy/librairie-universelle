@@ -37,7 +37,7 @@ final class AdminAccounts
         if (strlen($password) < 12 || strlen($password) > 256) {
             throw new InvalidArgumentException('Choisissez un mot de passe de 12 caractères minimum.');
         }
-        $pdo->exec('BEGIN IMMEDIATE');
+        $pdo->beginTransaction();
         try {
             if (self::exists($pdo) || !self::tokenValid($pdo, $token)) {
                 throw new RuntimeException('Lien d’initialisation invalide ou déjà utilisé.');
