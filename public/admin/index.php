@@ -33,7 +33,7 @@ $latestFeedback = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC, 
 <body>
 <header class="site-header">
     <a class="brand" href="/admin/">🛠️ <span>Administration <small>alpha</small></span></a>
-    <nav class="site-nav"><a href="/admin/livres-auteurs.php">Fiches d’auteurs</a><a href="/admin/distribution-links.php">Rattachements multicanaux</a><a href="/admin/submissions.php">Archives de dépôts</a><a href="/" target="_blank" rel="noopener noreferrer">Voir le site ↗</a></nav>
+    <nav class="site-nav"><a href="/admin/livres-auteurs.php">Fiches d’auteurs</a><a href="/admin/distribution-links.php">Rattachements multicanaux</a><a href="/admin/submissions.php">Archives de dépôts</a><a href="/admin/interviews.php">Entretiens écrits</a><a href="/" target="_blank" rel="noopener noreferrer">Voir le site ↗</a></nav>
 </header>
 <main>
     <section class="page-hero compact">
@@ -78,6 +78,11 @@ $latestFeedback = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC, 
             <a class="button-link secondary" href="/enquete-lecteurs.php?admin=1">Réponses des lecteurs</a>
             <a class="button-link secondary" href="/enquete-libraires.php?admin=1">Réponses des libraires</a>
         </div>
+    </section>
+    <section class="content-section">
+        <h2>Entretiens écrits — édition 2026</h2>
+        <p>Préparer une invitation individuelle, puis consulter et exporter les réponses avant toute publication.</p>
+        <a class="button-link secondary" href="/admin/interviews.php">Gérer l’entretien avec Cécile Bory-Saillant</a>
     </section>
     <section class="content-section">
         <h2>Dernières synchronisations</h2>
