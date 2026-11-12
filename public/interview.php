@@ -144,7 +144,7 @@ if (!$authenticated && isset($_SESSION['interview_pause_notice'][$row['id']])) {
 <p class="eyebrow">Enquête 2014–2026 · entretien écrit</p>
 <h1>Douze ans après : la librairie Georges face au numérique</h1>
 <p>Bonjour Cécile, et merci d’avoir accepté de revenir sur notre échange de 2014. Ce nouvel entretien prolonge mon mémoire sur les librairies indépendantes et la révolution numérique du livre. Il porte sur les choix réellement faits depuis, les conditions économiques et les perspectives du métier.</p>
-<p>Une question à la fois, dans l’ordre ; votre texte est sauvegardé automatiquement après une courte pause. Vous pouvez aussi choisir « Enregistrer et quitter » pour reprendre plus tard avec le même lien et un nouveau code. <strong>Rien n’est publié automatiquement.</strong></p>
+<p>Une question à la fois, dans l’ordre ; lorsque JavaScript est actif, votre texte est sauvegardé automatiquement après une courte pause. Vous pouvez aussi choisir « Enregistrer et quitter » pour reprendre plus tard avec le même lien et un nouveau code. <strong>Rien n’est publié automatiquement.</strong></p>
 <?php if ($error !== ''): ?><p class="interview-error" role="alert"><?= itw_e($error) ?></p><?php endif; ?>
 <?php if ($pauseNotice): ?><p class="interview-notice" role="status">Votre brouillon a bien été enregistré. Vous pouvez fermer cette page et reprendre quand vous le souhaitez avec votre lien d’invitation.</p><?php endif; ?>
 <?php if (!$authenticated): ?>
@@ -176,6 +176,7 @@ if (!$authenticated && isset($_SESSION['interview_pause_notice'][$row['id']])) {
         <label for="answer" class="interview-question"><?= itw_e($step['question']) ?></label>
         <textarea id="answer" name="answer" rows="9" maxlength="18000" data-unsaved="<?= $unsavedAnswer !== null ? 'true' : 'false' ?>" <?= $step['required']?'required':'' ?> autocomplete="off"><?= itw_e($unsavedAnswer ?? (string)($answers[(string)$cursor] ?? '')) ?></textarea>
         <p id="interview-save-status" class="interview-save-status" role="status" aria-live="polite">Votre réponse sera enregistrée lorsque vous utiliserez un bouton.</p>
+        <noscript><p class="interview-hint">La sauvegarde automatique nécessite JavaScript. Utilisez « Enregistrer et quitter » pour conserver un brouillon incomplet.</p></noscript>
         <?php if (!$step['required']): ?><p class="interview-hint">Question facultative : vous pouvez laisser ce champ vide.</p><?php endif; ?>
         <?php if (isset($questions[$cursor+1])): ?><p class="interview-next">Ensuite : <?= itw_e($questions[$cursor+1]['question']) ?></p><?php endif; ?>
         <div class="interview-actions">
