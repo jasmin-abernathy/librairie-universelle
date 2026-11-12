@@ -32,6 +32,47 @@ try {
     if (!Interview::verifyCode($pdo,$row,$config,$code)) throw new RuntimeException('Code valide rejeté.');
     $row=Interview::find($pdo,Interview::CECILE_ID);
     if (!Interview::sessionAuthorized($row)) throw new RuntimeException('Session après validation OTP indisponible.');
+    // Saving an incomplete mandatory answer must not advance the interview.
+    $fingerprint = Interview::draftFingerprint($row, 0);
+    $draftText = "Début de réponse,\nà reprendre plus tard…";
+    $savedFingerprint = Interview::saveDraft($pdo, $row, 0, $draftText, $fingerprint);
+    $row = Interview::find($pdo, Interview::CECILE_ID);
+    if ($row['status'] !== 'in_progress' || (int)$row['cursor'] !== 0
+        || Interview::answers($row)['0'] !== $draftText
+        || Interview::draftFingerprint($row,0) !== $savedFingerprint) {
+        throw new RuntimeException('Le brouillon incomplet n’a pas été conservé sans avancer.');
+    }
+    // A stale autosave from another tab must not overwrite a newer answer.
+    $blocked=false;
+    try { Interview::saveDraft($pdo,$row,0,'Écrasement',str_repeat('0',64)); }
+    catch(RuntimeException $e){$blocked=true;}
+    if (!$blocked) throw new RuntimeException('Un ancien brouillon a écrasé la réponse.');
+    $staleRow = $row;
+    $secondFingerprint = Interview::saveDraft($pdo,$row,0,'Deuxième brouillon',$savedFingerprint);
+    $blocked=false;
+    try { Interview::saveDraft($pdo,$staleRow,0,'Écrasement concurrent',$savedFingerprint); }
+    catch(RuntimeException $e){$blocked=true;}
+    if (!$blocked) throw new RuntimeException('L’écriture concurrente périmée a réussi.');
+    $row=Interview::find($pdo, Interview::CECILE_ID);
+    if (Interview::answers($row)['0'] !== 'Deuxième brouillon'
+        || Interview::draftFingerprint($row,0) !== $secondFingerprint) {
+        throw new RuntimeException('Le dernier brouillon sauvegardé est perdu.');
+    }
+    $blocked=false;
+    try { Interview::saveDraft($pdo,$row,0,str_repeat('X',18001),$secondFingerprint); }
+    catch(InvalidArgumentException $e){$blocked=true;}
+    if (!$blocked) throw new RuntimeException('Réponse trop longue acceptée.');
+    // Navigation still validates mandatory questions and stale fingerprints.
+    $blocked=false;
+    try { Interview::saveAnswer($pdo,$row,0,'Réponse complète','next',str_repeat('0',64)); }
+    catch(RuntimeException $e){$blocked=true;}
+    if (!$blocked) throw new RuntimeException('Navigation avec empreinte périmée autorisée.');
+    // The pause flow revokes the in-browser interview session; returning needs a code.
+    unset($_SESSION['editorial_interview_auth'][$row['id']]);
+    if (Interview::sessionAuthorized($row)) throw new RuntimeException('La pause ne ferme pas l’accès invité.');
+    $_SESSION['editorial_interview_auth'][$row['id']] = [
+        'version'=>(int)$row['token_version'], 'until'=>time()+1800
+    ];
     $blocked=false;
     try { Interview::saveAnswer($pdo,$row,0,'','next'); }
     catch(RuntimeException $e){$blocked=true;}
@@ -44,10 +85,28 @@ try {
     Interview::saveAnswer($pdo,$row,2,'Une réponse libre','back');
     $row=Interview::find($pdo,Interview::CECILE_ID);
     if ((int)$row['cursor']!==1 || Interview::answers($row)['2']!=='Une réponse libre') throw new RuntimeException('Retour/sauvegarde échoué.');
+    // A transmitted interview must never accept delayed autosave requests.
+    $pdo->exec("UPDATE editorial_interviews SET status='submitted' WHERE id='cecile-bory-saillant-2026'");
+    $submittedRow=Interview::find($pdo,Interview::CECILE_ID);
+    $blocked=false;
+    try {
+        Interview::saveDraft($pdo,$submittedRow,(int)$submittedRow['cursor'],
+            'Brouillon tardif',Interview::draftFingerprint($submittedRow,(int)$submittedRow['cursor']));
+    } catch (RuntimeException $e) { $blocked=true; }
+    if (!$blocked) throw new RuntimeException('Autosave a modifié un entretien transmis.');
     $pdo->exec("UPDATE editorial_interviews SET status='closed', token_version=token_version+1 WHERE id='cecile-bory-saillant-2026'");
     $row=Interview::find($pdo,Interview::CECILE_ID);
     if (Interview::canOpen($row,$config,$params['k']??'')) throw new RuntimeException('Ancien lien encore actif.');
     if (Interview::sessionAuthorized($row)) throw new RuntimeException('Session non révoquée.');
+    $form = (string)file_get_contents(dirname(__DIR__).'/public/interview.php');
+    $script = (string)file_get_contents(dirname(__DIR__).'/public/assets/js/interview-autosave.js');
+    if (!str_contains($form, 'value="save_exit"')
+        || !str_contains($form, "value=\"autosave\"") && !str_contains($form,"=== 'autosave'")
+        || !str_contains($form, 'id="interview-save-status"')
+        || !str_contains($script, "credentials: 'same-origin'")
+        || !str_contains($script, 'form.requestSubmit(submitter)')) {
+        throw new RuntimeException('Parcours de sauvegarde et reprise incomplet.');
+    }
     echo "InterviewTest OK\n";
 } finally {
     $pdo=null;
