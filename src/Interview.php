@@ -100,7 +100,7 @@ final class Interview
 
     public static function sendCode(PDO $pdo, array $row, array $config): void
     {
-        if (!in_array($row['status'], ['invited','in_progress'], true)) {
+        if (!in_array($row['status'], ['invited','in_progress','submitted'], true)) {
             throw new RuntimeException('Cet entretien ne peut plus recevoir de code.');
         }
         if (!filter_var($row['recipient_email'], FILTER_VALIDATE_EMAIL)) {
@@ -135,7 +135,7 @@ final class Interview
 
     public static function verifyCode(PDO $pdo, array $row, array $config, string $code): bool
     {
-        if (!in_array($row['status'], ['invited','in_progress'], true)
+        if (!in_array($row['status'], ['invited','in_progress','submitted'], true)
             || !preg_match('/\\A[0-9]{6}\\z/D',$code)
             || (int)$row['otp_expires_at'] < time()
             || (int)$row['otp_attempts'] >= 5
