@@ -156,6 +156,49 @@ final class Interview
         return true;
     }
 
+
+    /**
+     * Fingerprint of the persisted text, used for optimistic concurrency.
+     * It is not an access token: the private link, CSRF and verified session remain mandatory.
+     */
+    public static function draftFingerprint(array $row, int $cursor): string
+    {
+        $answers = self::answers($row);
+        return hash('sha256', (string)($answers[(string)$cursor] ?? ''));
+    }
+
+    /**
+     * Save the current answer without changing question or submitting the interview.
+     * Also saves unfinished mandatory answers, so an interruption cannot erase progress.
+     */
+    public static function saveDraft(PDO $pdo, array $row, int $cursor, string $answer, string $fingerprint): string
+    {
+        $questions = self::questions();
+        if (!in_array($row['status'], ['invited','in_progress'], true)
+            || !isset($questions[$cursor]) || $cursor !== (int)$row['cursor']) {
+            throw new RuntimeException('Cet entretien ou cette question ne peut plus être modifié.');
+        }
+        if (!preg_match('/\\A[a-f0-9]{64}\\z/D', $fingerprint)
+            || !hash_equals(self::draftFingerprint($row, $cursor), $fingerprint)) {
+            throw new RuntimeException('Cette réponse a changé dans un autre onglet. Rechargez pour éviter de l’écraser.');
+        }
+        $answer = str_replace("\r", '', $answer);
+        if (strlen($answer) > 18000) {
+            throw new InvalidArgumentException('La réponse dépasse la limite de 18 000 octets.');
+        }
+        $answers = self::answers($row);
+        $answers[(string)$cursor] = $answer;
+        $encoded = json_encode($answers, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+        $stmt = $pdo->prepare("UPDATE editorial_interviews
+            SET answers_json=?, status='in_progress', updated_at=CURRENT_TIMESTAMP
+            WHERE id=? AND cursor=? AND answers_json=? AND status IN ('invited','in_progress')");
+        $stmt->execute([$encoded, $row['id'], $cursor, $row['answers_json']]);
+        if ($stmt->rowCount() !== 1) {
+            throw new RuntimeException('Une autre modification a été enregistrée. Rechargez pour retrouver la dernière version.');
+        }
+        return hash('sha256', $answer);
+    }
+
     public static function saveAnswer(PDO $pdo, array $row, int $cursor, string $answer, string $direction): void
     {
         $questions = self::questions();
